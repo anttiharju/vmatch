@@ -1,4 +1,4 @@
 #!/bin/bash
-set -euco pipefail
+set -euo pipefail
 
 find . -iname "*.sh" -exec shellcheck {} +

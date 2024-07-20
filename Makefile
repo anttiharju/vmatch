@@ -1,6 +1,6 @@
 SHELL := bash
 .ONESHELL:
-.SHELLFLAGS := -euco pipefail
+.SHELLFLAGS := -euo pipefail -c
 MAKEFLAGS += --warn-undefined-variables
 
 GOLANGCI_LINT_VERSION=$(shell cat .golangci.version)
