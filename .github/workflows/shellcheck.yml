@@ -1,0 +1,17 @@
+name: Lint
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '**.sh'
+  pull_request:
+    paths:
+      - '**.sh'
+
+jobs:
+  shellcheck:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: scripts/shellcheck.sh
