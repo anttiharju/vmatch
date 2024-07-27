@@ -1,4 +1,4 @@
-#!/bin/bash
-set -euo pipefail
+#!/bin/sh
+set -eu
 
-echo "GOLANGCI_LINT_VERSION=$(cat .golangci.version)" >> "$GITHUB_ENV"
+echo "GOLANGCI_LINT_VERSION=$(cat .golangci-version)" >> "$GITHUB_ENV"

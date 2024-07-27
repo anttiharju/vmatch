@@ -1,4 +1,4 @@
-#!/bin/bash
-set -euo pipefail
+#!/bin/sh
+set -eu
 
-find . -iname "*.sh" -exec shellcheck {} +
+find . -path ./node_modules -prune -o -type f \( -iname "*.sh" -o -path "./.githooks/*" \) -exec shellcheck {} +

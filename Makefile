@@ -3,14 +3,16 @@ SHELL := bash
 .SHELLFLAGS := -euo pipefail -c
 MAKEFLAGS += --warn-undefined-variables
 
-GOLANGCI_LINT_VERSION=$(shell cat .golangci.version)
+GOLANGCI_LINT_VERSION=$(shell cat .golangci-version)
 GOLANGCI_LINT_INSTALL_DIR=$(shell go env GOPATH)/bin
 
-.PHONY: install-pre-commit-hook
-install-pre-commit-hook:
-	rm -f .git/hooks/pre-commit
-	cp scripts/pre-commit.sh .git/hooks/pre-commit
-	chmod +x .git/hooks/pre-commit
+PHONY: setup
+setup: install-lint install-hooks
+	bun install
+
+.PHONY: install-hooks
+install-hooks:
+	git config --local core.hooksPath .githooks/
 
 .PHONY: install-lint
 install-lint:
@@ -29,4 +31,5 @@ shellcheck:
 	scripts/shellcheck.sh
 
 .PHONY: ci
-ci: lint shellcheck
+ci: shellcheck lint
+	bun run typecheck
