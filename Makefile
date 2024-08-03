@@ -8,7 +8,6 @@ GOLANGCI_LINT_INSTALL_DIR=$(shell go env GOPATH)/bin
 
 PHONY: setup
 setup: install-lint install-hooks
-	bun install
 
 .PHONY: install-hooks
 install-hooks:
@@ -32,4 +31,3 @@ shellcheck:
 
 .PHONY: ci
 ci: shellcheck lint
-	bun run typecheck
