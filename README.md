@@ -1,3 +1,3 @@
-# golangci-lint-updater
+# vMatch golangci-lint
 
-Easy peasy lemon squeezy
+Work in progress.
