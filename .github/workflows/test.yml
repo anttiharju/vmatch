@@ -11,7 +11,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version-file: 'go.mod'
+          go-version-file: "go.mod"
           cache: false # To suppress warning about 'missing' go sum
       - name: Get golangci-lint version
         run: .github/scripts/golangci-lint-version.sh
@@ -36,7 +36,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version-file: 'go.mod'
+          go-version-file: "go.mod"
           cache: false # To suppress warning about 'missing' go sum
       - name: Test if there's a diff between wrapped and unwrapped linter
         run: make test

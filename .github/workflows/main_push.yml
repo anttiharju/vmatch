@@ -21,11 +21,11 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version-file: 'go.mod'
+          go-version-file: "go.mod"
           cache: false # To suppress warning about 'missing' go sum
       - name: Build binary
         run: make build
       - name: Release
-        uses: ./.github/actions/release
+        uses: anttiharju/actions/release@v0
         with:
           binary: bin/vmatch-golangci-lint
