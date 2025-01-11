@@ -30,6 +30,12 @@ Also currently it's only built for Apple Silicon -based macOS. The homebrew form
 
 ## How do I use it?
 
+Install with
+
+```sh
+brew install anttiharju/packages/vmatch-golangci-lint
+```
+
 Instead of calling golangci-lint, call vmatch-golangci-lint. And have a `.golangci-version` file as outlined above.
 
 Main use case I was thinking about when developing this was VS Code integration. You can enable it as outlined [here](https://golangci-lint.run/welcome/integrations/#go-for-visual-studio-code). Although please don't commit the `.vscode/settings.json` into version control, people have individualised preferences.
@@ -41,15 +47,9 @@ A `.vscode/settings.json` for integrating vmatch-golangci-lint would have the fo
   "go.lintTool": "golangci-lint",
   "go.lintFlags": ["--fast"],
   "go.alternateTools": {
-    "golangci-lint": "/Users/antti/anttiharju/vmatch-golangci-lint/bin/vmatch-golangci-lint"
+    "golangci-lint": "/opt/homebrew/bin/vmatch-golangci-lint"
   }
 }
-```
-
-Note that the above won't work for you as-is. You can determine the value for `"golangci-lint":` with
-
-```sh
-which vmatch-golangci-lint
 ```
 
 ## Final words
