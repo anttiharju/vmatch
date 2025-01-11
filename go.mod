@@ -1,3 +1,3 @@
-module github.com/anttiharju/vmatch-golangci-lint
+module github.com/anttiharju/vmatch
 
 go 1.23.4

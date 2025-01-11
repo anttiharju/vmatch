@@ -1,4 +1,4 @@
-# vmatch-golangci-lint
+# vmatch
 
 ## What is this?
 
@@ -22,7 +22,7 @@ The confusion stems from different versions of golangci-lint producing different
 
 ## What caveats does it have?
 
-It doesn't manage Go for you. Go version also affects golangci-lint output, in the future I might make a `vmatch-go` to further solve this issue.
+It doesn't manage Go for you. Go version also affects golangci-lint output, the intention is to add a wrapper for Go as well.
 
 It needs to be acknowledged that automatically managing tools is a bit spooky, so tools such as https://flox.dev may be better solutions to the problem I'm trying to solve. Although I haven't tested how dynamic flox environments are, do they need reactivation in case the manifest changes when switching between branches.
 
@@ -33,7 +33,7 @@ Also currently it's only built for Apple Silicon -based macOS. The homebrew form
 Install with
 
 ```sh
-brew install anttiharju/app/vmatch-golangci-lint
+brew install anttiharju/app/vmatch
 ```
 
 Instead of calling golangci-lint, call vmatch-golangci-lint. And have a `.golangci-version` file as outlined above.

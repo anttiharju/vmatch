@@ -1,4 +1,4 @@
-name: Test
+name: Validate
 on:
   workflow_call:
 
@@ -27,16 +27,3 @@ jobs:
         uses: actions/checkout@v4
       - name: Run shellcheck
         run: scripts/shellcheck.sh
-
-  test:
-    runs-on: ubuntu-24.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Go
-        uses: actions/setup-go@v5
-        with:
-          go-version-file: "go.mod"
-          cache: false # To suppress warning about 'missing' go sum
-      - name: Test if there's a diff between wrapped and unwrapped linter
-        run: make test

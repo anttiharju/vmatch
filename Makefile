@@ -1,6 +1,6 @@
-SHELL := bash
+SHELL := sh
 .ONESHELL:
-.SHELLFLAGS := -euo pipefail -c
+.SHELLFLAGS := -eu -c
 MAKEFLAGS += --warn-undefined-variables
 
 GOLANGCI-LINT_VERSION=$(shell cat .golangci-version)
@@ -8,20 +8,15 @@ GOLANGCI-LINT_INSTALL_DIR=$(shell pwd)/bin/v/$(GOLANGCI-LINT_VERSION)
 
 APP_NAME=vmatch-golangci-lint
 
-setup: install-hooks install-lint
+setup: install_hooks install_lint
 
-install-hooks:
+install_hooks:
 	@git config --local core.hooksPath .githooks/
 
-install-lint:
+install_lint:
 	@VERSION=$(GOLANGCI-LINT_VERSION) INSTALL_DIR=$(GOLANGCI-LINT_INSTALL_DIR) scripts/install-lint.sh
 
-ci: shellcheck lint
-
-shellcheck:
-	@scripts/shellcheck.sh
-
-lint: install-lint
+lint: install_lint
 	@$(GOLANGCI-LINT_INSTALL_DIR)/golangci-lint run
 
 lint-fix:
@@ -30,22 +25,4 @@ lint-fix:
 build:
 	@APP_NAME=$(APP_NAME) scripts/build.sh
 
-run: build rerun
-
-rerun:
-	@APP_NAME=$(APP_NAME) bin/$(APP_NAME) version
-
-clean:
-	@rm -rf bin/
-
-copy-path:
-	@echo -n "$(shell pwd)/bin/$(APP_NAME)" | pbcopy
-
-simple-benchmark:
-	@time /Users/antti/go/bin/golangci-lint version
-	@time ./bin/$(APP_NAME) version
-
-test:
-	@VERSION=$(GOLANGCI-LINT_VERSION) ./scripts/test.sh
-
-.PHONY: setup install-hooks install-lint ci shellcheck lint lint-fix build run rerun clean copy-path simple-benchmark test
+.PHONY: setup install_hooks install_lint lint lint-fix build

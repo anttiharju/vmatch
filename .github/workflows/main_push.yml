@@ -7,13 +7,13 @@ permissions:
   contents: write
 
 jobs:
-  test:
-    name: Test
-    uses: ./.github/workflows/test.yml
+  validate:
+    name: Validate
+    uses: ./.github/workflows/validate.yml
 
   release:
     name: Release
-    needs: test
+    needs: validate
     runs-on: ubuntu-24.04
     steps:
       - name: Release

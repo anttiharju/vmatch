@@ -9,5 +9,5 @@ go build \
 	"-s
 	-w
 	-buildid=
-	-X github.com/anttiharju/vmatch-golangci-lint/pkg/exit.appName=$APP_NAME" \
+	-X github.com/anttiharju/vmatch/pkg/exit.appName=$APP_NAME" \
 	-o "$ROOT/bin/$APP_NAME"

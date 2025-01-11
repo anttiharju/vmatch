@@ -2,6 +2,6 @@ name: Pull Request
 on: pull_request
 
 jobs:
-  test:
-    name: Test
-    uses: ./.github/workflows/test.yml
+  validate:
+    name: Validate
+    uses: ./.github/workflows/validate.yml

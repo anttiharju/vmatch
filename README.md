@@ -1,4 +1,4 @@
-# vmatch-golangci-lint
+# vmatch
 
 See [docs](./docs/README.md) for usage.
 

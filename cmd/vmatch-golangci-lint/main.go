@@ -5,9 +5,9 @@ import (
 	"os"
 	"os/signal"
 
-	"github.com/anttiharju/vmatch-golangci-lint/internal/app"
-	"github.com/anttiharju/vmatch-golangci-lint/pkg/exit"
-	"github.com/anttiharju/vmatch-golangci-lint/pkg/exit/exitcode"
+	"github.com/anttiharju/vmatch/internal/app"
+	"github.com/anttiharju/vmatch/pkg/exit"
+	"github.com/anttiharju/vmatch/pkg/exit/exitcode"
 )
 
 func main() {
