@@ -4,8 +4,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/anttiharju/vmatch-golangci-lint/src/exit"
-	"github.com/anttiharju/vmatch-golangci-lint/src/exit/exitcode"
+	"github.com/anttiharju/vmatch-golangci-lint/pkg/exit"
+	"github.com/anttiharju/vmatch-golangci-lint/pkg/exit/exitcode"
 )
 
 func GetBinDir() string {

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env dash
 set -eu
 
 if [ -f "$INSTALL_DIR/golangci-lint" ]; then

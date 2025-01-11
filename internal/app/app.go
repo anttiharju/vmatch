@@ -6,10 +6,10 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/anttiharju/vmatch-golangci-lint/src/exit"
-	"github.com/anttiharju/vmatch-golangci-lint/src/exit/exitcode"
-	"github.com/anttiharju/vmatch-golangci-lint/src/pathfinder"
-	"github.com/anttiharju/vmatch-golangci-lint/src/versionfinder"
+	"github.com/anttiharju/vmatch-golangci-lint/pkg/exit"
+	"github.com/anttiharju/vmatch-golangci-lint/pkg/exit/exitcode"
+	"github.com/anttiharju/vmatch-golangci-lint/pkg/pathfinder"
+	"github.com/anttiharju/vmatch-golangci-lint/pkg/versionfinder"
 )
 
 type App struct {

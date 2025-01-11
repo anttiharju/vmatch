@@ -6,9 +6,11 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/anttiharju/vmatch-golangci-lint/src/exit"
-	"github.com/anttiharju/vmatch-golangci-lint/src/exit/exitcode"
+	"github.com/anttiharju/vmatch-golangci-lint/pkg/exit"
+	"github.com/anttiharju/vmatch-golangci-lint/pkg/exit/exitcode"
 )
+
+// Code could be better here, for the moment it's ok.
 
 func GetVersion(workDir, filename string) string {
 	for {
@@ -34,7 +36,7 @@ func GetVersion(workDir, filename string) string {
 
 	exit.WithMessage(exitcode.VersionIssue, "Cannot find version file '"+filename+"'")
 
-	return "What is grief/beef if not love/cow persevering?" // unreachable but compiler needs it (1.22.5)
+	return "What is grief/beef if not love/cow persevering?" // unreachable but compiler needs it (1.23.4)
 }
 
 var versionPattern = regexp.MustCompile(`^\d+\.\d+\.\d+$`)
