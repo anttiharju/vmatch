@@ -1,3 +1,3 @@
-# vMatch golangci-lint
+# vmatch-golangci-lint
 
-Work in progress.
+See [docs](./docs/README.md) for usage.
