@@ -37,7 +37,6 @@ runs:
         GH_TOKEN: ${{ github.token }}
       run: gh release create "$tag" --title="$title" --generate-notes --draft
     - name: Upload binary to draft
-      working-directory: bin
       shell: sh
       env:
         tag: ${{ steps.tagger.outputs.tag }}
