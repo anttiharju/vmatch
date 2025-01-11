@@ -8,6 +8,7 @@ runs:
       uses: actions/setup-go@v5
       with:
         go-version-file: 'go.mod'
+        cache: false # To suppress warning about 'missing' go sum
     - name: Build binary
       shell: sh
       run: make build
@@ -16,3 +17,9 @@ runs:
       with:
         name: vmatch-golangci-lint-${{ runner.os }}-${{ runner.arch }}
         path: bin/vmatch-golangci-lint
+    - name: Create a tag
+      shell: sh
+      run: |
+        SHA=$(git rev-parse --short HEAD)
+        git tag "$SHA"
+        git push origin "$SHA"
