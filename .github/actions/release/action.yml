@@ -24,7 +24,7 @@ runs:
       shell: sh
       run: |
         TITLE="0-alpha-$(git rev-parse --short HEAD)"
-        TAG="v0-alpha-$(git rev-parse --short HEAD)"
+        TAG="v$TITLE"
         git tag "$TAG"
         git push origin "$TAG"
         echo "tag=$TAG" >> "$GITHUB_OUTPUT"
