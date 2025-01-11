@@ -1,0 +1,19 @@
+name: Main Push
+on:
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    name: Test
+    uses: ./.github/workflows/test.yml
+
+  release:
+    name: Release
+    needs: test
+    runs-on: macos-15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Release
+        uses: ./.github/actions/release
