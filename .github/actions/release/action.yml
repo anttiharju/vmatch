@@ -21,17 +21,29 @@ runs:
       id: tagger
       shell: sh
       run: |
+        TITLE="0-alpha-$(git rev-parse --short HEAD)"
         TAG="v0-alpha-$(git rev-parse --short HEAD)"
         git tag "$TAG"
         git push origin "$TAG"
         echo "tag=$TAG" >> "$GITHUB_OUTPUT"
-    - name: Create a release
-      shell: bash
+        echo "title=$TITLE" >> "$GITHUB_OUTPUT"
+    - name: Create a release draft
+      shell: sh
+      env:
+        tag: ${{ steps.tagger.outputs.tag }}
+        title: ${{ steps.tagger.outputs.title }}
+        GH_TOKEN: ${{ github.token }}
+      run: gh release create "$tag" --title="$title" --generate-notes --draft
+    - name: Upload binary to draft
+      working-directory: bin
+      shell: sh
       env:
         tag: ${{ steps.tagger.outputs.tag }}
         GH_TOKEN: ${{ github.token }}
-      run: |
-        gh release create "$tag" \
-          --repo="$GITHUB_REPOSITORY" \
-          --title="${GITHUB_REPOSITORY#*/} ${tag#v}" \
-          --generate-notes
+      run: gh release upload "$tag" vmatch-golangci-lint
+    - name: Promote draft to a release
+      shell: sh
+      env:
+        tag: ${{ steps.tagger.outputs.tag }}
+        GH_TOKEN: ${{ github.token }}
+      run: gh release edit "$tag" --draft=false --latest
