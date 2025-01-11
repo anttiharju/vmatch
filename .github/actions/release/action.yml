@@ -18,8 +18,19 @@ runs:
         name: vmatch-golangci-lint-${{ runner.os }}-${{ runner.arch }}
         path: bin/vmatch-golangci-lint
     - name: Create a tag
+      id: tagger
       shell: sh
       run: |
-        SHA=$(git rev-parse --short HEAD)
-        git tag "$SHA"
-        git push origin "$SHA"
+        TAG="v0-alpha-$(git rev-parse --short HEAD)"
+        git tag "$TAG"
+        git push origin "$TAG"
+        echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+    - name: Create a release
+      shell: bash
+      env:
+        tag: ${{ steps.tagger.outputs.tag }}
+      run: |
+        gh release create "$tag" \
+          --repo="$GITHUB_REPOSITORY" \
+          --title="${GITHUB_REPOSITORY#*/} ${tag#v}" \
+          --generate-notes
