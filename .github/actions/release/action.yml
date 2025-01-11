@@ -16,7 +16,7 @@ runs:
         OS: ${{ runner.os }}
         ARCH: ${{ runner.arch }}
       run: |
-        NEW_NAME="$binary-$OS-$ARCH"
+        NEW_NAME="$BIN-$OS-$ARCH"
         mv "$BIN" "$NEW_NAME"
         echo "BIN=$NEW_NAME" >> "$GITHUB_OUTPUT"
     - name: Create a tag
