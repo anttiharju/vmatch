@@ -45,4 +45,7 @@ simple-benchmark:
 	@time /Users/antti/go/bin/golangci-lint version
 	@time ./bin/$(APP_NAME) version
 
-.PHONY: setup install-hooks install-lint ci shellcheck lint lint-fix build run rerun clean copy-path
+test:
+	@VERSION=$(GOLANGCI-LINT_VERSION) ./scripts/test.sh
+
+.PHONY: setup install-hooks install-lint ci shellcheck lint lint-fix build run rerun clean copy-path simple-benchmark test
