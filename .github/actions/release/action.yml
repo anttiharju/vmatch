@@ -1,22 +1,24 @@
 name: Release
 description: 'Release a binary'
+inputs:
+  binary:
+    description: 'path to the binary to release'
+    required: true
 
 runs:
   using: 'composite'
   steps:
-    - name: Setup Go
-      uses: actions/setup-go@v5
-      with:
-        go-version-file: 'go.mod'
-        cache: false # To suppress warning about 'missing' go sum
-    - name: Build binary
+    - name: Append os and arch to binary
+      id: rename
       shell: sh
-      run: make build
-    - name: Upload artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: vmatch-golangci-lint-${{ runner.os }}-${{ runner.arch }}
-        path: bin/vmatch-golangci-lint
+      env:
+        BIN: ${{ inputs.binary }}
+        OS: ${{ runner.os }}
+        ARCH: ${{ runner.arch }}
+      run: |
+        NEW_NAME="$binary-$OS-$ARCH"
+        mv "$BIN" "$NEW_NAME"
+        echo "BIN=$NEW_NAME" >> "$GITHUB_OUTPUT"
     - name: Create a tag
       id: tagger
       shell: sh
@@ -40,7 +42,8 @@ runs:
       env:
         tag: ${{ steps.tagger.outputs.tag }}
         GH_TOKEN: ${{ github.token }}
-      run: gh release upload "$tag" vmatch-golangci-lint
+        BIN: ${{ steps.rename.outputs.BIN }}
+      run: gh release upload "$tag" "$BIN"
     - name: Promote draft to a release
       shell: sh
       env:
