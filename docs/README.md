@@ -33,7 +33,7 @@ Also currently it's only built for Apple Silicon -based macOS. The homebrew form
 Install with
 
 ```sh
-brew install anttiharju/packages/vmatch-golangci-lint
+brew install anttiharju/pkg/vmatch-golangci-lint
 ```
 
 Instead of calling golangci-lint, call vmatch-golangci-lint. And have a `.golangci-version` file as outlined above.
