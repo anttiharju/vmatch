@@ -1,4 +1,4 @@
-# vmatch
+# vMatch
 
 ## What is this?
 
@@ -33,7 +33,7 @@ Also currently it's only built for Apple Silicon -based macOS. The homebrew form
 Install with
 
 ```sh
-brew install anttiharju/app/vmatch-golangci-lint
+brew install anttiharju/tap/vmatch-golangci-lint
 ```
 
 Instead of calling golangci-lint, call vmatch-golangci-lint. And have a `.golangci-version` file as outlined above.

@@ -18,3 +18,29 @@ jobs:
     steps:
       - name: Release
         uses: anttiharju/actions/release@v0
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: "go.mod"
+          cache: false # To suppress warning about 'missing' go sum
+      - name: Extract details
+        id: extract-details
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo "homepage=$(gh api repos/${{ github.repository }} --jq .homepage)" >> "$GITHUB_OUTPUT"
+          echo "url=$(gh api repos/${{ github.repository }}/releases/latest --jq .tarball_url)" >> "$GITHUB_OUTPUT"
+          echo "go_version=$(go list -m -f '{{.GoVersion}}')" >> "$GITHUB_OUTPUT"
+    outputs:
+      homepage: ${{ steps.extract-details.outputs.homepage }}
+      url: ${{ steps.extract-details.outputs.url }}
+      go_version: ${{ steps.extract-details.outputs.go_version }}
+
+  update-homebrew-tap:
+    name: Update Homebrew Tap
+    needs: release
+    uses: anttiharju/homebrew-tap/.github/workflows/vmatch.yml@main
+    with:
+      homepage: ${{ needs.release.outputs.homepage }}
+      url: ${{ needs.release.outputs.url }}
+      go_version: ${{ needs.release.outputs.go_version }}
