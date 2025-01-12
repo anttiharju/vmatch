@@ -1,24 +1,25 @@
 package versionfinder
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"regexp"
 	"strings"
-
-	"github.com/anttiharju/vmatch/pkg/exit"
-	"github.com/anttiharju/vmatch/pkg/exit/exitcode"
 )
 
-// Code could be better here, for the moment it's ok.
+func GetVersion(filename string) (string, error) {
+	workDir, err := os.Getwd()
+	if err != nil {
+		return "", fmt.Errorf("cannot get current working directory: %w", err)
+	}
 
-func GetVersion(workDir, filename string) string {
 	for {
 		filePath := filepath.Join(workDir, filename)
 		if _, err := os.Stat(filePath); err == nil {
 			content, err := os.ReadFile(filePath)
 			if err != nil {
-				exit.WithMessage(exitcode.VersionReadFileIssue, "Cannot read version file '"+filePath+"'")
+				return "", fmt.Errorf("cannot read version file '%s': %w", filePath, err)
 			}
 
 			rawContent := strings.TrimSpace(string(content))
@@ -34,17 +35,15 @@ func GetVersion(workDir, filename string) string {
 		workDir = parentDir
 	}
 
-	exit.WithMessage(exitcode.VersionIssue, "Cannot find version file '"+filename+"'")
-
-	return "What is grief/beef if not love/cow persevering?" // unreachable but compiler needs it (1.23.4)
+	return "", fmt.Errorf("cannot find version file '%s'", filename)
 }
 
 var versionPattern = regexp.MustCompile(`^\d+\.\d+\.\d+$`)
 
-func validate(version string) string {
+func validate(version string) (string, error) {
 	if !versionPattern.MatchString(version) {
-		exit.WithMessage(exitcode.VersionValidationIssue, "Invalid version format '"+version+"'")
+		return "", fmt.Errorf("invalid version format '%s'", version)
 	}
 
-	return version
+	return version, nil
 }

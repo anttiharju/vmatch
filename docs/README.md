@@ -33,7 +33,7 @@ Also currently it's only built for Apple Silicon -based macOS. The homebrew form
 Install with
 
 ```sh
-brew install anttiharju/app/vmatch
+brew install anttiharju/app/vmatch-golangci-lint
 ```
 
 Instead of calling golangci-lint, call vmatch-golangci-lint. And have a `.golangci-version` file as outlined above.
@@ -51,9 +51,3 @@ A `.vscode/settings.json` for integrating vmatch-golangci-lint would have the fo
   }
 }
 ```
-
-## Final words
-
-This project was less about producing perfect Go code but more about getting the necessary infrastructure in place to distribute a nontrivial application via homebrew.
-
-Currently it's mostly for personal use. Others may find it useful too but I haven't put in the effort to start recommending this for others.

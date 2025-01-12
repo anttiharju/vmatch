@@ -13,4 +13,5 @@ const (
 	CmdStartIssue
 	CmdWaitIssue
 	UserHomeDirIssue
+	InstallPathIssue
 )
