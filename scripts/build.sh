@@ -1,13 +1,15 @@
-#!/usr/bin/env dash
+#!/usr/bin/env sh
 set -eu
 
-ROOT=$(pwd)
-mkdir -p "$ROOT/bin"
-go build \
-	-C cmd/vmatch-golangci-lint \
-	-ldflags \
-	"-s
-	-w
-	-buildid=
-	-X github.com/anttiharju/vmatch/pkg/exit.appName=$APP_NAME" \
-	-o "$ROOT/bin/$APP_NAME"
+BUILD_PREFIX="${BUILD_PREFIX:-sh}"
+
+SHA=$(git rev-parse HEAD)
+if [ -n "$(git status --porcelain)" ]; then
+  BUILDID="$SHA-dirty"
+else
+  BUILDID="$SHA"
+fi
+
+# build id can be extracted from a binary with
+# go tool buildid $APP_NAME
+go build -C cmd/"$APP_NAME" -ldflags "-s -w -buildid=$BUILD_PREFIX-$BUILDID -X github.com/anttiharju/vmatch/pkg/exit.appName=$APP_NAME" -o "$(pwd)/$APP_NAME"

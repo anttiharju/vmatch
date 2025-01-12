@@ -19,8 +19,7 @@ type App struct {
 
 func NewApp(versionFileName string) *App {
 	desiredVersion := versionfinder.GetVersion(pathfinder.GetWorkDir(), versionFileName)
-	ps := string(os.PathSeparator)
-	installPath := pathfinder.GetBinDir() + ps + "v" + ps + desiredVersion
+	installPath := pathfinder.GetInstallPath(desiredVersion)
 
 	return &App{
 		desiredVersion: desiredVersion,

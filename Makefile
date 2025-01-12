@@ -4,9 +4,7 @@ SHELL := sh
 MAKEFLAGS += --warn-undefined-variables
 
 GOLANGCI-LINT_VERSION=$(shell cat .golangci-version)
-GOLANGCI-LINT_INSTALL_DIR=$(shell pwd)/bin/v/$(GOLANGCI-LINT_VERSION)
-
-APP_NAME=vmatch-golangci-lint
+GOLANGCI-LINT_INSTALL_DIR=~/.vmatch/golangci-lint/v$(GOLANGCI-LINT_VERSION)
 
 setup: install_hooks install_lint
 
@@ -23,6 +21,6 @@ lint-fix:
 	@$(GOLANGCI-LINT_INSTALL_DIR)/golangci-lint run --fix
 
 build:
-	@APP_NAME=$(APP_NAME) scripts/build.sh
+	@BUILD_PREFIX=make APP_NAME=vmatch-golangci-lint scripts/build.sh
 
 .PHONY: setup install_hooks install_lint lint lint-fix build

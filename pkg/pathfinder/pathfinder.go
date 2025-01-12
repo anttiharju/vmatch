@@ -8,6 +8,23 @@ import (
 	"github.com/anttiharju/vmatch/pkg/exit/exitcode"
 )
 
+func GetInstallPath(version string) string {
+	homeDir := GetHomeDir()
+	ps := string(os.PathSeparator)
+	installPath := homeDir + ps + ".vmatch" + ps + "golangci-lint" + ps + "v" + version
+
+	return installPath
+}
+
+func GetHomeDir() string {
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		exit.WithMessage(exitcode.UserHomeDirIssue, "Cannot get user home directory")
+	}
+
+	return homeDir
+}
+
 func GetBinDir() string {
 	binPath := getBin()
 	binDir := binPath[:strings.LastIndex(binPath, string(os.PathSeparator))]

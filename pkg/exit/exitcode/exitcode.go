@@ -12,4 +12,5 @@ const (
 	VersionValidationIssue
 	CmdStartIssue
 	CmdWaitIssue
+	UserHomeDirIssue
 )
