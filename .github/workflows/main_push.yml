@@ -36,8 +36,8 @@ jobs:
       url: ${{ steps.extract-details.outputs.url }}
       go_version: ${{ steps.extract-details.outputs.go_version }}
 
-  update-homebrew-tap:
-    name: Update Homebrew Tap
+  homebrew-tap:
+    name: Homebrew tap
     needs: release
     uses: anttiharju/homebrew-tap/.github/workflows/vmatch.yml@main
     with:
