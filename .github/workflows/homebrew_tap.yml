@@ -26,7 +26,8 @@ jobs:
     name: Update vMatch formulas
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/create-github-app-token@v1
+      - name: Generate commit token
+        uses: actions/create-github-app-token@v1
         id: generate-token
         with:
           app-id: ${{ secrets.AUTOMATION_APP_ID }}
@@ -57,4 +58,7 @@ jobs:
       - name: Commit changes
         uses: anttiharju/actions/commit-changes@v0
         with:
-          message: "Update vMatch formulas to ${{ steps.extract-version.outputs.version }}"
+          message: |
+            Update vMatch formulas to ${{ steps.extract-version.outputs.version }}
+
+            https://github.com/anttiharju/vmatch/blob/main/.github/workflows/homebrew_tap.yml
