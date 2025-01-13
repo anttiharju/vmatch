@@ -14,11 +14,12 @@ jobs:
           go-version-file: "go.mod"
           cache: false # To suppress warning about 'missing' go sum
       - name: Get golangci-lint version
-        run: .github/scripts/golangci-lint-version.sh
+        id: get-version
+        run: echo "golangci-lint=v$(cat .golangci-version)" >> "$GITHUB_OUTPUT"
       - name: Run golangci-lint
         uses: golangci/golangci-lint-action@v6
         with:
-          version: ${{ env.GOLANGCI_LINT_VERSION }}
+          version: ${{ steps.get-version.outputs.golangci-lint }}
 
   shellcheck:
     runs-on: ubuntu-24.04
