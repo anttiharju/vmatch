@@ -61,4 +61,4 @@ jobs:
           message: |
             Update vMatch formulas to ${{ steps.extract-version.outputs.version }}
 
-            https://github.com/anttiharju/vmatch/blob/main/.github/workflows/homebrew_tap.yml
+            https://github.com/anttiharju/vmatch/blob/${{ github.sha }}/.github/workflows/homebrew_tap.yml
