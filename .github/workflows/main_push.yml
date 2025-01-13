@@ -28,9 +28,11 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          echo "homepage=$(gh api repos/${{ github.repository }} --jq .homepage)" >> "$GITHUB_OUTPUT"
-          echo "url=$(gh api repos/${{ github.repository }}/releases/latest --jq .tarball_url)" >> "$GITHUB_OUTPUT"
-          echo "go_version=$(go list -m -f '{{.GoVersion}}')" >> "$GITHUB_OUTPUT"
+          {
+            echo "homepage=$(gh api repos/${{ github.repository }} --jq .homepage)"
+            echo "url=$(gh api repos/${{ github.repository }}/releases/latest --jq .tarball_url)"
+            echo "go_version=$(go list -m -f '{{.GoVersion}}')"
+          } >> "$GITHUB_OUTPUT"
     outputs:
       homepage: ${{ steps.extract-details.outputs.homepage }}
       url: ${{ steps.extract-details.outputs.url }}
@@ -39,7 +41,7 @@ jobs:
   homebrew-tap:
     name: Homebrew tap
     needs: release
-    uses: anttiharju/homebrew-tap/.github/workflows/vmatch.yml@main
+    uses: ./.github/workflows/homebrew_tap.yml
     with:
       homepage: ${{ needs.release.outputs.homepage }}
       url: ${{ needs.release.outputs.url }}
