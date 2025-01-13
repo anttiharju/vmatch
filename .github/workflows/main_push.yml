@@ -38,6 +38,7 @@ jobs:
         with:
           app-id: ${{ secrets.AUTOMATION_APP_ID }}
           private-key: ${{ secrets.AUTOMATION_APP_PRIVATE_KEY }}
+          owner: anttiharju
           repositories: anttiharju/homebrew-tap
     outputs:
       homepage: ${{ steps.extract-details.outputs.homepage }}
