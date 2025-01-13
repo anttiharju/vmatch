@@ -46,3 +46,5 @@ jobs:
       homepage: ${{ needs.release.outputs.homepage }}
       url: ${{ needs.release.outputs.url }}
       go_version: ${{ needs.release.outputs.go_version }}
+    secrets:
+      HOMEBREW_TOKEN: ${{ secrets.HOMEBREW_TOKEN }}

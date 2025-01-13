@@ -12,6 +12,9 @@ on:
       go_version:
         required: true
         type: string
+    secrets:
+      HOMEBREW_TOKEN:
+        required: true
 
 permissions:
   contents: write
