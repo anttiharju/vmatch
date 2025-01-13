@@ -33,18 +33,10 @@ jobs:
             echo "url=$(gh api repos/${{ github.repository }}/releases/latest --jq .tarball_url)"
             echo "go_version=$(go list -m -f '{{.GoVersion}}')"
           } >> "$GITHUB_OUTPUT"
-      - uses: actions/create-github-app-token@v1
-        id: generate-token
-        with:
-          app-id: ${{ secrets.AUTOMATION_APP_ID }}
-          private-key: ${{ secrets.AUTOMATION_APP_PRIVATE_KEY }}
-          owner: anttiharju
-          repositories: homebrew-tap
     outputs:
       homepage: ${{ steps.extract-details.outputs.homepage }}
       url: ${{ steps.extract-details.outputs.url }}
       go_version: ${{ steps.extract-details.outputs.go_version }}
-      token: ${{ steps.generate-token.outputs.token }}
 
   homebrew-tap:
     name: Homebrew tap
@@ -54,5 +46,4 @@ jobs:
       homepage: ${{ needs.release.outputs.homepage }}
       url: ${{ needs.release.outputs.url }}
       go_version: ${{ needs.release.outputs.go_version }}
-    secrets:
-      token: ${{ needs.release.outputs.token }}
+    secrets: inherit

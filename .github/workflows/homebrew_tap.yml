@@ -13,7 +13,9 @@ on:
         required: true
         type: string
     secrets:
-      token:
+      AUTOMATION_APP_ID:
+        required: true
+      AUTOMATION_APP_PRIVATE_KEY:
         required: true
 
 permissions:
@@ -24,12 +26,17 @@ jobs:
     name: Update vMatch formulas
     runs-on: ubuntu-24.04
     steps:
+      - uses: actions/create-github-app-token@v1
+        id: generate-token
+        with:
+          app-id: ${{ secrets.AUTOMATION_APP_ID }}
+          private-key: ${{ secrets.AUTOMATION_APP_PRIVATE_KEY }}
+          repositories: homebrew-tap
       - name: Checkout
         uses: actions/checkout@v4
         with:
           repository: anttiharju/homebrew-tap
-          token: ${{ secrets.token }}
-
+          token: ${{ steps.generate-token.outputs.token }}
       - name: Render vmatch-golangci-lint formula
         env:
           TEMPLATE: Go
@@ -39,7 +46,6 @@ jobs:
           URL: ${{ inputs.url }}
           GO_VERSION: ${{ inputs.go_version }}
         run: scripts/render.py
-
       # Format is assummed to be
       # https://api.github.com/repos/anttiharju/vmatch/tarball/build6
       # where "build6" is the version
@@ -48,7 +54,6 @@ jobs:
         env:
           url: ${{ inputs.url }}
         run: echo "version=$(basename "$url")" >> "$GITHUB_OUTPUT"
-
       - name: Commit changes
         uses: anttiharju/actions/commit-changes@v0
         with:
