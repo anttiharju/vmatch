@@ -47,7 +47,6 @@ jobs:
           homepage: ${{ inputs.homepage }}
           url: ${{ inputs.url }}
           go-version: ${{ inputs.go-version }}
-          workspace: ${{ github.workspace }}
       - name: Extract version from url
         id: extract-version
         env:
