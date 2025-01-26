@@ -1,34 +1,41 @@
-# vMatch
+# vmatch-golangci-lint
 
-## What is this?
+## What?
 
 A wrapper that automatically calls the golangci-lint version matching your project.
 
-## How does it know the right version?
+## How?
 
-It read a file with the name `.golangci-version`. The version format is as follows:
+It traverses filesystem upwards until it finds the file `.golangci-version` with the following format:
 
 ```
 1.63.4
 ```
 
-A good place to place it is at your repo root. You could also have one at your home or file system root. It keeps traversing up to find one and errors out if it doesn't.
+Good place to have the version file is your git repo root.
 
-## Why did you make this?
+It installs the right golangci-lint version using the [Binaries](https://golangci-lint.run/welcome/install/#binaries) install method. Binaries are stored under `~` like this:
 
-To prevent people from being confused why their machines complain about different issues in code reviews.
+```
+.vmatch
+└── golangci-lint
+    └── v1.63.4
+        └── golangci-lint
+```
 
-The confusion stems from different versions of golangci-lint producing different errors.
+## Why?
 
-## What caveats does it have?
+I saw mismatching linter versions causing confusion in a team so I thought to automate it.
 
-It doesn't manage Go for you. Go version also affects golangci-lint output, the intention is to add a wrapper for Go as well.
+## Caveats?
 
-It needs to be acknowledged that automatically managing tools is a bit spooky, so tools such as https://flox.dev may be better solutions to the problem I'm trying to solve. Although I haven't tested how dynamic flox environments are, do they need reactivation in case the manifest changes when switching between branches.
+- It could be more secure (pin install script to a sha)
+- It doesn't manage Go for you. As the Go version affects golangci-lint output, the golangci-lint version management isn't as automated as it could be.
+  - One option would be to infer sane default from the Go version in `go.mod`
+  - Another would be making a supporting wrapper for Go, `vmatch-go`
+    - **But overall, a better approach is probably something Nix-based.**
 
-Also currently it's only built for Apple Silicon -based macOS. The homebrew formula might work for more operating systems, but I haven't tested that.
-
-## How do I use it?
+## Usage?
 
 Install with
 
@@ -38,9 +45,7 @@ brew install anttiharju/tap/vmatch-golangci-lint
 
 Instead of calling golangci-lint, call vmatch-golangci-lint. And have a `.golangci-version` file as outlined above.
 
-Main use case I was thinking about when developing this was VS Code integration. You can enable it as outlined [here](https://golangci-lint.run/welcome/integrations/#go-for-visual-studio-code). Although please don't commit the `.vscode/settings.json` into version control, people have individualised preferences.
-
-A `.vscode/settings.json` for integrating vmatch-golangci-lint would have the following:
+For VS Code, this can be done with a `.vscode/settings.json` file like the one below:
 
 ```json
 {
@@ -51,3 +56,12 @@ A `.vscode/settings.json` for integrating vmatch-golangci-lint would have the fo
   }
 }
 ```
+
+For more documentation on VS Code integration, refer here [here](https://golangci-lint.run/welcome/integrations/#go-for-visual-studio-code).
+
+## Learnings
+
+1. How to distribute software via Homebrew
+2. How to automate the release process with GitHub App tokens
+   - What GitHub Apps can't do and where a service account may be appropriate
+3. More about composite actions, as I created a few in my actions monorepo
