@@ -9,7 +9,7 @@ on:
       url:
         required: true
         type: string
-      go_version:
+      go-version:
         required: true
         type: string
     secrets:
@@ -38,18 +38,15 @@ jobs:
         with:
           repository: anttiharju/homebrew-tap
           token: ${{ steps.generate-token.outputs.token }}
-      - name: Render vmatch-golangci-lint formula
-        env:
-          TEMPLATE: Go
-          APP_NAME: vmatch-golangci-lint
-          DESCRIPTION: Wrapper that automatically calls the golangci-lint version matching your project
-          HOMEPAGE: ${{ inputs.homepage }}
-          URL: ${{ inputs.url }}
-          GO_VERSION: ${{ inputs.go_version }}
-        run: scripts/render.py
-      # Format is assummed to be
-      # https://api.github.com/repos/anttiharju/vmatch/tarball/build6
-      # where "build6" is the version
+      - name: Render formula
+        uses: anttiharju/actions/render-formula@v0
+        with:
+          template: Go
+          app-name: vmatch-golangci-lint
+          description: Wrapper that automatically calls the golangci-lint version matching your project
+          homepage: ${{ inputs.homepage }}
+          url: ${{ inputs.url }}
+          go-version: ${{ inputs.go-version }}
       - name: Extract version from url
         id: extract-version
         env:
