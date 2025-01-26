@@ -24,8 +24,5 @@ go.work.sum
 # env file
 .env
 
-# Binary
+# make build output
 vmatch-golangci-lint
-
-# Editor config
-.vscode/settings.json

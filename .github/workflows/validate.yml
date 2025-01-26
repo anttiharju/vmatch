@@ -21,10 +21,15 @@ jobs:
         with:
           version: ${{ steps.get-version.outputs.golangci-lint }}
 
-  shellcheck:
+  build:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Run shellcheck
-        run: scripts/shellcheck.sh
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: "go.mod"
+          cache: false # To suppress warning about 'missing' go sum
+      - name: Build binary
+        run: make build

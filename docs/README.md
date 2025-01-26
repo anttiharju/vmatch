@@ -29,11 +29,32 @@ I saw mismatching linter versions causing confusion in a team so I thought to au
 
 ## Caveats?
 
-- It could be more secure (pin install script to a sha)
-- It doesn't manage Go for you. As the Go version affects golangci-lint output, the golangci-lint version management isn't as automated as it could be.
-  - One option would be to infer sane default from the Go version in `go.mod`
-  - Another would be making a supporting wrapper for Go, `vmatch-go`
-    - **But overall, a better approach is probably something Nix-based.**
+### Go version is unmanaged
+
+`vmatch-golangci-lint` does not manage Go versions. As the installed Go version affects golangci-lint output, the golangci-lint version matching is not as automated as it could be.
+
+A solution to this could be to implement another wrapper for Go, `vmatch-go`. But this bring up another issue:
+
+### vMatch does not want to cause visible changes in repositories that use it
+
+Currently, integrating `vmatch-golangci-lint` into for example VS Code should not end up in version control. But should `vmatch-go` be implemented, it would definitely be visible in tracked files with the current wrapping approach.
+
+There are better ways to "replace" binaries, one way is for example to "use bash aliases or functions in your profile" as described [\[1\]](https://scriptingosx.com/2017/05/where-paths-come-from/), which further refers to [\[2\]](https://scriptingosx.com/2017/05/configuring-bash-with-aliases-and-functions/)
+
+The problem with said approach is, that it introduces additional complexity [managing shell aliases/functions], which is somewhat undesired. TBD
+
+## Todo
+
+- Wrapper-specific cli (with --, and use an actual library)
+  - Include an actual test in the brew formula
+- Also manage Go versions
+- For now focus is on Apple Silicon macbooks but cross-platform is more or less required for more serious usage.
+
+### Lack of tests
+
+Currently there's not too much code and the overall direction of the project is still quite open.
+
+Once the project is defined feature-complete, writing automated tests (covering all platforms) would be essential for long-term maintenance.
 
 ## Usage?
 
@@ -63,5 +84,5 @@ For more documentation on VS Code integration, refer here [here](https://golangc
 
 1. How to distribute software via Homebrew
 2. How to automate the release process with GitHub App tokens
-   - What GitHub Apps can't do and where a service account may be appropriate
+   - Also learned that GitHub Apps can't enable automerge, and this is the place where service accounts would be appropriate.
 3. More about composite actions, as I created a few in my actions monorepo
