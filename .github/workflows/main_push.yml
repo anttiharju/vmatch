@@ -1,7 +1,7 @@
 name: Main Push
 on:
   push:
-    branches: [main]
+    branches: main
 
 permissions:
   contents: write
