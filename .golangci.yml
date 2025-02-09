@@ -89,7 +89,7 @@ linters:
     # https://peter.bourgon.org/blog/2017/06/09/theory-of-modern-go.html
     - gochecknoglobals
     - gochecknoinits
-    # use make lint-fix
+    # run with --fix
     - gofmt
     - gofumpt
     - goimports

@@ -35,7 +35,7 @@ I saw mismatching linter versions causing confusion in a team so I thought to au
 
 A solution to this could be to implement another wrapper for Go, `vmatch-go`. But this bring up another issue:
 
-### vMatch does not want to cause visible changes in repositories that use it
+### vmatch does not want to cause visible changes in repositories that use it
 
 Currently, integrating `vmatch-golangci-lint` into for example VS Code should not end up in version control. But should `vmatch-go` be implemented, it would definitely be visible in tracked files with the current wrapping approach.
 

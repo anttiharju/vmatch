@@ -1,0 +1,13 @@
+name: Build
+description: Build a binary with go
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Go
+      uses: actions/setup-go@v5
+      with:
+        go-version-file: "go.mod"
+        cache: false # To suppress warning about 'missing' go sum
+    - shell: sh
+      run: go build

@@ -1,0 +1,14 @@
+name: Lint
+description: Run golangci-lint
+
+runs:
+  using: "composite"
+  steps:
+    - name: Get golangci-lint version
+      id: get-version
+      shell: sh
+      run: echo "golangci-lint=v$(cat .golangci-version)" >> "$GITHUB_OUTPUT"
+    - name: Run golangci-lint
+      uses: golangci/golangci-lint-action@v6
+      with:
+        version: ${{ steps.get-version.outputs.golangci-lint }}

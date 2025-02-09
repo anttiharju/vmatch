@@ -1,0 +1,17 @@
+output:
+  - success
+  - failure
+
+pre-push:
+  jobs:
+    - run: go build
+    - name: golangci-lint
+      glob: "*.go"
+      run: golangci-lint run
+
+pre-commit:
+  jobs:
+    - name: golangci-lint --fast --fix
+      glob: "*.go"
+      run: golangci-lint run --fast --fix {staged_files}
+      stage_fixed: true

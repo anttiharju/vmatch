@@ -16,8 +16,11 @@ jobs:
     needs: validate
     runs-on: ubuntu-24.04
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Release
         uses: anttiharju/actions/release@v0
+
       - name: Setup Go
         uses: actions/setup-go@v5
         with:

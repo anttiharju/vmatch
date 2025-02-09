@@ -3,33 +3,15 @@ on:
   workflow_call:
 
 jobs:
-  golangci-lint:
+  validate:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Setup Go
-        uses: actions/setup-go@v5
-        with:
-          go-version-file: "go.mod"
-          cache: false # To suppress warning about 'missing' go sum
-      - name: Get golangci-lint version
-        id: get-version
-        run: echo "golangci-lint=v$(cat .golangci-version)" >> "$GITHUB_OUTPUT"
-      - name: Run golangci-lint
-        uses: golangci/golangci-lint-action@v6
-        with:
-          version: ${{ steps.get-version.outputs.golangci-lint }}
 
-  build:
-    runs-on: ubuntu-24.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Go
-        uses: actions/setup-go@v5
-        with:
-          go-version-file: "go.mod"
-          cache: false # To suppress warning about 'missing' go sum
-      - name: Build binary
-        run: make build
+      - name: golangci-lint
+        uses: ./.github/actions/lint
+
+      - if: always()
+        name: go build
+        uses: ./.github/actions/build

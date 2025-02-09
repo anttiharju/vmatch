@@ -24,5 +24,5 @@ go.work.sum
 # env file
 .env
 
-# make build output
-vmatch-golangci-lint
+# built binary
+vmatch
