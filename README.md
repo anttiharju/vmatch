@@ -31,13 +31,13 @@ I saw mismatching linter versions causing confusion in a team so I thought to au
 
 ### Go version is unmanaged
 
-`vmatch-golangci-lint` does not manage Go versions. As the installed Go version affects golangci-lint output, the golangci-lint version matching is not as automated as it could be.
+`vmatch` does not manage Go versions. As the installed Go version affects golangci-lint output, the golangci-lint version matching is not as automated as it could be.
 
-A solution to this could be to implement another wrapper for Go, `vmatch-go`. But this bring up another issue:
+A solution to this could be to implement another wrapper for Go, `vmatch -- go`. But this bring up another issue:
 
 ### vmatch does not want to cause visible changes in repositories that use it
 
-Currently, integrating `vmatch-golangci-lint` into for example VS Code should not end up in version control. But should `vmatch-go` be implemented, it would definitely be visible in tracked files with the current wrapping approach.
+Currently, integrating `vmatch` into for example VS Code should not end up in version control. But should `vmatch -- go` be implemented, it would definitely be visible in tracked files with the current wrapping approach.
 
 There are better ways to "replace" binaries, one way is for example to "use bash aliases or functions in your profile" as described [\[1\]](https://scriptingosx.com/2017/05/where-paths-come-from/), which further refers to [\[2\]](https://scriptingosx.com/2017/05/configuring-bash-with-aliases-and-functions/)
 
@@ -63,10 +63,10 @@ Once the project is defined feature-complete, writing automated tests (covering 
 Install with
 
 ```sh
-brew install anttiharju/tap/vmatch-golangci-lint
+brew install anttiharju/tap/vmatch
 ```
 
-Instead of calling golangci-lint, call vmatch-golangci-lint. And have a `.golangci-version` file as outlined above.
+Instead of calling golangci-lint, call vmatch. And have a `.golangci-version` file as outlined above.
 
 For VS Code, this can be done with a `.vscode/settings.json` file like the one below:
 
@@ -75,7 +75,7 @@ For VS Code, this can be done with a `.vscode/settings.json` file like the one b
   "go.lintTool": "golangci-lint",
   "go.lintFlags": ["--fast"],
   "go.alternateTools": {
-    "golangci-lint": "/opt/homebrew/bin/vmatch-golangci-lint"
+    "golangci-lint": "/opt/homebrew/bin/vmatch"
   }
 }
 ```
