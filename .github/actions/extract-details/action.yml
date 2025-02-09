@@ -1,0 +1,40 @@
+name: Extract details
+description: Extracts details for homebrew-tap workflow call
+inputs:
+  github-token:
+    description: "GitHub token for API access"
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Go
+      uses: actions/setup-go@v5
+      with:
+        go-version-file: "go.mod"
+        cache: false # To suppress warning about 'missing' go sum
+    - name: Extract details
+      id: extract-details
+      shell: sh
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+      run: |
+        {
+          url=$(gh api repos/${{ github.repository }}/releases/latest --jq .tarball_url)
+          echo "homepage=$(gh api repos/${{ github.repository }} --jq .homepage)"
+          echo "url=$url"
+          echo "go_version=$(go list -m -f '{{.GoVersion}}')"
+          echo "version=$(basename "$url")"
+        } >> "$GITHUB_OUTPUT"
+outputs:
+  homepage:
+    description: "Repository homepage URL"
+    value: ${{ steps.extract-details.outputs.homepage }}
+  url:
+    description: "Latest release tarball URL" 
+    value: ${{ steps.extract-details.outputs.url }}
+  go_version:
+    description: "Go version from go.mod"
+    value: ${{ steps.extract-details.outputs.go_version }}
+  version:
+    description: "Latest release version"
+    value: ${{ steps.extract-details.outputs.version }}

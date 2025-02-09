@@ -1,0 +1,59 @@
+name: Distribute
+
+on:
+  workflow_call:
+    inputs:
+      homepage:
+        required: true
+        type: string
+      url:
+        required: true
+        type: string
+      go-version:
+        required: true
+        type: string
+      version:
+        required: true
+        type: string
+    secrets:
+      AUTOMATION_APP_ID:
+        required: true
+      AUTOMATION_APP_PRIVATE_KEY:
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  homebrew-tap:
+    name: Homebrew tap
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Generate commit token
+        uses: actions/create-github-app-token@v1
+        id: generate-token
+        with:
+          app-id: ${{ secrets.AUTOMATION_APP_ID }}
+          private-key: ${{ secrets.AUTOMATION_APP_PRIVATE_KEY }}
+          repositories: homebrew-tap
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          repository: anttiharju/homebrew-tap
+          token: ${{ steps.generate-token.outputs.token }}
+      - name: Render formula
+        uses: anttiharju/actions/render-formula@v0
+        with:
+          template: Go
+          app-name: ${{ github.event.repository.name }}
+          description: Wrapper that automatically calls the golangci-lint version matching your project
+          homepage: ${{ inputs.homepage }}
+          url: ${{ inputs.url }}
+          go-version: ${{ inputs.go-version }}
+      - name: Commit changes
+        uses: anttiharju/actions/commit-changes@v0
+        with:
+          message: |
+            Update vmatch formula to ${{ inputs.version }}
+
+            https://github.com/anttiharju/vmatch/blob/${{ github.sha }}/.github/workflows/distribute.yml
