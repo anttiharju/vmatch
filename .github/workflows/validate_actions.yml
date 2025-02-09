@@ -1,23 +1,17 @@
 name: Validate
 on:
-  workflow_call:
+  pull_request:
+    paths:
+      - '.github/**'
 
 jobs:
-  validate:
+  actions:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: golangci-lint
-        uses: ./.github/actions/lint
-
-      - if: always()
-        name: go build
-        uses: ./.github/actions/build
-
-      - if: always()
-        name: actionlint
+      - name: actionlint
         uses: anttiharju/actions/actionlint@v0
 
       - if: always()

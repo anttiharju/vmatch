@@ -10,7 +10,7 @@ permissions:
 jobs:
   validate:
     name: Validate
-    uses: ./.github/workflows/validate.yml
+    uses: ./.github/workflows/validate_vmatch.yml
 
   release:
     name: Release

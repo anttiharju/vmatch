@@ -1,0 +1,17 @@
+name: Validate
+on:
+  workflow_call:
+
+jobs:
+  vmatch:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: golangci-lint
+        uses: ./.github/actions/lint
+
+      - if: always()
+        name: go build
+        uses: ./.github/actions/build

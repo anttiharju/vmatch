@@ -81,10 +81,3 @@ For VS Code, this can be done with a `.vscode/settings.json` file like the one b
 ```
 
 For more documentation on VS Code integration, refer here [here](https://golangci-lint.run/welcome/integrations/#go-for-visual-studio-code).
-
-## Learnings
-
-1. How to distribute software via Homebrew
-2. How to automate the release process with GitHub App tokens
-   - Also learned that GitHub Apps can't enable automerge, and this is the place where service accounts would be appropriate.
-3. More about composite actions, as I created a few in my actions monorepo
