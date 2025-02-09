@@ -4,6 +4,9 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"os/signal"
+
+	"github.com/anttiharju/vmatch/pkg/exitcode"
 )
 
 type wrapperInterface interface {
@@ -19,6 +22,13 @@ type Interface interface {
 
 type BaseWrapper struct {
 	Name string
+}
+
+func (w *BaseWrapper) ExitUpon(signals ...os.Signal) {
+	interruptCh := make(chan os.Signal, 1)
+	signal.Notify(interruptCh, signals...)
+	<-interruptCh
+	w.ExitWithPrintln(exitcode.Interrupt, "Interrupted")
 }
 
 // os.Exit() does not respect defer so it's neat to wrap its usage in methods.

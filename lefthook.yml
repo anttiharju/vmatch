@@ -4,14 +4,12 @@ output:
 
 pre-push:
   jobs:
-    - run: go build
-    - name: golangci-lint
-      glob: "*.go"
-      run: golangci-lint run
+    - name: build
+      run: go build
 
 pre-commit:
   jobs:
-    - name: golangci-lint --fast --fix
+    - name: golangci-lint --fix
       glob: "*.go"
-      run: golangci-lint run --fast --fix {staged_files}
+      run: golangci-lint run --fix
       stage_fixed: true
