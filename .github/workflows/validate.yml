@@ -15,3 +15,11 @@ jobs:
       - if: always()
         name: go build
         uses: ./.github/actions/build
+
+      - if: always()
+        name: actionlint
+        uses: anttiharju/actions/actionlint@v0
+
+      - if: always()
+        name: action-validator
+        uses: anttiharju/actions/action-validator@v0
