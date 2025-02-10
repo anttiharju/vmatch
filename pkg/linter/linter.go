@@ -5,9 +5,10 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"slices"
 
 	"github.com/anttiharju/vmatch/pkg/exitcode"
-	"github.com/anttiharju/vmatch/pkg/versionfinder"
+	"github.com/anttiharju/vmatch/pkg/finder"
 	"github.com/anttiharju/vmatch/pkg/wrapper"
 )
 
@@ -32,7 +33,7 @@ func getInstallPath(version string) (string, error) {
 func NewWrapper(name string) *WrappedLinter {
 	baseWrapper := wrapper.BaseWrapper{Name: name}
 
-	desiredVersion, err := versionfinder.GetVersion(".golangci-version")
+	desiredVersion, err := finder.GetLinterVersion()
 	if err != nil {
 		baseWrapper.ExitWithPrintln(exitcode.VersionReadFileIssue, err.Error())
 	}
@@ -55,6 +56,10 @@ func (w *WrappedLinter) Run(ctx context.Context) int {
 	}
 
 	args := os.Args[1:]
+	if !slices.Contains(args, "--color") {
+		args = append(args, "--color", "always")
+	}
+
 	//nolint:gosec // I don't think a wrapper can avoid G204.
 	linter := exec.Command(w.getGolangCILintPath(), args...)
 	linterOutput, _ := linter.Output()
@@ -73,6 +78,7 @@ func (w *WrappedLinter) noBinary() bool {
 func (w *WrappedLinter) install(_ context.Context) {
 	//nolint:lll // Official binary install command:
 	// curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.59.1
+	// todo: pin to a sha instead of master, but automate updates
 	curl := "curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh"
 	pipe := " | "
 	sh := "sh -s -- -b "

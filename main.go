@@ -4,12 +4,15 @@ import (
 	"context"
 	"os"
 
-	"github.com/anttiharju/vmatch/pkg/linter"
+	"github.com/anttiharju/vmatch/pkg/interrupt"
+	"github.com/anttiharju/vmatch/pkg/picker"
 )
 
 func main() {
-	wrappedLinter := linter.NewWrapper("vmatch-golangci-lint")
-	go wrappedLinter.ExitUpon(os.Interrupt)
-	exitCode := wrappedLinter.Run(context.Background())
-	wrappedLinter.Exit(exitCode)
+	go interrupt.Listen(os.Interrupt)
+
+	ctx := context.Background()
+	exitCode := picker.SelectWrapper(ctx, os.Args[1:])
+
+	os.Exit(exitCode)
 }
