@@ -33,7 +33,7 @@ I saw mismatching linter versions causing confusion in a team so I thought to au
 
 `vmatch` does not manage Go versions. As the installed Go version affects golangci-lint output, the golangci-lint version matching is not as automated as it could be.
 
-A solution to this could be to implement another wrapper for Go, `vmatch -- go`. But this bring up another issue:
+A solution to this could be to implement another wrapper for Go, `vmatch -- go`. But this brings up another issue:
 
 ### vmatch does not want to cause visible changes in repositories that use it
 
@@ -80,4 +80,4 @@ For VS Code, this can be done with a `.vscode/settings.json` file like the one b
 }
 ```
 
-For more documentation on VS Code integration, refer here [here](https://golangci-lint.run/welcome/integrations/#go-for-visual-studio-code).
+For more documentation on VS Code integration, refer to [golangci-lint docs](https://golangci-lint.run/welcome/integrations/#go-for-visual-studio-code).
