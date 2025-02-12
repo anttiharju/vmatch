@@ -50,6 +50,7 @@ jobs:
           homepage: ${{ inputs.homepage }}
           url: ${{ inputs.url }}
           go-version: ${{ inputs.go-version }}
+          version: ${{ inputs.version }}
       - name: Commit changes
         uses: anttiharju/actions/commit-changes@v0
         with:
