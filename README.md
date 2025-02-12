@@ -51,6 +51,7 @@ The problem with said approach is, that it introduces additional complexity [man
 - For now focus is on Apple Silicon macbooks but cross-platform is more or less required for more serious usage.
 - Providing a Docker image might be worthwhile, similar to https://golangci-lint.run/welcome/install/#docker
 - Simplify these docs, currently this is a collection of somewhat random thoughts.
+- Limit version management to only happen under $HOME to not collide with installation scripts (for example homebrew formulas)
 
 ### Lack of tests
 
