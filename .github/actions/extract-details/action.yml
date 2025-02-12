@@ -11,7 +11,7 @@ runs:
       uses: actions/setup-go@v5
       with:
         go-version-file: "go.mod"
-        cache: false # To suppress warning about 'missing' go sum
+        cache: false # To suppress warning about 'missing' go.sum
     - name: Extract details
       id: extract-details
       shell: sh
