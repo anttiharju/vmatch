@@ -14,7 +14,7 @@ It traverses filesystem upwards until it finds the file `.golangci-version` with
 
 Good place to have the version file is your git repo root.
 
-It installs the right golangci-lint version using the [Binaries](https://golangci-lint.run/welcome/install/#binaries) install method. Binaries are stored under `~` like this:
+It installs the right golangci-lint version using the [Binaries](https://golangci-lint.run/welcome/install/#binaries) install method. Binaries are stored under `$HOME` like this:
 
 ```
 .vmatch
@@ -27,37 +27,23 @@ It installs the right golangci-lint version using the [Binaries](https://golangc
 
 I saw mismatching linter versions causing confusion in a team so I thought to automate it.
 
-## Caveats?
-
-### Go version is unmanaged
-
-`vmatch` does not manage Go versions. As the installed Go version affects golangci-lint output, the golangci-lint version matching is not as automated as it could be.
-
-A solution to this could be to implement another wrapper for Go, `vmatch -- go`. But this brings up another issue:
-
-### vmatch does not want to cause visible changes in repositories that use it
-
-Currently, integrating `vmatch` into for example VS Code should not end up in version control. But should `vmatch -- go` be implemented, it would definitely be visible in tracked files with the current wrapping approach.
-
-There are better ways to "replace" binaries, one way is for example to "use bash aliases or functions in your profile" as described [\[1\]](https://scriptingosx.com/2017/05/where-paths-come-from/), which further refers to [\[2\]](https://scriptingosx.com/2017/05/configuring-bash-with-aliases-and-functions/)
-
-The problem with said approach is, that it introduces additional complexity [managing shell aliases/functions], which is somewhat undesired. TBD
-
 ## Todo
 
-- Wrapper-specific cli (with --, and use an actual library)
-  - Include an actual test in the brew formula
-- Also manage Go versions
-- For now focus is on Apple Silicon macbooks but cross-platform is more or less required for more serious usage.
-- Providing a Docker image might be worthwhile, similar to https://golangci-lint.run/welcome/install/#docker
+- doctor subcommand
+  - To be able to include an actual test in the brew formula
+- Work out implications of wrapping go binary
+  - Setup aliases with the brew formula, use advice from [here](https://scriptingosx.com/2017/05/where-paths-come-from/)
+  - Limit version management to only happen under $HOME to not collide with installation scripts (for example homebrew formulas)
+- Distribute to winget (no idea on details)
 - Simplify these docs, currently this is a collection of somewhat random thoughts.
-- Limit version management to only happen under $HOME to not collide with installation scripts (for example homebrew formulas)
+- Automation to be able to do security hardening
+- Dark mode for GitHub pages deployment
 
 ### Lack of tests
 
 Currently there's not too much code and the overall direction of the project is still quite open.
 
-Once the project is defined feature-complete, writing automated tests (covering all platforms) would be essential for long-term maintenance.
+Once the project is deemed feature-complete, writing automated tests (covering all platforms) would be essential for long-term maintenance.
 
 ## Usage?
 

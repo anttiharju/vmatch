@@ -1,28 +1,24 @@
 package picker
 
 import (
-	"context"
-	"fmt"
-	"runtime"
-
-	"github.com/anttiharju/vmatch/pkg/finder"
-	"github.com/anttiharju/vmatch/pkg/linter"
+	"github.com/anttiharju/vmatch/pkg/wrapper/language"
+	"github.com/anttiharju/vmatch/pkg/wrapper/linter"
 )
 
 func firstArgIsGo(args []string) bool {
 	return len(args) > 0 && args[0] == "go"
 }
 
-func SelectWrapper(ctx context.Context, args []string) int {
+func SelectWrapper(args []string) int {
 	if firstArgIsGo(args) {
-		version, _ := finder.GetLangVersion()
-		fmt.Println("https://go.dev/dl/go" + version + "." + runtime.GOOS + "-" + runtime.GOARCH + ".tar.gz")
+		wrappedLanguage := language.Wrap("go")
+		exitCode := wrappedLanguage.Run(args[1:])
 
-		return 0
+		return exitCode
 	}
 
-	wrappedLinter := linter.NewWrapper("vmatch-golangci-lint")
-	exitCode := wrappedLinter.Run(ctx)
+	wrappedLinter := linter.Wrap("golangci-lint")
+	exitCode := wrappedLinter.Run(args)
 
 	return exitCode
 }

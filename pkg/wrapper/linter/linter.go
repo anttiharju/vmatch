@@ -1,11 +1,11 @@
 package linter
 
 import (
-	"context"
 	"fmt"
 	"os"
 	"os/exec"
 	"slices"
+	"strings"
 
 	"github.com/anttiharju/vmatch/pkg/exitcode"
 	"github.com/anttiharju/vmatch/pkg/finder"
@@ -14,56 +14,45 @@ import (
 
 type WrappedLinter struct {
 	wrapper.BaseWrapper
-	desiredVersion string
-	installPath    string
 }
 
-func getInstallPath(version string) (string, error) {
-	homeDir, err := os.UserHomeDir()
-	if err != nil {
-		return "", fmt.Errorf("failed to get install path: %w", err)
-	}
+func linterParser(content []byte) (string, error) {
+	trimmed := strings.TrimSpace(string(content))
 
-	ps := string(os.PathSeparator)
-	installPath := homeDir + ps + ".vmatch" + ps + "golangci-lint" + ps + "v" + version
-
-	return installPath, nil
+	return trimmed, nil
 }
 
-func NewWrapper(name string) *WrappedLinter {
+func Wrap(name string) *WrappedLinter {
 	baseWrapper := wrapper.BaseWrapper{Name: name}
 
-	desiredVersion, err := finder.GetLinterVersion()
+	desiredVersion, err := finder.GetVersion(".golangci-version", linterParser)
 	if err != nil {
 		baseWrapper.ExitWithPrintln(exitcode.VersionReadFileIssue, err.Error())
 	}
 
-	installPath, err := getInstallPath(desiredVersion)
+	err = baseWrapper.GenerateInstallPath(desiredVersion)
 	if err != nil {
 		baseWrapper.ExitWithPrintln(exitcode.InstallPathIssue, err.Error())
 	}
 
 	return &WrappedLinter{
-		BaseWrapper:    baseWrapper,
-		desiredVersion: desiredVersion,
-		installPath:    installPath,
+		BaseWrapper: baseWrapper,
 	}
 }
 
-func (w *WrappedLinter) Run(ctx context.Context) int {
+func (w *WrappedLinter) Run(args []string) int {
 	if w.noBinary() {
-		w.install(ctx)
+		w.install()
 	}
 
-	args := os.Args[1:]
 	if !slices.Contains(args, "--color") {
 		args = append(args, "--color", "always")
 	}
 
 	//nolint:gosec // I don't think a wrapper can avoid G204.
 	linter := exec.Command(w.getGolangCILintPath(), args...)
-	linterOutput, _ := linter.Output()
 
+	linterOutput, _ := linter.CombinedOutput()
 	fmt.Print(string(linterOutput))
 
 	return linter.ProcessState.ExitCode()
@@ -75,14 +64,14 @@ func (w *WrappedLinter) noBinary() bool {
 	return os.IsNotExist(err)
 }
 
-func (w *WrappedLinter) install(_ context.Context) {
-	//nolint:lll // Official binary install command:
-	// curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.59.1
-	// todo: pin to a sha instead of master, but automate updates
+func (w *WrappedLinter) install() {
+	//nolint:lll // Install command example from https://golangci-lint.run/welcome/install/#binaries
+	// curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.59.1
+	// todo: pin to a sha instead of HEAD, but automate updates
 	curl := "curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh"
 	pipe := " | "
 	sh := "sh -s -- -b "
-	command := curl + pipe + sh + w.installPath + " v" + w.desiredVersion
+	command := curl + pipe + sh + w.InstallPath + " v" + w.DesiredVersion
 	cmd := exec.Command("sh", "-c", command)
 
 	err := cmd.Start()
@@ -97,7 +86,7 @@ func (w *WrappedLinter) install(_ context.Context) {
 }
 
 func (w *WrappedLinter) getGolangCILintPath() string {
-	return w.installPath + string(os.PathSeparator) + "golangci-lint"
+	return w.InstallPath + string(os.PathSeparator) + "golangci-lint"
 }
 
 var _ wrapper.Interface = (*WrappedLinter)(nil)

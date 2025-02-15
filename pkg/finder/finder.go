@@ -5,29 +5,27 @@ import (
 	"os"
 	"path/filepath"
 	"regexp"
-	"strings"
 )
 
-func GetLangVersion() (string, error) {
-	const filename = "go.mod"
+type parser func(content []byte) (string, error)
 
-	filePath, err := locateFile(filename)
+func GetVersion(filename string, parse parser) (string, error) {
+	location, err := locateFile(filename)
 	if err != nil {
-		return "", fmt.Errorf("cannot find lang version file '%s': %w", filename, err)
+		return "", fmt.Errorf("cannot find version file '%s': %w", filename, err)
 	}
 
-	return readLangVersion(filePath)
-}
-
-func GetLinterVersion() (string, error) {
-	const filename = ".golangci-version"
-
-	filePath, err := locateFile(filename)
+	content, err := os.ReadFile(location)
 	if err != nil {
-		return "", fmt.Errorf("cannot find linter version file '%s': %w", filename, err)
+		return "", fmt.Errorf("cannot read version file '%s': %w", location, err)
 	}
 
-	return readLinterVersion(filePath)
+	version, err := parse(content)
+	if err != nil {
+		return "", fmt.Errorf("could not parse %s: %w", location, err)
+	}
+
+	return validateVersion(version)
 }
 
 func locateFile(filename string) (string, error) {
@@ -51,36 +49,6 @@ func locateFile(filename string) (string, error) {
 	}
 
 	return "", fmt.Errorf("cannot find version file '%s'", filename)
-}
-
-func readLangVersion(filePath string) (string, error) {
-	content, err := os.ReadFile(filePath)
-	if err != nil {
-		return "", fmt.Errorf("cannot read version file '%s': %w", filePath, err)
-	}
-
-	lines := strings.Split(string(content), "\n")
-	for _, line := range lines {
-		line = strings.TrimSpace(line)
-		if strings.HasPrefix(line, "go ") {
-			trimmed := strings.TrimPrefix(line, "go ")
-
-			return validateVersion(trimmed)
-		}
-	}
-
-	return "", fmt.Errorf("cannot find go version in file '%s'", filePath)
-}
-
-func readLinterVersion(filePath string) (string, error) {
-	content, err := os.ReadFile(filePath)
-	if err != nil {
-		return "", fmt.Errorf("cannot read version file '%s': %w", filePath, err)
-	}
-
-	trimmed := strings.TrimSpace(string(content))
-
-	return validateVersion(trimmed)
 }
 
 var versionPattern = regexp.MustCompile(`^\d+\.\d+\.\d+$`)

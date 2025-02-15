@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"os"
 
 	"github.com/anttiharju/vmatch/pkg/interrupt"
@@ -11,8 +10,6 @@ import (
 func main() {
 	go interrupt.Listen(os.Interrupt)
 
-	ctx := context.Background()
-	exitCode := picker.SelectWrapper(ctx, os.Args[1:])
-
+	exitCode := picker.SelectWrapper(os.Args[1:])
 	os.Exit(exitCode)
 }
