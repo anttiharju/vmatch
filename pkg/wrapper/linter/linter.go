@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"regexp"
 	"slices"
 	"strings"
 
@@ -22,10 +23,20 @@ func linterParser(content []byte) (string, error) {
 	return trimmed, nil
 }
 
+var versionPattern = regexp.MustCompile(`^\d+\.\d+\.\d+$`) // major.minor.patch
+
+func validateVersion(version string) (string, error) {
+	if !versionPattern.MatchString(version) {
+		return "", fmt.Errorf("invalid version format '%s'", version)
+	}
+
+	return version, nil
+}
+
 func Wrap(name string) *WrappedLinter {
 	baseWrapper := wrapper.BaseWrapper{Name: name}
 
-	desiredVersion, err := finder.GetVersion(".golangci-version", linterParser)
+	desiredVersion, err := finder.GetVersion(".golangci-version", linterParser, validateVersion)
 	if err != nil {
 		baseWrapper.ExitWithPrintln(exitcode.VersionReadFileIssue, err.Error())
 	}

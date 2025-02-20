@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"regexp"
 	"runtime"
 	"strings"
 
@@ -31,10 +32,21 @@ func languageParser(content []byte) (string, error) {
 	return "", errors.New("cannot find go version")
 }
 
+// No patch as tools like stringer mandate not having it.
+var versionPattern = regexp.MustCompile(`^\d+\.\d+(?:\.\d+)?$`) // major.minor or major.minor.patch
+
+func validateVersion(version string) (string, error) {
+	if !versionPattern.MatchString(version) {
+		return "", fmt.Errorf("invalid version format '%s'", version)
+	}
+
+	return version, nil
+}
+
 func Wrap(name string) *WrappedLanguage {
 	baseWrapper := wrapper.BaseWrapper{Name: name}
 
-	desiredVersion, err := finder.GetVersion("go.mod", languageParser)
+	desiredVersion, err := finder.GetVersion("go.mod", languageParser, validateVersion)
 	if err != nil {
 		baseWrapper.ExitWithPrintln(exitcode.VersionReadFileIssue, err.Error())
 	}

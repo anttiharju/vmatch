@@ -4,12 +4,13 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"regexp"
 )
 
 type parser func(content []byte) (string, error)
 
-func GetVersion(filename string, parse parser) (string, error) {
+type validator func(version string) (string, error)
+
+func GetVersion(filename string, parse parser, validate validator) (string, error) {
 	location, err := locateFile(filename)
 	if err != nil {
 		return "", fmt.Errorf("cannot find version file '%s': %w", filename, err)
@@ -25,7 +26,7 @@ func GetVersion(filename string, parse parser) (string, error) {
 		return "", fmt.Errorf("could not parse %s: %w", location, err)
 	}
 
-	return validateVersion(version)
+	return validate(version)
 }
 
 func locateFile(filename string) (string, error) {
@@ -49,14 +50,4 @@ func locateFile(filename string) (string, error) {
 	}
 
 	return "", fmt.Errorf("cannot find version file '%s'", filename)
-}
-
-var versionPattern = regexp.MustCompile(`^\d+\.\d+\.\d+$`)
-
-func validateVersion(version string) (string, error) {
-	if !versionPattern.MatchString(version) {
-		return "", fmt.Errorf("invalid version format '%s'", version)
-	}
-
-	return version, nil
 }
