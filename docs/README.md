@@ -71,4 +71,4 @@ For more documentation on VS Code integration, refer to [golangci-lint docs](htt
 
 ## Further reading
 
-RFCs (used as architecture design documents, comments are welcome) are available [here](./RFC/).
+RFCs (used as architecture design documents, comments are welcome) are available [here](./rfc/).
