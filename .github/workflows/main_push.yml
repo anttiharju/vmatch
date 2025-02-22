@@ -49,6 +49,8 @@ jobs:
     name: Distribute
     needs: release
     uses: ./.github/workflows/distribute.yml
+    permissions:
+      contents: write
     with:
       description: ${{ needs.release.outputs.description }}
       homepage: ${{ needs.release.outputs.homepage }}
