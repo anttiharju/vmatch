@@ -40,7 +40,7 @@ outputs:
     description: "Repository homepage URL"
     value: ${{ steps.extract-details.outputs.homepage }}
   url:
-    description: "Latest release tarball URL" 
+    description: "Latest release tarball URL"
     value: ${{ steps.extract-details.outputs.url }}
   go_version:
     description: "Go version from go.mod"

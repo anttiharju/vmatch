@@ -2,14 +2,28 @@ output:
   - success
   - failure
 
+# also update validate.yml
 pre-commit:
   jobs:
-    - run: go build
-    - run: golangci-lint run --fix
-      glob: "*.go"
+    - name: Style
+      run: golangci-lint run --fix
+      glob: "{*.go,.golangci*}"
       stage_fixed: true
-    - name: action-validator
-      run: find ./.github -mindepth 2 -type f -name "*.yml" -exec action-validator --verbose {} +
+
+    - name: Build
+      run: go build
+
+    - name: Docs
+      run: |
+        mkdocs build --strict
+        prettier --write "docs/**/*.md"
+      glob: "{docs/**,mkdocs.yml}"
+      stage_fixed: true
+
+    - name: Actions
+      run: |
+        find ./.github -mindepth 2 -type f -name "*.yml" -exec action-validator --verbose {} +
+        actionlint
+        prettier --write ".github/**/*.{yml,yaml}"
       glob: ".github/**"
-    - run: actionlint
-      glob: ".github/**"
+      stage_fixed: true

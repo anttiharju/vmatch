@@ -2,6 +2,7 @@ name: Validate
 on:
   workflow_call:
 
+# also update lefthook.yml
 jobs:
   project:
     name: Project
@@ -26,5 +27,5 @@ jobs:
         uses: anttiharju/actions/lint-docs@v0
 
       - if: always()
-        name: CI manifests
+        name: Actions
         uses: anttiharju/actions/lint-actions@v0

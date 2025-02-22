@@ -28,16 +28,16 @@ jobs:
           token: ${{ steps.generate-token.outputs.token }}
       - name: Release vmatch
         uses: anttiharju/actions/release@v0
+      - name: Release docs
+        uses: anttiharju/actions/release-docs@v0
+        with:
+          committer: "anttiharju[bot]"
       - name: Get project details
         id: get-project-details
         uses: ./.github/actions/get-project-details
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           cache: false # Suppress warning about a 'missing' go.sum
-      - name: Release docs
-        uses: anttiharju/actions/release-docs@v0
-        with:
-          committer: "anttiharju[bot]"
     outputs:
       description: ${{ steps.get-project-details.outputs.description }}
       homepage: ${{ steps.get-project-details.outputs.homepage }}
