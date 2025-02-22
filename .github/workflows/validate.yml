@@ -1,25 +1,30 @@
-name: vmatch
+name: Validate
 on:
   workflow_call:
 
 jobs:
-  validate:
+  project:
+    name: Project
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: style
+      - name: Style
         uses: anttiharju/actions/lint-go@v0
         with:
           version-file: ".golangci-version"
 
       - if: always()
-        name: build
+        name: Build
         uses: ./.github/actions/build
         with:
           cache: false # Suppress warning about a 'missing' go.sum
 
       - if: always()
-        name: docs
-        uses: anttiharju/actions/validate-docs@v0
+        name: Docs
+        uses: anttiharju/actions/lint-docs@v0
+
+      - if: always()
+        name: CI manifests
+        uses: anttiharju/actions/lint-actions@v0
