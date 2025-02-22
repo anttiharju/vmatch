@@ -68,5 +68,3 @@ For VS Code, this can be done with a `.vscode/settings.json` file like the one b
 ```
 
 For more documentation on VS Code integration, refer to [golangci-lint docs](https://golangci-lint.run/welcome/integrations/#go-for-visual-studio-code).
-
-<!--dummy change to test CI-->

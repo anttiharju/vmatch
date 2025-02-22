@@ -29,13 +29,11 @@ pre-commit:
       stage_fixed: true
 
     - name: Docs
-      run: |
-        mkdocs build --strict
+      run: mkdocs build --strict
       glob: "{docs/*,mkdocs.yml}"
       stage_fixed: true
 
     - name: Prettier
-      run: |
-        npx prettier --write .
+      run: npx prettier --write .
       glob: "*{.md,.yml}"
       stage_fixed: true

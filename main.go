@@ -7,7 +7,6 @@ import (
 	"github.com/anttiharju/vmatch/pkg/picker"
 )
 
-// dummy change to test CI
 func main() {
 	go interrupt.Listen(os.Interrupt)
 
