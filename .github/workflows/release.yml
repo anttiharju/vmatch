@@ -1,0 +1,51 @@
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "pkg/**"
+      - "main.go"
+      - "go.mod"
+
+jobs:
+  validate:
+    name: Validate
+    uses: ./.github/workflows/validate.yml
+
+  release:
+    name: Release
+    needs: validate
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Release vmatch
+        uses: anttiharju/actions/release@v0
+      - name: Get metadata
+        id: get-metadata
+        uses: anttiharju/actions/get-go-metadata@v0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          cache: false # Suppress warning about a 'missing' go.sum
+    outputs:
+      description: ${{ steps.get-metadata.outputs.description }}
+      homepage: ${{ steps.get-metadata.outputs.homepage }}
+      url: ${{ steps.get-metadata.outputs.url }}
+      go_version: ${{ steps.get-metadata.outputs.go_version }}
+      version: ${{ steps.get-metadata.outputs.version }}
+
+  publish:
+    name: Publish
+    needs: release
+    uses: ./.github/workflows/publish.yml
+    permissions:
+      contents: write
+    with:
+      description: ${{ needs.release.outputs.description }}
+      homepage: ${{ needs.release.outputs.homepage }}
+      url: ${{ needs.release.outputs.url }}
+      go-version: ${{ needs.release.outputs.go_version }}
+      version: ${{ needs.release.outputs.version }}
+    secrets: inherit

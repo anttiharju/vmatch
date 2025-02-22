@@ -1,0 +1,30 @@
+# https://anttiharju.dev/vmatch
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "docs/**/*"
+      - "mkdocs.yml"
+
+jobs:
+  update-docs:
+    name: Update docs
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: Generate docs token
+        uses: actions/create-github-app-token@v1
+        id: generate-token
+        with:
+          app-id: ${{ secrets.ANTTIHARJU_BOT_ID }}
+          private-key: ${{ secrets.ANTTIHARJU_BOT_PRIVATE_KEY }}
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ steps.generate-token.outputs.token }}
+      - name: Update docs
+        uses: anttiharju/actions/update-docs@v0
+        with:
+          committer: "anttiharju[bot]"

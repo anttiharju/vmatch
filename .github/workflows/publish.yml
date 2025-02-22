@@ -1,4 +1,4 @@
-name: Distribute
+name: Publish
 
 on:
   workflow_call:
@@ -44,8 +44,8 @@ jobs:
         with:
           repository: anttiharju/homebrew-tap
           token: ${{ steps.generate-token.outputs.token }}
-      - name: Render formula
-        uses: anttiharju/actions/render-brew-formula@v0
+      - name: Update formula
+        uses: anttiharju/actions/update-brew-formula@v0
         with:
           template: Go
           app-name: ${{ github.event.repository.name }}
@@ -57,7 +57,8 @@ jobs:
       - name: Commit changes
         uses: anttiharju/actions/commit-changes@v0
         with:
+          committer: "anttiharju[bot]"
           message: |
             Update vmatch formula to ${{ inputs.version }}
 
-            https://github.com/anttiharju/vmatch/blob/${{ github.sha }}/.github/workflows/distribute.yml
+            https://github.com/anttiharju/vmatch/blob/${{ github.sha }}/.github/workflows/publish.yml

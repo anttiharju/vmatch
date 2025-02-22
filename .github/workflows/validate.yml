@@ -1,22 +1,23 @@
-name: Validate
 on:
+  pull_request:
   workflow_call:
 
 # also update lefthook.yml
 jobs:
-  vmatch:
+  validate:
+    name: Validate
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Build
-        uses: ./.github/actions/build
+        uses: anttiharju/actions/build-go@v0
         with:
           cache: false # Suppress warning about a 'missing' go.sum
 
       - if: always()
-        name: Style
+        name: Lint
         uses: anttiharju/actions/lint-go@v0
         with:
           version-file: ".golangci-version"
@@ -31,4 +32,4 @@ jobs:
 
       - if: always()
         name: Prettier
-        uses: anttiharju/actions/prettier@v0
+        uses: anttiharju/actions/check-prettier@v0
