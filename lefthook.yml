@@ -8,3 +8,8 @@ pre-commit:
     - run: golangci-lint run --fix
       glob: "*.go"
       stage_fixed: true
+    - name: action-validator
+      run: find ./.github -mindepth 2 -type f -name "*.yml" -exec action-validator --verbose {} +
+      glob: ".github/**"
+    - run: actionlint
+      glob: ".github/**"

@@ -8,35 +8,49 @@ permissions:
   contents: write
 
 jobs:
-  validate:
-    name: Validate
-    uses: ./.github/workflows/validate_vmatch.yml
+  vmatch:
+    uses: ./.github/workflows/vmatch.yml
 
   release:
     name: Release
-    needs: validate
+    needs: vmatch
     runs-on: ubuntu-24.04
     steps:
+      - name: Generate docs token
+        uses: actions/create-github-app-token@v1
+        id: generate-token
+        with:
+          app-id: ${{ secrets.AUTOMATION_APP_ID }}
+          private-key: ${{ secrets.AUTOMATION_APP_PRIVATE_KEY }}
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          token: ${{ steps.generate-token.outputs.token }}
       - name: Release
         uses: anttiharju/actions/release@v0
-      - name: Extract details
-        id: extract-details
-        uses: ./.github/actions/extract-details
+      - name: Get project details
+        id: get-project-details
+        uses: ./.github/actions/get-project-details
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          cache: false # Suppress warning about a 'missing' go.sum
+      - name: Publish docs
+        uses: anttiharju/actions/publish-docs@v0
+        with:
+          committer: "anttiharju[bot]"
     outputs:
-      homepage: ${{ steps.extract-details.outputs.homepage }}
-      url: ${{ steps.extract-details.outputs.url }}
-      go_version: ${{ steps.extract-details.outputs.go_version }}
-      version: ${{ steps.extract-details.outputs.version }}
+      description: ${{ steps.get-project-details.outputs.description }}
+      homepage: ${{ steps.get-project-details.outputs.homepage }}
+      url: ${{ steps.get-project-details.outputs.url }}
+      go_version: ${{ steps.get-project-details.outputs.go_version }}
+      version: ${{ steps.get-project-details.outputs.version }}
 
   distribute:
     name: Distribute
     needs: release
     uses: ./.github/workflows/distribute.yml
     with:
+      description: ${{ needs.release.outputs.description }}
       homepage: ${{ needs.release.outputs.homepage }}
       url: ${{ needs.release.outputs.url }}
       go-version: ${{ needs.release.outputs.go_version }}

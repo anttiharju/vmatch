@@ -1,9 +1,15 @@
-name: Extract details
-description: Extracts details for homebrew-tap workflow call
+name: Get project details
+description: Outputs details about the project for distribute workflow call
 inputs:
   github-token:
     description: "GitHub token for API access"
     required: true
+  cache:
+    description: |
+      Use this to suppress a warning about 'missing'
+      go.sum if only the standard library is used.
+    required: false
+    default: "true"
 runs:
   using: "composite"
   steps:
@@ -11,7 +17,7 @@ runs:
       uses: actions/setup-go@v5
       with:
         go-version-file: "go.mod"
-        cache: false # To suppress warning about 'missing' go.sum
+        cache: ${{ inputs.cache }}
     - name: Extract details
       id: extract-details
       shell: sh
@@ -19,6 +25,7 @@ runs:
         GH_TOKEN: ${{ inputs.github-token }}
       run: |
         {
+          echo "description=\"$(gh repo view  --json description --jq .description)\""
           url=$(gh api repos/${{ github.repository }}/releases/latest --jq .tarball_url)
           echo "homepage=$(gh api repos/${{ github.repository }} --jq .homepage)"
           echo "url=$url"
@@ -26,6 +33,9 @@ runs:
           echo "version=$(basename "$url")"
         } >> "$GITHUB_OUTPUT"
 outputs:
+  description:
+    description: "GitHub project description"
+    value: ${{ steps.extract-details.outputs.description }}
   homepage:
     description: "Repository homepage URL"
     value: ${{ steps.extract-details.outputs.homepage }}

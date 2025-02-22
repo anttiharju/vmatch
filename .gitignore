@@ -26,3 +26,6 @@ go.work.sum
 
 # built binary
 vmatch
+
+# mkdocs build output
+site

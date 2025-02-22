@@ -1,14 +1,12 @@
-# Language wrapper: unlocked patch versions
+# Go patch version resolution
 
-21st of February 2025
-
-This document outlines how vmatch decides which patch version to pick when only minor version has been specfied in `go.mod`.
+This document outlines how vmatch resolves which patch version to pick when only minor version has been specfied in `go.mod`.
 
 ## Background
 
 ### Patch version specification in `go.mod`
 
-A basic [`go.mod`](../../go.mod) can look as follows
+A basic `go.mod` file can look as follows
 
 ```
 module github.com/anttiharju/vmatch
@@ -143,10 +141,11 @@ So in the worst case:
 - vmatch can become aware of the new Go version (t=23h59m)
 
 But in practice:
+
 - a user notices their development environment is not working at the end of their workday
 - the development environment cannot fix itself during their next workday
 
--> vmatch should have the ability to become aware of new Go versions within 12 hours of release. This would translate to running the GitHub Actions job every 6 hours, resulting in the worst case scenario of 
+-> vmatch should have the ability to become aware of new Go versions within 12 hours of release. This would translate to running the GitHub Actions job every 6 hours, resulting in the worst case scenario of
 
 - vmatch-go-version completes a scan (t=0h0m)
 - Go releases a version immediately after (t=0h1m)
@@ -155,10 +154,11 @@ But in practice:
 - vmatch can become aware of the new Go version (t=11h59m)
 
 So in practice:
+
 - user notices their development environment is not working at the end of their workday
 - the development environment can fix itself by tomorrow (assuming a somewhat regular working schedule)
 
-The 12-hour schedule leaves slack for irregular work schedules and possible GitHub Actions downtime. It would consume 31*(24/6)=124 minutes a month which is 6,2% (124/2000) of the free capacity. As of writing this appears acceptable, to be adjusted if limits are hit.
+The 12-hour schedule leaves slack for irregular work schedules and possible GitHub Actions downtime. It would consume 31\*(24/6)=124 minutes a month which is 6,2% (124/2000) of the free capacity. As of writing this appears acceptable, to be adjusted if limits are hit.
 
 #### How to manage a partial state copy?
 
@@ -177,7 +177,7 @@ Therefore vmatch in its queries to vmatch-go-version should stay aware of the la
       - vmatch-go-version/1.24 (patch 0, saved to a file)
   - call the latest patch binary of the minor Go version appropriate for the patch-unlocked project
 
-### vmatch-go-version
+#### vmatch-go-version repository
 
 Should always scan all existing Go versions from the upstream API to maintain a solid ground truth.
 

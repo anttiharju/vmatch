@@ -3,6 +3,9 @@ name: Distribute
 on:
   workflow_call:
     inputs:
+      description:
+        required: true
+        type: string
       homepage:
         required: true
         type: string
@@ -46,7 +49,7 @@ jobs:
         with:
           template: Go
           app-name: ${{ github.event.repository.name }}
-          description: Wrapper that automatically calls the golangci-lint version matching your project
+          description: ${{ inputs.description }}
           homepage: ${{ inputs.homepage }}
           url: ${{ inputs.url }}
           go-version: ${{ inputs.go-version }}

@@ -1,5 +1,12 @@
 name: Build
 description: Build a binary with go
+inputs:
+  cache:
+    description: |
+      Use this to suppress a warning about 'missing'
+      go.sum if only the standard library is used.
+    required: false
+    default: "true"
 
 runs:
   using: "composite"
@@ -8,6 +15,6 @@ runs:
       uses: actions/setup-go@v5
       with:
         go-version-file: "go.mod"
-        cache: false # To suppress warning about 'missing' go.sum
+        cache: ${{ inputs.cache }}
     - shell: sh
       run: go build
