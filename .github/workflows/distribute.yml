@@ -1,5 +1,3 @@
-name: Publish
-
 on:
   workflow_call:
     inputs:
@@ -61,4 +59,4 @@ jobs:
           message: |
             Update vmatch formula to ${{ inputs.version }}
 
-            https://github.com/anttiharju/vmatch/blob/${{ github.sha }}/.github/workflows/publish.yml
+            https://github.com/anttiharju/vmatch/blob/${{ github.sha }}/.github/workflows/distribute.yml

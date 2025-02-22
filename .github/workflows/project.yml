@@ -2,7 +2,7 @@ on:
   push:
     branches:
       - main
-    paths:
+    paths: # opposite of release.yml
       - "!pkg/**"
       - "!main.go"
       - "!go.mod"
