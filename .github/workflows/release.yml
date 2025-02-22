@@ -8,13 +8,15 @@ on:
       - "go.mod"
 
 jobs:
-  validate:
-    name: Validate
+  # First check happened on pull_request event
+  # Second check happens on push to main
+  double-check:
+    name: Double check
     uses: ./.github/workflows/validate.yml
 
   release:
     name: Release
-    needs: validate
+    needs: double-check
     runs-on: ubuntu-24.04
     permissions:
       contents: write

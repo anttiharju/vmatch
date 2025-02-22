@@ -19,9 +19,9 @@ on:
         required: true
         type: string
     secrets:
-      AUTOMATION_APP_ID:
+      ANTTIHARJU_BOT_ID:
         required: true
-      AUTOMATION_APP_PRIVATE_KEY:
+      ANTTIHARJU_BOT_PRIVATE_KEY:
         required: true
 
 permissions:
@@ -36,8 +36,8 @@ jobs:
         uses: actions/create-github-app-token@v1
         id: generate-token
         with:
-          app-id: ${{ secrets.AUTOMATION_APP_ID }}
-          private-key: ${{ secrets.AUTOMATION_APP_PRIVATE_KEY }}
+          app-id: ${{ secrets.ANTTIHARJU_BOT_ID }}
+          private-key: ${{ secrets.ANTTIHARJU_BOT_PRIVATE_KEY }}
           repositories: homebrew-tap
       - name: Checkout
         uses: actions/checkout@v4
