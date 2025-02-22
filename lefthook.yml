@@ -5,25 +5,30 @@ output:
 # also update validate.yml
 pre-commit:
   jobs:
+    - name: Build
+      run: go build
+
     - name: Style
       run: golangci-lint run --fix
       glob: "{*.go,.golangci*}"
       stage_fixed: true
 
-    - name: Build
-      run: go build
+    - name: Actions
+      run: |
+        find ./.github -mindepth 2 -type f -name "*.yml" -exec \
+        action-validator --verbose {} +
+        actionlint
+      glob: ".github/**"
+      stage_fixed: true
 
     - name: Docs
       run: |
         mkdocs build --strict
-        prettier --write "docs/**/*.md"
       glob: "{docs/**,mkdocs.yml}"
       stage_fixed: true
 
-    - name: Actions
+    - name: Prettier
       run: |
-        find ./.github -mindepth 2 -type f -name "*.yml" -exec action-validator --verbose {} +
-        actionlint
-        prettier --write ".github/**/*.{yml,yaml}"
-      glob: ".github/**"
+        npx prettier --write .
+      glob: "{*.md,*.yml}"
       stage_fixed: true
