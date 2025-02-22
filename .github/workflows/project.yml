@@ -2,11 +2,10 @@ on:
   push:
     branches:
       - main
-    paths: # opposite of release.yml
-      - "!pkg/**"
-      - "!main.go"
-      - "!go.mod"
-      - "**/*"
+    paths-ignore:
+      - "pkg/**"
+      - "main.go"
+      - "go.mod"
   pull_request:
   workflow_call:
 
