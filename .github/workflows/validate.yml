@@ -2,8 +2,9 @@ on:
   push:
     branches:
       - main
-    paths:
-      - "!pkg/**"
+    paths: # This workflow is called by main.yml if these files have changed
+      - "!pkg/**/*"
+      - "!scripts/**/*"
       - "!main.go"
       - "!go.mod"
   pull_request:
@@ -11,8 +12,7 @@ on:
 
 # also update lefthook.yml
 jobs:
-  validate:
-    name: Validate
+  vmatch:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
@@ -34,9 +34,17 @@ jobs:
         uses: anttiharju/actions/lint-actions@v0
 
       - if: always()
+        name: ShellCheck
+        uses: anttiharju/actions/check-shellcheck@v0
+
+      - if: always()
         name: Docs
         uses: anttiharju/actions/lint-docs@v0
 
       - if: always()
         name: Prettier
         uses: anttiharju/actions/check-prettier@v0
+
+      - if: always()
+        name: EditorConfig
+        uses: anttiharju/actions/check-editorconfig@v0
