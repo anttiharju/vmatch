@@ -3,6 +3,7 @@ on:
     branches:
       - main
     paths: # This workflow is called by main.yml if these files have changed
+      - "**/*"
       - "!pkg/**/*"
       - "!scripts/**/*"
       - "!main.go"
