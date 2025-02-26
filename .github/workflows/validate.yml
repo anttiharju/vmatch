@@ -2,7 +2,7 @@ on:
   push:
     branches:
       - main
-    paths: # This workflow is called by main.yml if these files have changed
+    paths: # This workflow is called by release.yml if these files have changed
       - "**/*"
       - "!pkg/**/*"
       - "!scripts/**/*"
