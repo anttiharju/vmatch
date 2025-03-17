@@ -2,8 +2,9 @@ on:
   push:
     branches:
       - main
-    paths: # This workflow is called by release.yml if these files have changed
+    paths:
       - "**/*"
+      # This workflow is called by release.yml if the files below have changed
       - "!pkg/**/*"
       - "!scripts/**/*"
       - "!main.go"
