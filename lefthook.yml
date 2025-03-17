@@ -39,6 +39,6 @@ pre-commit:
       glob: "{docs/*,mkdocs.yml}"
 
     - name: Prettier
-      run: npx prettier --write .
+      run: npx --yes prettier --write .
       glob: "*{.md,.yml,.json}"
       stage_fixed: true
