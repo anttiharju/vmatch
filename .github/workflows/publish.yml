@@ -1,4 +1,3 @@
-# https://anttiharju.dev/vmatch
 on:
   push:
     branches:
