@@ -27,18 +27,6 @@ It installs the right golangci-lint version using the [Binaries](https://golangc
 
 I saw mismatching linter versions causing confusion in a team so I thought to automate it.
 
-## Todo
-
-- doctor subcommand
-  - To be able to include an actual test in the brew formula
-- Work out implications of wrapping go binary
-  - Setup aliases with the brew formula, use advice from [here](https://scriptingosx.com/2017/05/where-paths-come-from/)
-  - Limit version management to only happen under $HOME to not collide with installation scripts (for example homebrew formulas)
-- Publish to winget (no idea on details)
-- Simplify these docs, currently this is a collection of somewhat random thoughts.
-- Automation to be able to do security hardening
-- Dark mode for GitHub pages deployment
-
 ### Lack of tests
 
 Currently there's not too much code and the overall direction of the project is still quite open.
