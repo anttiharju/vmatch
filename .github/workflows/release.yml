@@ -4,6 +4,7 @@ on:
       - main
     paths:
       - "pkg/**/*"
+      - "dist/**/*"
       - "scripts/**/*"
       - "main.go"
       - "go.mod"
