@@ -45,7 +45,7 @@ jobs:
       - name: Update formula
         uses: anttiharju/actions/update-brew-formula@v0
         with:
-          template: Go
+          template: dist/brew-formula.rb
           app-name: ${{ github.event.repository.name }}
           description: ${{ inputs.description }}
           homepage: ${{ inputs.homepage }}

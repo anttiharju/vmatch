@@ -6,6 +6,7 @@ on:
       - "**/*"
       # This workflow is called by release.yml if the files below have changed
       - "!pkg/**/*"
+      - "!dist/**/*"
       - "!scripts/**/*"
       - "!main.go"
       - "!go.mod"
