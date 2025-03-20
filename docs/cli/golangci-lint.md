@@ -8,6 +8,6 @@ vmatch golangci-lint
 
 TBD
 
-### Options
+## Options
 
 TBD
