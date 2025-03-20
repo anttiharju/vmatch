@@ -67,4 +67,5 @@ jobs:
             Update vmatch formula to ${{ inputs.version }}
 
             https://github.com/anttiharju/vmatch/blob/${{ github.sha }}/.github/workflows/distribute.yml
-          working-directory: vmatch
+          working-directory: homebrew-tap
+          strict: true
