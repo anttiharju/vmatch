@@ -30,6 +30,10 @@ jobs:
     name: Homebrew tap
     runs-on: ubuntu-24.04
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          path: vmatch
       - name: Generate commit token
         uses: actions/create-github-app-token@v1
         id: generate-token
@@ -42,10 +46,11 @@ jobs:
         with:
           repository: anttiharju/homebrew-tap
           token: ${{ steps.generate-token.outputs.token }}
+          path: homebrew-tap
       - name: Update formula
         uses: anttiharju/actions/update-brew-formula@v0
         with:
-          template: dist/brew-formula.rb
+          template: vmatch/dist/brew-formula.rb
           app-name: ${{ github.event.repository.name }}
           description: ${{ inputs.description }}
           homepage: ${{ inputs.homepage }}
@@ -60,3 +65,4 @@ jobs:
             Update vmatch formula to ${{ inputs.version }}
 
             https://github.com/anttiharju/vmatch/blob/${{ github.sha }}/.github/workflows/distribute.yml
+          working-directory: vmatch
