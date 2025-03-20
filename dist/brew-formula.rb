@@ -1,3 +1,4 @@
+# tmp change to trigger release
 class $CLASS_NAME < Formula
     desc "$DESCRIPTION"
     homepage "$HOMEPAGE"
