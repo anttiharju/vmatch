@@ -27,7 +27,7 @@ It installs the right golangci-lint version using the [Binaries](https://golangc
 
 I saw mismatching linter versions causing confusion in a team so I thought to automate it.
 
-### Lack of tests
+## Lack of tests
 
 Currently there's not too much code and the overall direction of the project is still quite open.
 
