@@ -32,7 +32,7 @@ pre-commit:
         | xargs -0 file | ./scripts/filter.py
         | cut -d: -f1
         | xargs -I{} sh -c 'cd "$(dirname {})" && shellcheck --color=always -x "$(basename {})"'
-      glob: "{scripts/*,*.sh}"
+      glob: "{dist/wrapper/*,*.sh}"
 
     - name: Docs
       run: mkdocs build --strict
