@@ -28,6 +28,9 @@ else
   echo "Generating fresh values"
   set -a
   source values.sh | tee "$cache_file"
+  # cache file does not always exist
+  # shellcheck disable=SC1090
+  source "$cache_file"
   set +a
 fi
 
