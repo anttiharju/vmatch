@@ -41,3 +41,4 @@ homebrew-tap
 
 # Locally rendered formula
 formula.rb
+formula.tpl.rb
