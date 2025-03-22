@@ -22,11 +22,12 @@ if [[ "$quick_mode" == true ]] && [[ -f "$cache_file" ]]; then
   # cache file does not always exist
   # shellcheck disable=SC1090
   source "$cache_file"
+  cat "$cache_file"
   set +a
 else
   echo "Generating fresh values"
   set -a
-  source values.sh > "$cache_file"
+  source values.sh | tee "$cache_file"
   set +a
 fi
 
