@@ -8,7 +8,7 @@ runs:
       working-directory: ${{ env.GITHUB_ACTION_PATH }}
       shell: bash
       # This way we get shellcheck validations in case of file renames
-      run: action.sh
+      run: ./action.sh
 outputs:
   version:
     description: "The latest release version"
