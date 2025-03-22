@@ -1,0 +1,15 @@
+name: "Get Version"
+description: "Gets the latest release version from values.sh"
+runs:
+  using: "composite"
+  steps:
+    - name: Get Version
+      id: get-version
+      working-directory: ${{ env.GITHUB_ACTION_PATH }}
+      shell: bash
+      # This way we get shellcheck validations in case of file renames
+      run: action.sh
+outputs:
+  version:
+    description: "The latest release version"
+    value: ${{ steps.get-version.outputs.version }}
