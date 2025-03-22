@@ -26,7 +26,7 @@ else
   echo "Generating fresh values"
   source values.sh | tee "$cache_file"
 fi
-# Can not assume cache file is always there
+# Cache file only exists if this script has been ran
 # shellcheck disable=SC1090
 source "$cache_file"
 set +a
