@@ -6,7 +6,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 
 formula_file="formula.tpl"
 if [ ! -f "$formula_file" ]; then
-  echo "File not found: $formula_file"
+  echo "Template file is missing: $formula_file"
   exit 1
 fi
 
