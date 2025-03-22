@@ -1,21 +1,5 @@
 on:
   workflow_call:
-    inputs:
-      description:
-        required: true
-        type: string
-      homepage:
-        required: true
-        type: string
-      url:
-        required: true
-        type: string
-      go-version:
-        required: true
-        type: string
-      version:
-        required: true
-        type: string
     secrets:
       ANTTIHARJU_BOT_ID:
         required: true
@@ -50,21 +34,18 @@ jobs:
           token: ${{ steps.generate-token.outputs.token }}
           path: homebrew-tap
       - name: Update formula
-        uses: anttiharju/actions/update-brew-formula@v0
+        uses: anttiharju/actions/render-template@v0
         with:
-          template: vmatch/dist/brew-formula.rb
-          app-name: ${{ github.event.repository.name }}
-          description: ${{ inputs.description }}
-          homepage: ${{ inputs.homepage }}
-          url: ${{ inputs.url }}
-          go-version: ${{ inputs.go-version }}
-          version: ${{ inputs.version }}
+          template: vmatch/dist/brew/template.rb
+          values: vmatch/dist/brew/values.sh
+          output: homebrew-tap/Formula/${{ github.event.repository.name }}.rb
       - name: Commit changes
         uses: anttiharju/actions/commit-changes@v0
         with:
           committer: "anttiharju[bot]"
+          # todo: add back "to $version"
           message: |
-            Update vmatch formula to ${{ inputs.version }}
+            Update vmatch formula
 
             https://github.com/anttiharju/vmatch/blob/${{ github.sha }}/.github/workflows/distribute.yml
           working-directory: homebrew-tap
