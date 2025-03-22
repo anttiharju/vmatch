@@ -6,6 +6,8 @@ runs:
     - name: Get Version
       id: get-version
       shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
       # This way we get shellcheck validations in case of file renames
       run: "$GITHUB_ACTION_PATH/action.sh"
 outputs:
