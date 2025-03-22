@@ -28,7 +28,6 @@ indent_size = 4
 [*.json]
 indent_style = space
 indent_size = 2
-root = true
 
 [Makefile]
 indent_style = tab
