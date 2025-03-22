@@ -29,7 +29,7 @@ jobs:
           repository: anttiharju/homebrew-tap
           token: ${{ steps.generate-token.outputs.token }}
           path: homebrew-tap
-      - name: Update formula
+      - name: Render formula template
         uses: anttiharju/actions/render-template@v0
         with:
           template: dist/brew/formula.tpl
