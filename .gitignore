@@ -38,3 +38,6 @@ site
 
 # Nested checkout during distribute workflow
 homebrew-tap
+
+# Locally rendered formula
+formula.rb
