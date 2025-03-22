@@ -4,7 +4,7 @@ set -euo pipefail
 # Normalise working directory
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
-# Match what is available in GitHub Actions
+# Match what is used from GitHub Actions env
 export GITHUB_REPOSITORY="anttiharju/vmatch"
 
 # Mimic anttiharju/actions/render-template
