@@ -11,4 +11,4 @@ GITHUB_REPOSITORY="anttiharju/$(basename "$(git rev-parse --show-toplevel)")"
 set -a
 source values.sh
 set +a
-envsubst < template.rb > formula.rb
+envsubst < formula.tmpl.rb > formula.rb
