@@ -18,8 +18,10 @@ jobs:
         uses: actions/checkout@v4
         with:
           path: vmatch
-          sparse-checkout: dist/brew/formula.tpl
-          sparse-checkout-cone-mode: false # todo: read about this, following actions/checkout recommendation atm
+          sparse-checkout: |
+            dist/brew/formula.tpl
+            dist/brew/values.sh
+          sparse-checkout-cone-mode: false
       - name: Generate commit token
         uses: actions/create-github-app-token@v1
         id: generate-token
