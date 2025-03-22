@@ -2,7 +2,7 @@
 
 capture() {
     eval "$1=\"$2\""
-    echo "$1 = $2"
+    echo "$1=\"$2\""
 }
 
 repo_name="$(basename "$GITHUB_REPOSITORY")"
