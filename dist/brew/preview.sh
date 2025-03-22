@@ -4,7 +4,7 @@ set -euo pipefail
 # Normalise working directory
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
-formula_file="formula.tpl"
+formula_file="formula.tpl.rb"
 if [ ! -f "$formula_file" ]; then
     echo "Template file is missing: $formula_file"
     exit 1
