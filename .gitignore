@@ -35,3 +35,6 @@ site
 
 # preview value cache
 **/*.cache.sh
+
+# nested checkout during distribute workflow
+homebrew-tap
