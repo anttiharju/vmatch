@@ -28,11 +28,11 @@ pre-commit:
 
     - name: ShellCheck
       run: >
-        git ls-files -z | xargs -0 file |
-        grep "script text executable" |
-        cut -d: -f1 | xargs
-        shellcheck --color=always -x
-      glob: "{*.sh,scripts/*}"
+        git ls-files --cached --exclude-standard -o -z
+        | xargs -0 file | grep "script text executable"
+        | cut -d: -f1
+        | xargs -I{} sh -c 'cd "$(dirname {})" && shellcheck --color=always -x "$(basename {})"'
+      glob: "{scripts/*,*.sh}"
 
     - name: Docs
       run: mkdocs build --strict
@@ -42,3 +42,6 @@ pre-commit:
       run: npx --yes prettier --write .
       glob: "*{.md,.yml,.json}"
       stage_fixed: true
+
+    - name: EditorConfig
+      run: git ls-files -z | npx --yes editorconfig-checker
