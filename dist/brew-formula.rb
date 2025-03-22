@@ -1,21 +1,21 @@
-class $CLASS_NAME < Formula
-    desc "$DESCRIPTION"
-    homepage "$HOMEPAGE"
+class ${class_name} < Formula
+    desc "${description}"
+    homepage "${homepage}"
 
-    url "$URL"
-    sha256 "$SHA256"
-    head "https://$REPOSITORY"
+    url "${url}"
+    sha256 "${sha256}"
+    head "https://${repository}"
 
-    depends_on "go@$GO_VERSION" => :build
+    depends_on "go@${go_version}" => :build
 
     def install
         ENV["GOPATH"] = buildpath
 
-        bin_path = buildpath/"src/$REPOSITORY"
+        bin_path = buildpath/"src/${repository}"
         bin_path.install Dir["*"]
         cd bin_path do
-          system "go", "build", "-ldflags", "-s -w -buildid=brew-$VERSION"
-          bin.install "$APP_NAME"
+          system "go", "build", "-ldflags", "-s -w -buildid=brew-${version}"
+          bin.install "${app_name}"
         end
     end
 
