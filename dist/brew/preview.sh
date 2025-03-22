@@ -16,22 +16,18 @@ GITHUB_REPOSITORY="anttiharju/$(basename "$(git rev-parse --show-toplevel)")"
 cache_file=".values.cache"
 quick_mode=false
 [[ " $* " =~ " --quick " ]] && quick_mode=true
+
+set -a
 if [[ "$quick_mode" == true ]] && [[ -f "$cache_file" ]]; then
   echo "Using cached values from $cache_file"
-  set -a
-  # cache file does not always exist
-  # shellcheck disable=SC1090
-  source "$cache_file"
   cat "$cache_file"
-  set +a
 else
   echo "Generating fresh values"
-  set -a
   source values.sh | tee "$cache_file"
-  # cache file does not always exist
-  # shellcheck disable=SC1090
-  source "$cache_file"
-  set +a
 fi
+# Can not assume cache file is always there
+# shellcheck disable=SC1090
+source "$cache_file"
+set +a
 
 envsubst < "$formula_file" > formula.rb
