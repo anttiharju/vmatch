@@ -34,4 +34,4 @@ site
 .tool-versions
 
 # preview value cache
-**/*.cache
+**/*.cache.sh
