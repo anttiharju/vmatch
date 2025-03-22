@@ -13,6 +13,7 @@ fi
 # Mock relevant parts of GitHub Actions env
 GITHUB_REPOSITORY="anttiharju/$(basename "$(git rev-parse --show-toplevel)")"
 
+# Cache logic for faster iteration
 cache_file=".values.cache"
 quick_mode=false
 [[ " $* " =~ " --quick " ]] && quick_mode=true
@@ -30,4 +31,5 @@ fi
 source "$cache_file"
 set +a
 
+# Template
 envsubst < "$formula_file" > formula.rb
