@@ -16,5 +16,8 @@ capture url "$tarball_url"
 capture sha256 "$(curl -sL "$tarball_url" | shasum -a 256 | cut -d ' ' -f1)"
 capture repository "github.com/$GITHUB_REPOSITORY"
 capture go_version "$(go list -m -f '{{.GoVersion}}' | awk -F. '{print $1"."$2}')"
-capture version "$(basename "$tarball_url")"
 capture app_name "$repo_name"
+
+# Done manually to get robust static analysis from ShellCheck for get-version
+version="$(basename "$tarball_url")"
+echo "$version"
