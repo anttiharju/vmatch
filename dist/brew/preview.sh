@@ -4,6 +4,12 @@ set -euo pipefail
 # Normalise working directory
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
+formula_file="formula.tmpl"
+if [ ! -f "$formula_file" ]; then
+  echo "File not found: $formula_file"
+  exit 1
+fi
+
 # Mock relevant parts of GitHub Actions env
 GITHUB_REPOSITORY="anttiharju/$(basename "$(git rev-parse --show-toplevel)")"
 
@@ -11,4 +17,4 @@ GITHUB_REPOSITORY="anttiharju/$(basename "$(git rev-parse --show-toplevel)")"
 set -a
 source values.sh
 set +a
-envsubst < formula.tmpl.rb > formula.rb
+envsubst < "$formula_file" > formula.rb
