@@ -11,7 +11,7 @@ class ${class_name} < Formula
   def install
     ENV['GOPATH'] = buildpath
 
-    bin_path = buildpath/'src/${repository}'
+    bin_path = buildpath / 'src/${repository}'
     bin_path.install Dir['*']
     cd bin_path do
       system 'go', 'build', '-ldflags', '-s -w -buildid=brew-${version}'

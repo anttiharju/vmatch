@@ -11,7 +11,7 @@ class Vmatch < Formula
   def install
     ENV['GOPATH'] = buildpath
 
-    bin_path = buildpath/'src/github.com/anttiharju/vmatch'
+    bin_path = buildpath / 'src/github.com/anttiharju/vmatch'
     bin_path.install Dir['*']
     cd bin_path do
       system 'go', 'build', '-ldflags', '-s -w -buildid=brew-build62'
