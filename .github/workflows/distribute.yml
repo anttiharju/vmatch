@@ -16,8 +16,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          path: vmatch
       - name: Generate commit token
         uses: actions/create-github-app-token@v1
         id: generate-token
@@ -34,8 +32,8 @@ jobs:
       - name: Update formula
         uses: anttiharju/actions/render-template@v0
         with:
-          template: vmatch/dist/brew/formula.tpl
-          values: vmatch/dist/brew/values.sh
+          template: dist/brew/formula.tpl
+          values: dist/brew/values.sh
           output: homebrew-tap/Formula/${{ github.event.repository.name }}.rb
       - name: Get version
         id: get-version
