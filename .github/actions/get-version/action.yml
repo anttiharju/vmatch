@@ -5,10 +5,9 @@ runs:
   steps:
     - name: Get Version
       id: get-version
-      working-directory: ${{ env.GITHUB_ACTION_PATH }}
       shell: bash
       # This way we get shellcheck validations in case of file renames
-      run: ./action.sh
+      run: "$GITHUB_ACTION_PATH/action.sh"
 outputs:
   version:
     description: "The latest release version"
