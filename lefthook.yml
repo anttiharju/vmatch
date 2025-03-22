@@ -42,3 +42,6 @@ pre-commit:
       run: npx --yes prettier --write .
       glob: "*{.md,.yml,.json}"
       stage_fixed: true
+
+    - name: EditorConfig
+      run: git ls-files -z | npx --yes editorconfig-checker
