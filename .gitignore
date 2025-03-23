@@ -38,3 +38,7 @@ site
 
 # Nested checkout during distribute workflow
 homebrew-tap
+
+# Locally rendered formula
+diff.rb
+diff.tpl.rb
