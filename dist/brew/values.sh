@@ -20,4 +20,4 @@ capture app_name "$repo_name"
 
 # Done manually to get robust static analysis from ShellCheck for get-version
 version="$(basename "$tarball_url")"
-echo "$version"
+echo "version=\"$version\""
