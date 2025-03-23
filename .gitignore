@@ -40,5 +40,5 @@ site
 homebrew-tap
 
 # Locally rendered formula
-diff.rb
-diff.tpl.rb
+preview.rb
+preview.tpl.rb
