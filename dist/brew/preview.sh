@@ -4,9 +4,9 @@ set -euo pipefail
 # Normalise working directory
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
-formula_file="template.rb"
-if [ ! -f "$formula_file" ]; then
-    echo "Template file is missing: $formula_file"
+template_file="formula.tpl.rb"
+if [ ! -f "$template_file" ]; then
+    echo "Formula template is missing: $template_file"
     exit 1
 fi
 
@@ -32,7 +32,7 @@ source "$cache_file"
 set +a
 
 # Template
-envsubst < "$formula_file" > formula.rb
+envsubst < "$template_file" > diff.rb
 
 # Easier diffing
-cp template.rb formula.tpl.rb
+cp "$template_file" diff.tpl.rb
