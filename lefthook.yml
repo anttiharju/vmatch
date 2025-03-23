@@ -7,15 +7,16 @@ pre-commit:
   parallel: true
   jobs:
     - name: Build
-      run: go build
       glob: "{pkg/*,main.go,go.mod}"
+      run: go build
 
     - name: Lint
-      run: golangci-lint run --fix
       glob: "{*.go,.golangci*}"
+      run: golangci-lint run --fix
       stage_fixed: true
 
     - name: Actions
+      glob: ".github/*"
       group:
         parallel: true
         jobs:
@@ -24,25 +25,21 @@ pre-commit:
               find ./.github -type f -mindepth 2 -name "*.yml" -exec
               action-validator --verbose {} +
           - run: actionlint
-      glob: ".github/*"
 
     - name: ShellCheck
-      run: >
-        git ls-files --cached --exclude-standard -o -z
-        | xargs -0 file
-        | ./scripts/filter.py
-        | cut -d: -f1
-        | xargs -I{} sh -c 'cd "$(dirname {})" &&
-        shellcheck --color=always -x "$(basename {})"'
-      glob: "{dist/wrapper/*,*.sh}"
+      glob: "{scripts/*,*.sh}"
+      run: |
+        for file in {staged_files}; do
+          (cd "$(dirname "$file")" && shellcheck --color=always -x "$(basename "$file")")
+        done
 
     - name: Docs
-      run: mkdocs build --strict
       glob: "{docs/*,mkdocs.yml}"
+      run: mkdocs build --strict
 
     - name: Prettier
-      run: npx --yes prettier --write .
       glob: "*{.md,.yml,.json}"
+      run: npx --yes prettier --write .
       stage_fixed: true
 
     - name: EditorConfig

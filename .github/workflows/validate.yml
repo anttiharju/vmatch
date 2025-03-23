@@ -2,13 +2,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - "**/*"
-      # This workflow is called by release.yml if the files below have changed
-      - "!pkg/**/*"
-      - "!dist/**/*"
-      - "!main.go"
-      - "!go.mod"
   pull_request:
   workflow_call:
 
