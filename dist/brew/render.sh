@@ -32,7 +32,7 @@ source "$cache_file"
 set +a
 
 # Template
-envsubst < "$template_file" > diff.rb
+envsubst < "$template_file" > .formula.rb
 
 # Easier diffing
-cp "$template_file" diff.tpl.rb
+cp "$template_file" .formula.tpl.rb
