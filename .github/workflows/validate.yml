@@ -30,16 +30,16 @@ jobs:
 
       - if: always()
         name: ShellCheck
-        uses: anttiharju/actions/check-shellcheck@v0
+        uses: anttiharju/actions/run-shellcheck@v0
 
       - if: always()
         name: Docs
-        uses: anttiharju/actions/lint-docs@v0
+        uses: anttiharju/actions/run-mkdocs-build-strict@v0
 
       - if: always()
         name: Prettier
-        uses: anttiharju/actions/check-prettier@v0
+        uses: anttiharju/actions/run-prettier@v0
 
       - if: always()
         name: EditorConfig
-        uses: anttiharju/actions/check-editorconfig@v0
+        uses: anttiharju/actions/run-editorconfig-checker@v0
