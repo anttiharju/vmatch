@@ -37,6 +37,10 @@ jobs:
         uses: anttiharju/actions/run-mkdocs-build-strict@v0
 
       - if: always()
+        name: Markdown
+        uses: anttiharju/actions/run-markdown-link-check@v0
+
+      - if: always()
         name: Prettier
         uses: anttiharju/actions/run-prettier@v0
 
