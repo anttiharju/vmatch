@@ -3,11 +3,12 @@ on:
     branches:
       - main
     paths:
-      - "pkg/**/*"
-      - "dist/**/*"
-      - "main.go"
-      - "go.mod"
       - ".github/**/*"
+      - "dist/**/*"
+      - "pkg/**/*"
+      - "scripts/**/*"
+      - "go.mod"
+      - "main.go"
 
 jobs:
   validate:
