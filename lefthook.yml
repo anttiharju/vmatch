@@ -30,7 +30,7 @@ pre-commit:
       run: >
         git ls-files --cached --exclude-standard -o -z
         | xargs -0 file
-        | ./scripts/filter.py
+        | grep -i ":[[:space:]]*(POSIX shell script\|sh script\|Bourne-Again shell script)"
         | cut -d: -f1
         | xargs -I{} sh -c 'cd "$(dirname {})" &&
         shellcheck --color=always -x "$(basename {})"'
