@@ -39,7 +39,7 @@ pre-commit:
 
     - name: Markdown
       glob: "*.md"
-      run: npx markdown-link-check --quiet {staged_files} | (! grep .)
+      run: npx --yes markdown-link-check --quiet {staged_files} | (! grep .)
 
     - name: Prettier
       glob: "*{.md,.yml,.json}"
