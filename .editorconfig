@@ -36,3 +36,7 @@ tab_width = 4
 [*.rb]
 indent_style = space
 indent_size = 2
+
+[.gitconfig]
+indent_style = space
+indent_size = 4
