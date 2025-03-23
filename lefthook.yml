@@ -27,14 +27,11 @@ pre-commit:
       glob: ".github/*"
 
     - name: ShellCheck
-      run: >
-        git ls-files --cached --exclude-standard -o -z
-        | xargs -0 file
-        | grep -i ":[[:space:]]*(POSIX shell script\|sh script\|Bourne-Again shell script)"
-        | cut -d: -f1
-        | xargs -I{} sh -c 'cd "$(dirname {})" &&
-        shellcheck --color=always -x "$(basename {})"'
-      glob: "{dist/wrapper/*,*.sh}"
+      run: |
+        for file in {staged_files}; do
+          (cd "$(dirname "$file")" && shellcheck --color=always -x "$(basename "$file")")
+        done
+      glob: "{scripts/*,*.sh}"
 
     - name: Docs
       run: mkdocs build --strict
