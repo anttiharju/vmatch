@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+cd "$(git rev-parse --show-toplevel)"
 
-# Normalise working directory
-cd "$(dirname "${BASH_SOURCE[0]}")"
-
-source ../../../dist/brew/values.sh
-
+source dist/brew/values.sh
 echo "version=$version" >> "$GITHUB_OUTPUT"
