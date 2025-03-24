@@ -28,10 +28,12 @@ pre-commit:
 
     - name: ShellCheck
       glob: "{scripts/*,*.sh}"
-      run: |
-        for file in {staged_files}; do
-          (cd "$(dirname "$file")" && shellcheck --color=always -x "$(basename "$file")")
-        done
+      run: >
+        shellcheck --color=always -x $(
+          file {staged_files} |
+          grep -i -E "POSIX shell script|sh script text executable|sh script, ASCII text executable|Bourne-Again shell script" |
+          cut -d: -f1
+        )
 
     - name: Docs
       glob: "{docs/*,mkdocs.yml}"
