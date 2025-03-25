@@ -33,7 +33,7 @@ jobs:
         uses: anttiharju/actions/render-template@v0
         with:
           template: dist/brew/formula.tpl.rb
-          values: dist/brew/values.sh
+          values: dist/brew/values.bash
           output: homebrew-tap/Formula/${{ github.event.repository.name }}.rb
       - name: Get version
         id: get-version
