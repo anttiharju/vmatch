@@ -28,7 +28,7 @@ pre-commit:
 
     - name: ShellCheck
       glob: "{*.sh,*.bash}"
-      run: shellcheck --color=always {staged_files}
+      run: shellcheck --color=always --source-path=SCRIPTDIR --external-sources {staged_files}
 
     - name: Docs
       glob: "{docs/*,mkdocs.yml}"
