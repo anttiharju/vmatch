@@ -1,0 +1,11 @@
+# Increase flexibility
+source-path=SCRIPTDIR
+
+# Enable some optional checks
+enable=add-default-case
+enable=avoid-nullary-conditions
+enable=check-set-e-suppressed
+enable=check-unassigned-uppercase
+enable=deprecate-which
+enable=quote-safe-variables
+enable=require-double-brackets

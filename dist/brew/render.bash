@@ -3,7 +3,7 @@ set -euo pipefail
 cd "$(git rev-parse --show-toplevel)"
 
 template_file=dist/brew/formula.tpl.rb
-if [ ! -f "$template_file" ]; then
+if [[ ! -f "$template_file" ]]; then
     echo "Formula template is missing: $template_file"
     exit 1
 fi
@@ -22,7 +22,7 @@ if [[ "$quick_mode" == true ]] && [[ -f "$cache_file" ]]; then
     cat "$cache_file"
 else
     echo "Generating fresh values"
-    source dist/brew/values.sh | tee "$cache_file"
+    source dist/brew/values.bash | tee "$cache_file"
 fi
 # Cache file only exists if this script has been ran
 # shellcheck disable=SC1090
