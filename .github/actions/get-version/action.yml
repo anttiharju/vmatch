@@ -1,5 +1,5 @@
 name: "Get Version"
-description: "Gets the latest release version from values.sh"
+description: "Gets the latest release version from values.bash"
 runs:
   using: "composite"
   steps:
@@ -9,7 +9,8 @@ runs:
       env:
         GH_TOKEN: ${{ github.token }}
       # This way we get shellcheck validations in case of file renames
-      run: "$GITHUB_ACTION_PATH/action.sh"
+      run: |
+        "$GITHUB_ACTION_PATH/action.bash" >> "$GITHUB_OUTPUT"
 outputs:
   version:
     description: "The latest release version"

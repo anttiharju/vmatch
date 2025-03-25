@@ -39,4 +39,4 @@ homebrew-tap
 # Brew dist local render
 .formula.rb
 .formula.tpl.rb
-.values.cache.sh
+values.cache
