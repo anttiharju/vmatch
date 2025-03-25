@@ -1,5 +1,7 @@
 # Increase flexibility
 source-path=SCRIPTDIR
+
+# Required for partial checks by Lefthook
 external-sources=true
 
 # Considered helpful
