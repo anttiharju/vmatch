@@ -27,13 +27,8 @@ pre-commit:
           - run: actionlint
 
     - name: ShellCheck
-      glob: "{scripts/*,*.sh}"
-      run: >
-        shellcheck --color=always -x $(
-          file {staged_files} |
-          grep -i -E "POSIX shell script|sh script text executable|sh script, ASCII text executable|Bourne-Again shell script" |
-          cut -d: -f1
-        )
+      glob: "{*.sh,*.bash}"
+      run: shellcheck --color=always {staged_files}
 
     - name: Docs
       glob: "{docs/*,mkdocs.yml}"
