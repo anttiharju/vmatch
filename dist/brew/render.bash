@@ -12,7 +12,7 @@ fi
 GITHUB_REPOSITORY=anttiharju/vmatch
 
 # Cache logic for faster iteration
-cache_file=.values.cache.sh
+cache_file=values.cache
 quick_mode=false
 [[ " $* " =~ " --quick " ]] && quick_mode=true
 
