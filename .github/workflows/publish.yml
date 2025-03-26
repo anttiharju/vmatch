@@ -24,6 +24,6 @@ jobs:
         with:
           token: ${{ steps.generate-token.outputs.token }}
       - name: Update docs
-        uses: anttiharju/actions/update-docs@v0
+        uses: anttiharju/actions/mkdocs-gh-deploy@v0
         with:
           committer: "anttiharju[bot]"
