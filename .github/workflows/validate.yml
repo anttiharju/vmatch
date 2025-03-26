@@ -5,7 +5,7 @@ on:
   pull_request:
   workflow_call:
 
-# also update lefthook.yml
+# Match to lefthook.yml
 jobs:
   vmatch:
     runs-on: ubuntu-24.04
@@ -13,37 +13,37 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Build
-        uses: anttiharju/actions/build-go@v0
-        with:
-          cache: false # Suppress warning about a 'missing' go.sum
+      - name: go build
+        uses: anttiharju/actions/go-build@v0
 
       - if: always()
-        name: Lint
-        uses: anttiharju/actions/lint-go@v0
-        with:
-          version-file: ".golangci-version"
+        name: golangci-lint
+        uses: anttiharju/actions/golangci-lint@v0
 
       - if: always()
-        name: Actions
-        uses: anttiharju/actions/lint-actions@v0
+        name: action-validator
+        uses: anttiharju/actions/action-validator@v0
+
+      - if: always()
+        name: actionlint
+        uses: anttiharju/actions/actionlint@v0
 
       - if: always()
         name: ShellCheck
         uses: anttiharju/actions/shellcheck@v0
 
       - if: always()
-        name: Docs
-        uses: anttiharju/actions/run-mkdocs-build-strict@v0
+        name: MkDocs build strict
+        uses: anttiharju/actions/mkdocs-build-strict@v0
 
       - if: always()
-        name: Markdown
-        uses: anttiharju/actions/run-markdown-link-check@v0
+        name: markdown-link-check
+        uses: anttiharju/actions/markdown-link-check@v0
 
       - if: always()
         name: Prettier
-        uses: anttiharju/actions/run-prettier@v0
+        uses: anttiharju/actions/prettier@v0
 
       - if: always()
-        name: EditorConfig
-        uses: anttiharju/actions/run-editorconfig-checker@v0
+        name: EditorConfig-Checker
+        uses: anttiharju/actions/editorconfig-checker@v0
