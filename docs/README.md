@@ -57,12 +57,8 @@ For VS Code, this can be done with a `.vscode/settings.json` file like the one b
 
 For more documentation on VS Code integration, refer to [golangci-lint docs](https://golangci-lint.run/welcome/integrations/#go-for-visual-studio-code).
 
-## Star History
+## Stargazers over time
 
-<a href="https://star-history.com/#anttiharju/vmatch&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=anttiharju/vmatch&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=anttiharju/vmatch&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=anttiharju/vmatch&type=Date" />
- </picture>
-</a>
+[![Stargazers over time](https://starchart.cc/anttiharju/vmatch.svg?variant=adaptive)](https://starchart.cc/anttiharju/vmatch)
+
+Starring the project helps to get it eventually distributed via homebrew/core :)
