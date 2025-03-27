@@ -57,7 +57,6 @@ for file in "$@"; do
         fi
     done < <(echo "$link_data")
 
-    # Now broken_links_found is accessible outside of the subshell
     if [[ $broken_links_found -eq 1 ]]; then
         EXIT_CODE=1
     fi
