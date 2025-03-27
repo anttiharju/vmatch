@@ -17,15 +17,15 @@ pre-commit:
 
     - name: action-validator
       glob: "{.github/workflows/*.yml,*/action.yml}"
-      run: action-validator --verbose {all_files}
+      run: action-validator --verbose {staged_files}
 
     - name: actionlint
       glob: ".github/workflows/*.yml"
-      run: actionlint -color {all_files}
+      run: actionlint -color {staged_files}
 
     - name: ShellCheck
       glob: "{*.sh,*.bash}"
-      run: shellcheck --color=always --source-path=SCRIPTDIR --external-sources {all_files}
+      run: shellcheck --color=always --source-path=SCRIPTDIR --external-sources {staged_files}
 
     - name: Prettier
       glob: "*{.md,.yml}"
@@ -41,4 +41,4 @@ pre-commit:
 
     - name: markdown-link-check
       glob: "*.md"
-      run: npx --yes markdown-link-check --quiet {all_files} | (! grep .)
+      run: npx --yes markdown-link-check --quiet {staged_files} | (! grep .)
