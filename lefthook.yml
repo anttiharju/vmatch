@@ -16,7 +16,7 @@ pre-commit:
       stage_fixed: true
 
     - name: action-validator
-      glob: "{.github/*/*.yml,*/action.yml}"
+      glob: "{.github/workflows/*.yml,*/action.yml}"
       run: action-validator --verbose {all_files}
 
     - name: actionlint
