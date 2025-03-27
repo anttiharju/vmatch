@@ -40,6 +40,6 @@ pre-commit:
       glob: "{mkdocs.yml,docs/*}"
       run: mkdocs build --strict
 
-    - name: markdown-link-check
+    - name: check-relative-links
       glob: "*.md"
-      run: npx --yes markdown-link-check --quiet {staged_files} | (! grep .)
+      run: ./scripts/check-relative-links.sh {staged_files}
