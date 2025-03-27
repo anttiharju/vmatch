@@ -42,10 +42,10 @@ for file in "$@"; do
         line=$(echo "$line_with_num" | cut -d: -f2-)
 
         # Extract the link portion using sed
-        link=$(echo "$line" | grep -o "](\.[^)]*)" | sed 's/](\(.*\))/\1/')
+        link=$(echo "$line" | grep -o "](\.[^)]*)" | awk -F'[(]' '{print $2}' | awk -F'[)]' '{print $1}')
 
         # Handle anchor links by removing the #section part
-        target_path=$(echo "$link" | sed 's/#.*//')
+        target_path=$(echo "$link" | awk -F'#' '{print $1}')
 
         # Construct the full path relative to the file's location
         full_path="$dir/$target_path"
