@@ -1,11 +1,11 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # Check for relative Markdown links and verify they exist
 # Usage: ./check-relative-links.sh file1.md file2.md ...
 
 set -eu
 
-if [ $# -eq 0 ]; then
+if [[ $# -eq 0 ]]; then
     echo "Usage: $0 <file1.md> [file2.md] [...]"
     exit 1
 fi
@@ -13,7 +13,7 @@ fi
 EXIT_CODE=0
 
 for file in "$@"; do
-    if [ ! -f "$file" ]; then
+    if [[ ! -f "$file" ]]; then
         echo "Error: File not found: $file"
         EXIT_CODE=1
         continue
@@ -24,50 +24,46 @@ for file in "$@"; do
 
     echo "Checking links in $file..."
 
-    # Find all lines with relative links using grep
-    link_lines=$(grep -n "[^]]*](\.[^)]*)" "$file" || true)
+    # Extract all relative links in one pass with awk
+    # This avoids multiple grep/awk/echo calls per link
+    link_data=$(awk '
+        match($0, /\]\(\.[^)]*\)/) {
+            link = substr($0, RSTART+2, RLENGTH-3)
+            gsub(/#.*$/, "", link)  # Remove anchor part
+            if (link != "") {
+                print NR ":" link
+            }
+        }' "$file")
 
     # If no links are found, continue to the next file
-    if [ -z "$link_lines" ]; then
+    if [[ -z "$link_data" ]]; then
         echo "  No relative links found"
         continue
     fi
 
-    file_has_broken_links=0
+    # Initialize before the subshell
+    broken_links_found=0
 
-    # Use a for loop to process links instead of a pipeline/while loop
-    for line_with_num in $link_lines; do
-        # Extract line number and content
-        line_num=$(echo "$line_with_num" | cut -d: -f1)
-        line=$(echo "$line_with_num" | cut -d: -f2-)
-
-        # Extract the link portion using sed
-        link=$(echo "$line" | grep -o "](\.[^)]*)" | awk -F'[(]' '{print $2}' | awk -F'[)]' '{print $1}')
-
-        # Handle anchor links by removing the #section part
-        target_path=$(echo "$link" | awk -F'#' '{print $1}')
-
+    # Process each link
+    while IFS=: read -r line_num link; do
         # Construct the full path relative to the file's location
-        full_path="$dir/$target_path"
+        full_path="$dir/$link"
 
-        if [ -z "$target_path" ]; then
-            # Skip empty links (just anchors)
-            continue
-        elif [ ! -e "$full_path" ]; then
+        if [[ ! -e "$full_path" ]]; then
             echo "  ❌ Broken link: $link on line $line_num in $file"
-            file_has_broken_links=1
+            broken_links_found=1
         else
             echo "  ✅ Valid link: $link"
         fi
-    done
+    done < <(echo "$link_data")
 
-    # Update the exit code if broken links were found
-    if [ "$file_has_broken_links" -eq 1 ]; then
+    # Now broken_links_found is accessible outside of the subshell
+    if [[ $broken_links_found -eq 1 ]]; then
         EXIT_CODE=1
     fi
 done
 
-if [ "$EXIT_CODE" -eq 0 ]; then
+if [[ "$EXIT_CODE" -eq 0 ]]; then
     echo "✅ All relative links are valid!"
 fi
 
