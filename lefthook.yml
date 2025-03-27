@@ -33,6 +33,7 @@ pre-commit:
       stage_fixed: true
 
     - name: EditorConfig-Checker
+      glob: "*"
       run: npx --yes editorconfig-checker {staged_files}
 
     - name: MkDocs build strict
