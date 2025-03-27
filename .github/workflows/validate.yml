@@ -46,4 +46,6 @@ jobs:
 
       - if: always()
         name: check-relative-links
-        uses: ./scripts/check-relative-links.bash $(git ls-files '*.md')
+        run: |
+          # shellcheck disable=SC2046
+          ./scripts/check-relative-links.bash $(git ls-files '*.md')
