@@ -41,5 +41,5 @@ pre-commit:
       run: mkdocs build --strict
 
     - name: check-relative-links
-      glob: "*.md"
-      run: ./scripts/check-relative-links.sh {staged_files}
+      glob: "*"
+      run: ./scripts/check-relative-links.bash $(git ls-files '*.md')

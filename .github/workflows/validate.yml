@@ -45,5 +45,5 @@ jobs:
         uses: anttiharju/actions/mkdocs-build-strict@v0
 
       - if: always()
-        name: markdown-link-check
-        uses: anttiharju/actions/markdown-link-check@v0
+        name: check-relative-links
+        uses: ./scripts/check-relative-links.bash $(git ls-files '*.md')
