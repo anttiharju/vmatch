@@ -29,12 +29,12 @@ pre-commit:
 
     - name: Prettier
       glob: "*{.md,.yml}"
-      run: npx --yes prettier --write {staged_files}
+      run: prettier --write {staged_files}
       stage_fixed: true
 
     - name: EditorConfig-Checker
       glob: "*"
-      run: npx --yes editorconfig-checker {staged_files}
+      run: editorconfig-checker {staged_files}
 
     - name: MkDocs build strict
       glob: "{mkdocs.yml,docs/*}"
