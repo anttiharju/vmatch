@@ -27,14 +27,6 @@ pre-commit:
       glob: "{*.sh,*.bash}"
       run: shellcheck --color=always --source-path=SCRIPTDIR --external-sources {staged_files}
 
-    - name: MkDocs build strict
-      glob: "{docs/*,mkdocs.yml}"
-      run: mkdocs build --strict
-
-    - name: markdown-link-check
-      glob: "*.md"
-      run: npx --yes markdown-link-check --quiet {staged_files} | (! grep .)
-
     - name: Prettier
       glob: "*{.md,.yml}"
       run: npx --yes prettier --write {staged_files}
@@ -42,3 +34,11 @@ pre-commit:
 
     - name: EditorConfig-Checker
       run: npx --yes editorconfig-checker {staged_files}
+
+    - name: MkDocs build strict
+      glob: "{docs/*,mkdocs.yml}"
+      run: mkdocs build --strict
+
+    - name: markdown-link-check
+      glob: "*.md"
+      run: npx --yes markdown-link-check --quiet {staged_files} | (! grep .)

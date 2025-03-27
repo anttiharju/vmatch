@@ -33,17 +33,17 @@ jobs:
         uses: anttiharju/actions/shellcheck@v0
 
       - if: always()
-        name: MkDocs build strict
-        uses: anttiharju/actions/mkdocs-build-strict@v0
-
-      - if: always()
-        name: markdown-link-check
-        uses: anttiharju/actions/markdown-link-check@v0
-
-      - if: always()
         name: Prettier
         uses: anttiharju/actions/prettier@v0
 
       - if: always()
         name: EditorConfig-Checker
         uses: anttiharju/actions/editorconfig-checker@v0
+
+      - if: always()
+        name: MkDocs build strict
+        uses: anttiharju/actions/mkdocs-build-strict@v0
+
+      - if: always()
+        name: markdown-link-check
+        uses: anttiharju/actions/markdown-link-check@v0
