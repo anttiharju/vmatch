@@ -24,7 +24,7 @@ pre-commit:
       run: actionlint -color {staged_files}
 
     - name: ShellCheck
-      glob: "{*.sh,*.bash}"
+      glob: "*{.sh,.bash}"
       run: shellcheck --color=always --source-path=SCRIPTDIR --external-sources {staged_files}
 
     - name: Prettier
@@ -37,7 +37,7 @@ pre-commit:
       run: npx --yes editorconfig-checker {staged_files}
 
     - name: MkDocs build strict
-      glob: "{docs/*,mkdocs.yml}"
+      glob: "{mkdocs.yml,docs/*}"
       run: mkdocs build --strict
 
     - name: markdown-link-check
