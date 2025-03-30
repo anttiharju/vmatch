@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"os"
 
 	"github.com/anttiharju/vmatch/pkg/choose"
@@ -10,6 +11,7 @@ import (
 func main() {
 	go interrupt.Listen(os.Interrupt)
 
-	exitCode := choose.Wrapper(os.Args[1:])
+	ctx := context.Background()
+	exitCode := choose.Wrapper(ctx, os.Args[1:])
 	os.Exit(exitCode)
 }
