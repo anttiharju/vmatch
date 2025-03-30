@@ -59,6 +59,7 @@ func downloadFile(ctx context.Context, url string) (io.ReadCloser, error) {
 	return resp.Body, nil
 }
 
+//nolint:cyclop // tar.NewReader and io.Copy have to stay in same function so gosec analysis works
 func extractTarGz(gzipStream io.Reader, installPath string) error {
 	// Decompress and extract tar.gz
 	gzr, err := gzip.NewReader(gzipStream)
