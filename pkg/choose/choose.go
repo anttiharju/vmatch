@@ -19,7 +19,7 @@ func Wrapper(args []string) int {
 
 	if firstArgIs("golangci-lint", args) {
 		wrappedLinter := linter.Wrap("golangci-lint")
-		exitCode := wrappedLinter.Run(args)
+		exitCode := wrappedLinter.Run(args[1:])
 
 		return exitCode
 	}
