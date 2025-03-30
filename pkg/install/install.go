@@ -95,26 +95,35 @@ func extractTarGz(gzipStream io.Reader, installPath string) error {
 				return errors.New("failed to create directory: " + err.Error())
 			}
 		case tar.TypeReg:
-			// Create file
-			dir := filepath.Dir(target)
-			if err := os.MkdirAll(dir, 0o755); err != nil {
-				return errors.New("failed to create file directory: " + err.Error())
-			}
-
-			f, err := os.OpenFile(target, os.O_CREATE|os.O_RDWR, os.FileMode(header.Mode))
+			file, err := createFileHandle(target, header.Mode)
 			if err != nil {
-				return errors.New("failed to create file: " + err.Error())
+				return err
 			}
 
-			if _, err := io.Copy(f, tarReader); err != nil {
-				f.Close()
+			if _, err := io.Copy(file, tarReader); err != nil {
+				file.Close()
 
 				return errors.New("failed to write file: " + err.Error())
 			}
 
-			f.Close()
+			file.Close()
 		}
 	}
 
 	return nil
+}
+
+func createFileHandle(target string, mode int64) (*os.File, error) {
+	// Create parent directory
+	dir := filepath.Dir(target)
+	if err := os.MkdirAll(dir, 0o755); err != nil {
+		return nil, errors.New("failed to create file directory: " + err.Error())
+	}
+
+	f, err := os.OpenFile(target, os.O_CREATE|os.O_RDWR, os.FileMode(mode))
+	if err != nil {
+		return nil, errors.New("failed to create file: " + err.Error())
+	}
+
+	return f, nil
 }
