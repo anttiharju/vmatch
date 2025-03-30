@@ -17,15 +17,15 @@ pre-commit:
 
     - name: action-validator
       glob: "{.github/workflows/*.yml,*/action.yml}"
-      run: action-validator --verbose {staged_files}
+      run: action-validator --verbose $(git ls-files '.github/workflows/*.yml' '*/action.yml')
 
     - name: actionlint
       glob: ".github/workflows/*.yml"
-      run: actionlint -color {staged_files}
+      run: actionlint -color
 
     - name: ShellCheck
       glob: "*{.sh,.bash}"
-      run: shellcheck --color=always --source-path=SCRIPTDIR --external-sources {staged_files}
+      run: shellcheck --color=always --source-path=SCRIPTDIR $(git ls-files '*.sh' '*.bash')
 
     - name: Prettier
       glob: "*{.md,.yml}"
@@ -33,13 +33,11 @@ pre-commit:
       stage_fixed: true
 
     - name: EditorConfig-Checker
-      glob: "*"
       run: editorconfig-checker {staged_files}
+
+    - name: check-relative-links
+      run: ./scripts/check-relative-links.bash $(git ls-files '*.md')
 
     - name: MkDocs build strict
       glob: "{mkdocs.yml,docs/*}"
       run: mkdocs build --strict
-
-    - name: check-relative-links
-      glob: "*"
-      run: ./scripts/check-relative-links.bash $(git ls-files '*.md')
