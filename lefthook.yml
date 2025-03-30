@@ -12,7 +12,7 @@ pre-commit:
 
     - name: golangci-lint
       glob: "{*.go,.golangci*}"
-      run: golangci-lint run --fix {staged_files}
+      run: for file in '{staged_files}'; do golangci-lint run --fix "$file"; done
       stage_fixed: true
 
     - name: action-validator
