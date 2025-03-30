@@ -14,42 +14,54 @@ import (
 )
 
 func FromURL(ctx context.Context, url, installPath string) error {
-	err := downloadAndExtract(ctx, url, installPath)
-	if err != nil {
-		return errors.New("failed to download or extract: " + err.Error())
-	}
+	ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
+	defer cancel()
 
-	return nil
-}
-
-func downloadAndExtract(ctx context.Context, url, installPath string) error {
 	// Ensure install directory exists
 	err := os.MkdirAll(installPath, 0o755)
 	if err != nil {
 		return errors.New("failed to create install directory: " + err.Error())
 	}
 
-	ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
-	defer cancel()
+	// Download the file
+	body, err := downloadFile(ctx, url)
+	if err != nil {
+		return errors.New("failed to download: " + err.Error())
+	}
+	defer body.Close()
 
+	// Extract the archive
+	err = extractTarGz(body, installPath)
+	if err != nil {
+		return errors.New("failed to extract: " + err.Error())
+	}
+
+	return nil
+}
+
+func downloadFile(ctx context.Context, url string) (io.ReadCloser, error) {
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {
-		return errors.New("failed to create request: " + err.Error())
+		return nil, errors.New("failed to create request: " + err.Error())
 	}
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		return errors.New("failed to fulfil request: " + err.Error())
+		return nil, errors.New("failed to fulfill request: " + err.Error())
 	}
-
-	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return errors.New("failed with status " + http.StatusText(resp.StatusCode))
+		resp.Body.Close()
+
+		return nil, errors.New("failed with status " + http.StatusText(resp.StatusCode))
 	}
 
+	return resp.Body, nil
+}
+
+func extractTarGz(gzipStream io.Reader, installPath string) error {
 	// Decompress and extract tar.gz
-	gzr, err := gzip.NewReader(resp.Body)
+	gzr, err := gzip.NewReader(gzipStream)
 	if err != nil {
 		return errors.New("failed to create gzip reader: " + err.Error())
 	}
