@@ -1,8 +1,8 @@
 package choose
 
 import (
-	"github.com/anttiharju/vmatch/pkg/wrapper/language"
-	"github.com/anttiharju/vmatch/pkg/wrapper/linter"
+	"github.com/anttiharju/vmatch/pkg/language"
+	"github.com/anttiharju/vmatch/pkg/linter"
 )
 
 func firstArgIs(arg string, args []string) bool {
