@@ -71,28 +71,24 @@ func extractTarGz(gzipStream io.Reader, installPath string) error {
 
 	// Extract files, stripping the top-level directory
 	for {
-		header, err := tarReader.Next()
-		if errors.Is(err, io.EOF) {
-			break
+		header, done, err := readNextHeader(tarReader)
+		if done {
+			break // EOF reached
 		}
 
 		if err != nil {
-			return errors.New("failed to read tar archive: " + err.Error())
+			return err
 		}
 
-		// Skip the top-level directory by removing the first path component
-		parts := strings.SplitN(header.Name, "/", 2)
-		if len(parts) < 2 {
-			continue // Skip if there's no second part (top-level directory itself)
+		target, skip := getTargetPath(header.Name, installPath)
+		if skip {
+			continue
 		}
-
-		target := filepath.Join(installPath, parts[1])
 
 		switch header.Typeflag {
 		case tar.TypeDir:
-			err = os.MkdirAll(target, 0o755)
-			if err != nil {
-				return errors.New("failed to create directory: " + err.Error())
+			if err := makeDirectory(target); err != nil {
+				return err
 			}
 		case tar.TypeReg:
 			file, err := createFileHandle(target, header.Mode)
@@ -108,6 +104,37 @@ func extractTarGz(gzipStream io.Reader, installPath string) error {
 
 			file.Close()
 		}
+	}
+
+	return nil
+}
+
+func readNextHeader(tarReader *tar.Reader) (*tar.Header, bool, error) {
+	header, err := tarReader.Next()
+	if errors.Is(err, io.EOF) {
+		return nil, true, nil
+	}
+
+	if err != nil {
+		return nil, false, errors.New("failed to read tar archive: " + err.Error())
+	}
+
+	return header, false, nil
+}
+
+func getTargetPath(headerName string, installPath string) (string, bool) {
+	// Skip the top-level directory by removing the first path component
+	parts := strings.SplitN(headerName, "/", 2)
+	if len(parts) < 2 {
+		return "", true // Skip if there's no second part (top-level directory itself)
+	}
+
+	return filepath.Join(installPath, parts[1]), false
+}
+
+func makeDirectory(path string) error {
+	if err := os.MkdirAll(path, 0o755); err != nil {
+		return errors.New("failed to create directory: " + err.Error())
 	}
 
 	return nil
