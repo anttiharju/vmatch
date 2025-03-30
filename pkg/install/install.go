@@ -148,7 +148,19 @@ func createFileHandle(target string, mode int64) (*os.File, error) {
 		return nil, errors.New("failed to create file directory: " + err.Error())
 	}
 
-	f, err := os.OpenFile(target, os.O_CREATE|os.O_RDWR, os.FileMode(mode))
+	// Convert mode to os.FileMode with bounds checking
+	var fileMode os.FileMode
+
+	switch {
+	case mode < 0:
+		fileMode = 0o600 // Default if negative
+	case mode > 0x7FFFFFFF:
+		fileMode = os.FileMode(0o777) // Cap at maximum permission if too large
+	default:
+		fileMode = os.FileMode(mode)
+	}
+
+	f, err := os.OpenFile(target, os.O_CREATE|os.O_RDWR, fileMode)
 	if err != nil {
 		return nil, errors.New("failed to create file: " + err.Error())
 	}
