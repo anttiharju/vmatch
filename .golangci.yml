@@ -71,7 +71,6 @@ linters:
     - staticcheck
     - stylecheck
     - tagliatelle
-    - tenv
     - testableexamples
     - testifylint
     - thelper

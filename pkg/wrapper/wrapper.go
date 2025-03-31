@@ -1,12 +1,13 @@
 package wrapper
 
 import (
+	"context"
 	"fmt"
 	"os"
 )
 
 type wrapperInterface interface {
-	Run(args []string) int
+	Run(ctx context.Context, args []string) int
 	Exit(code int)
 	ExitWithPrint(code int, msg string)
 	ExitWithPrintln(code int, msg string)
