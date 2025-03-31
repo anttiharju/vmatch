@@ -70,6 +70,15 @@ func extractTarGz(gzipStream io.Reader, installPath string) error {
 
 	tarReader := tar.NewReader(gzr)
 
+	// Define size limits
+	const gigabyte = 1024 * 1024 * 1024
+
+	const maxFileSize int64 = gigabyte
+
+	const maxTotalSize int64 = gigabyte
+
+	var totalExtracted int64
+
 	// Extract files, stripping the top-level directory
 	for {
 		header, done, err := readNextHeader(tarReader)
@@ -92,18 +101,62 @@ func extractTarGz(gzipStream io.Reader, installPath string) error {
 				return err
 			}
 		case tar.TypeReg:
-			file, err := createFileHandle(target, header.Mode)
+			bytesWritten, err := extractLimitedFile(tarReader, target, header.Mode, maxFileSize)
 			if err != nil {
 				return err
 			}
 
-			if _, err := io.Copy(file, tarReader); err != nil {
-				file.Close()
-
-				return errors.New("failed to write file: " + err.Error())
+			totalExtracted += bytesWritten
+			if totalExtracted > maxTotalSize {
+				return errors.New("extraction aborted: total size limit exceeded")
 			}
+		}
+	}
 
-			file.Close()
+	return nil
+}
+
+func extractLimitedFile(reader *tar.Reader, target string, mode int64, maxSize int64) (int64, error) {
+	file, err := createFileHandle(target, mode)
+	if err != nil {
+		return 0, err
+	}
+	defer file.Close()
+
+	written, err := io.CopyN(file, reader, maxSize)
+
+	err = handleCopyError(err, target)
+	if err != nil {
+		return 0, err
+	}
+
+	err = checkSizeLimitExceeded(written, maxSize, reader, target)
+	if err != nil {
+		return 0, err
+	}
+
+	return written, nil
+}
+
+func handleCopyError(err error, target string) error {
+	if err != nil && !errors.Is(err, io.EOF) {
+		os.Remove(target)
+
+		return errors.New("failed to write file: " + err.Error())
+	}
+
+	return nil
+}
+
+func checkSizeLimitExceeded(written int64, maxSize int64, reader *tar.Reader, target string) error {
+	if written == maxSize {
+		buf := make([]byte, 1)
+
+		n, _ := reader.Read(buf)
+		if n > 0 {
+			os.Remove(target)
+
+			return errors.New("file extraction aborted: size limit exceeded")
 		}
 	}
 
