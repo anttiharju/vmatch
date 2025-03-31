@@ -1,6 +1,7 @@
 package language
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"os"
@@ -11,6 +12,7 @@ import (
 
 	"github.com/anttiharju/vmatch/pkg/exitcode"
 	"github.com/anttiharju/vmatch/pkg/finder"
+	"github.com/anttiharju/vmatch/pkg/install"
 	"github.com/anttiharju/vmatch/pkg/wrapper"
 )
 
@@ -61,9 +63,9 @@ func Wrap(name string) *WrappedLanguage {
 	}
 }
 
-func (w *WrappedLanguage) Run(args []string) int {
+func (w *WrappedLanguage) Run(ctx context.Context, args []string) int {
 	if w.noBinary() {
-		w.install()
+		w.install(ctx)
 	}
 
 	//nolint:gosec // I don't think a wrapper can avoid G204.
@@ -81,26 +83,24 @@ func (w *WrappedLanguage) noBinary() bool {
 	return os.IsNotExist(err)
 }
 
-func (w *WrappedLanguage) install() {
-	//nolint:lll // Install command example:
-	// curl -sSfL https://raw.githubusercontent.com/anttiharju/vmatch-go/HEAD/install.sh | sh -s -- 1.23.6 darwin arm64 "$HOME/.vmatch/go/v1.23.6"
-	// todo: pin to a sha instead of HEAD, but automate updates
-	curl := "curl -sSfL https://raw.githubusercontent.com/anttiharju/vmatch-go/HEAD/install.sh"
-	pipe := " | "
-	sh := "sh -s -- "
-	versionArgs := w.DesiredVersion + " " + runtime.GOOS + " " + runtime.GOARCH + " "
-	command := curl + pipe + sh + versionArgs + w.InstallPath
-	cmd := exec.Command("sh", "-c", command)
+func (w *WrappedLanguage) install(ctx context.Context) {
+	downloadURL := buildDownloadURL(w.DesiredVersion)
 
-	err := cmd.Start()
+	err := install.FromURL(ctx, downloadURL, w.InstallPath)
 	if err != nil {
-		w.ExitWithPrint(exitcode.CmdStartIssue, "failed to start command: "+err.Error())
+		w.ExitWithPrint(exitcode.CmdStartIssue, "failed to install Go: "+err.Error())
 	}
 
-	err = cmd.Wait()
-	if err != nil {
-		w.ExitWithPrint(exitcode.CmdStartIssue, "failed to wait for command: "+err.Error())
+	if w.noBinary() {
+		w.ExitWithPrint(exitcode.CmdStartIssue, "failed to install Go: binary not found after installation")
 	}
+}
+
+func buildDownloadURL(version string) string {
+	return fmt.Sprintf("https://go.dev/dl/go%s.%s-%s.tar.gz",
+		version,
+		runtime.GOOS,
+		runtime.GOARCH)
 }
 
 func (w *WrappedLanguage) getGoPath() string {
