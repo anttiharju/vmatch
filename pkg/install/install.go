@@ -70,9 +70,9 @@ func extractTarGz(gzipStream io.Reader, installPath string) error {
 
 	tarReader := tar.NewReader(gzr)
 
-	// Define size limits
 	const gigabyte = 1024 * 1024 * 1024
 
+	// TODO: Configurable via an option
 	const maxFileSize int64 = gigabyte
 
 	const maxTotalSize int64 = gigabyte
