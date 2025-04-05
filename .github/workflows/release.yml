@@ -6,7 +6,6 @@ on:
       - ".github/**/*"
       - "dist/**/*"
       - "pkg/**/*"
-      - "scripts/**/*"
       - "go.mod"
       - "main.go"
 
