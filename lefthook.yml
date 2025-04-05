@@ -35,8 +35,9 @@ pre-commit:
     - name: EditorConfig-Checker
       run: editorconfig-checker {staged_files}
 
-    - name: check-relative-links
-      run: ./scripts/check-relative-links.bash $(git ls-files '*.md')
+    # https://github.com/anttiharju/check-relative-markdown-links
+    - name: check-relative-markdown-links
+      run: check-relative-markdown-links run
 
     - name: MkDocs build strict
       glob: "{mkdocs.yml,docs/*}"
