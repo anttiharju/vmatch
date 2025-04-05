@@ -41,10 +41,8 @@ jobs:
         uses: anttiharju/actions/editorconfig-checker@v0
 
       - if: always()
-        name: check-relative-links
-        run: |
-          # shellcheck disable=SC2046
-          ./scripts/check-relative-links.bash $(git ls-files '*.md')
+        name: check-relative-markdown-links
+        uses: anttiharju/actions/check-relative-markdown-links@v0
 
       - if: always()
         name: MkDocs build strict
