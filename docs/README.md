@@ -35,27 +35,19 @@ Once the project is deemed feature-complete, writing automated tests (covering a
 
 ## Usage?
 
-Install with
+The target state is that the `go` that you call is actually a shell script that wraps vmatch with right settings, the project hasn't gotten quite there yet so in the meanwhile use
 
 ```sh
-brew install anttiharju/tap/vmatch
+vmatch go (any args you would give to go)
 ```
 
-Instead of calling golangci-lint, call vmatch. And have a `.golangci-version` file as outlined above.
+or
 
-For VS Code, this can be done with a `.vscode/settings.json` file like the one below:
-
-```json
-{
-  "go.lintTool": "golangci-lint",
-  "go.lintFlags": ["--fast"],
-  "go.alternateTools": {
-    "golangci-lint": "/opt/homebrew/bin/vmatch"
-  }
-}
+```sh
+vmatch golangci-lint (any args you would give to golangci-lint)
 ```
 
-For more documentation on VS Code integration, refer to [golangci-lint docs](https://golangci-lint.run/welcome/integrations/#go-for-visual-studio-code).
+Remember that you need to have `go.mod` with Go version for go usage and respectively `.golangci-version` for golangci-lint.
 
 ## Stargazers over time
 
