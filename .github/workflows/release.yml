@@ -14,9 +14,9 @@ jobs:
         id: find_changes
         uses: ./.github/actions/find-changes
     outputs:
-      release: ${{ steps.find_changes.outputs.release_has_changed }}
-      distribute: ${{ steps.find_changes.outputs.distribution_has_changed }}
-      publish: ${{ steps.find_changes.outputs.documentation_has_changed }}
+      release: ${{ steps.find_changes.outputs.release_changed }}
+      distribute: ${{ steps.find_changes.outputs.distribution_changed }}
+      publish: ${{ steps.find_changes.outputs.documentation_changed }}
 
   validate:
     name: Validate

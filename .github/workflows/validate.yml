@@ -15,15 +15,15 @@ jobs:
         id: find_changes
         uses: ./.github/actions/find-changes
 
-      - if: always() && steps.find_changes.outputs.release_has_changed == 'true'
+      - if: always() && steps.find_changes.outputs.release_changed == 'true'
         name: Release
         uses: anttiharju/actions/go-build@v0
 
-      - if: always() && steps.find_changes.outputs.go_code_has_changed == 'true'
+      - if: always() && steps.find_changes.outputs.go_code_changed == 'true'
         name: Go code
         uses: anttiharju/actions/golangci-lint@v0
 
-      - if: always() && steps.find_changes.outputs.github_actions_has_changed == 'true'
+      - if: always() && steps.find_changes.outputs.github_actions_changed == 'true'
         name: GitHub Actions
         uses: anttiharju/actions/action-validator@v0
 
@@ -47,6 +47,6 @@ jobs:
         name: check-relative-markdown-links
         uses: anttiharju/actions/check-relative-markdown-links@v0
 
-      - if: always() && steps.find_changes.outputs.documentation_has_changed == 'true'
+      - if: always() && steps.find_changes.outputs.documentation_changed == 'true'
         name: Documentation
         uses: anttiharju/actions/mkdocs-build-strict@v0

@@ -44,18 +44,18 @@ runs:
         file: lefthook.yml
         yq: '.pre-commit.jobs[] | select(.name == "GitHub Actions") | .glob'
 outputs:
-  release_has_changed:
+  release_changed:
     description: "Whether release has changed"
-    value: ${{ steps.release.outputs.has_changed }}
-  distribution_has_changed:
+    value: ${{ steps.release.outputs.changed }}
+  distribution_changed:
     description: "Whether distribution has changed"
-    value: ${{ steps.distribution.outputs.has_changed }}
-  documentation_has_changed:
+    value: ${{ steps.distribution.outputs.changed }}
+  documentation_changed:
     description: "Whether documentation has changed"
-    value: ${{ steps.documentation.outputs.has_changed }}
-  go_code_has_changed:
+    value: ${{ steps.documentation.outputs.changed }}
+  go_code_changed:
     description: "Whether Go code has changed"
-    value: ${{ steps.go_code.outputs.has_changed }}
-  github_actions_has_changed:
+    value: ${{ steps.go_code.outputs.changed }}
+  github_actions_changed:
     description: "Whether GitHub Actions has changed"
-    value: ${{ steps.github_actions.outputs.has_changed }}
+    value: ${{ steps.github_actions.outputs.changed }}
