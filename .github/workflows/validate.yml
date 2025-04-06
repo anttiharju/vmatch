@@ -68,6 +68,6 @@ jobs:
         name: Documentation
         uses: anttiharju/actions/mkdocs-build-strict@v0
     outputs:
-      release: ${{ steps.find_changes.outputs.release_changed }}
-      distribute: ${{ steps.find_changes.outputs.distribution_changed }}
-      publish: ${{ steps.find_changes.outputs.documentation_changed }}
+      release: ${{ steps.plan.outputs.release_changed }}
+      distribute: ${{ steps.plan.outputs.distribution_changed }}
+      publish: ${{ steps.plan.outputs.documentation_changed }}
