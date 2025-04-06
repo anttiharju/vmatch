@@ -32,11 +32,11 @@ pre-commit:
       run: prettier --write {staged_files}
       stage_fixed: true
 
-    - name: EditorConfig-Checker
+    - name: Formatting
       run: editorconfig-checker {staged_files}
 
     # https://github.com/anttiharju/check-relative-markdown-links
-    - name: check-relative-markdown-links
+    - name: Relative Markdown links
       run: check-relative-markdown-links run
 
     - name: Documentation

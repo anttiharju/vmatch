@@ -42,11 +42,11 @@ jobs:
         uses: anttiharju/actions/prettier@v0
 
       - if: always()
-        name: EditorConfig-Checker
+        name: Formatting
         uses: anttiharju/actions/editorconfig-checker@v0
 
       - if: always()
-        name: check-relative-markdown-links
+        name: Relative Markdown links
         uses: anttiharju/actions/check-relative-markdown-links@v0
 
       - if: always() && steps.find_changes.outputs.documentation_changed == 'true'
