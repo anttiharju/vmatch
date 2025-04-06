@@ -6,27 +6,12 @@ on:
 jobs:
   planner:
     name: Planner
-    runs-on: ubuntu-24.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Find changes
-        id: find_changes
-        uses: ./.github/actions/find-changes
-    outputs:
-      release: ${{ steps.find_changes.outputs.release_changed }}
-      distribute: ${{ steps.find_changes.outputs.distribution_changed }}
-      publish: ${{ steps.find_changes.outputs.documentation_changed }}
-
-  validate:
-    name: Validate
     uses: ./.github/workflows/validate.yml
 
   release:
     if: needs.planner.outputs.release == 'true'
     needs:
       - planner
-      - validate
     name: Release
     runs-on: ubuntu-24.04
     permissions:
