@@ -27,8 +27,8 @@ jobs:
         name: GitHub Actions
         uses: anttiharju/actions/action-validator@v0
 
-      - if: always()
-        name: actionlint
+      - if: always() && steps.find_changes.outputs.github_actions_workflows_changed == 'true'
+        name: GitHub Actions Workflows
         uses: anttiharju/actions/actionlint@v0
 
       - if: always()

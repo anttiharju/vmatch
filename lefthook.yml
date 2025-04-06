@@ -19,7 +19,7 @@ pre-commit:
       glob: "{.github/workflows/*.yml,*/action.yml}"
       run: action-validator --verbose $(git ls-files '.github/workflows/*.yml' '*/action.yml')
 
-    - name: actionlint
+    - name: GitHub Actions Workflows
       glob: ".github/workflows/*.yml"
       run: actionlint -color
 

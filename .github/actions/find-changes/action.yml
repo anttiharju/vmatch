@@ -43,6 +43,14 @@ runs:
         changes: ${{ steps.changed.outputs.files }}
         file: lefthook.yml
         yq: '.pre-commit.jobs[] | select(.name == "GitHub Actions") | .glob'
+    - if: github.event_name != 'push'
+      name: Check if GitHub Actions Workflows have changed
+      id: github_actions_workflows
+      uses: anttiharju/actions/check-changes@v0
+      with:
+        changes: ${{ steps.changed.outputs.files }}
+        file: lefthook.yml
+        yq: '.pre-commit.jobs[] | select(.name == "GitHub Actions Workflows") | .glob'
 outputs:
   release_changed:
     description: "Whether release has changed"
@@ -58,4 +66,7 @@ outputs:
     value: ${{ steps.go_code.outputs.changed }}
   github_actions_changed:
     description: "Whether GitHub Actions have changed"
+    value: ${{ steps.github_actions.outputs.changed }}
+  github_actions_workflows_changed:
+    description: "Whether GitHub Actions Worfklows have changed"
     value: ${{ steps.github_actions.outputs.changed }}
