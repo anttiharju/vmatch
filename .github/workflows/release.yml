@@ -48,8 +48,7 @@ jobs:
   distribute:
     if: |
       always() && !failure() && !cancelled() &&
-      needs.planner.outputs.release == 'true' ||
-      needs.planner.outputs.distribute == 'true'
+      (needs.planner.outputs.release == 'true' || needs.planner.outputs.distribute == 'true')
     needs:
       - planner
       - release
