@@ -36,7 +36,7 @@ jobs:
         uses: anttiharju/actions/shellcheck@v0
 
       - if: always()
-        name: Prettier
+        name: Markdown and YAML
         uses: anttiharju/actions/prettier@v0
 
       - if: always()

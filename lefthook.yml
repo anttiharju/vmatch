@@ -27,8 +27,8 @@ pre-commit:
       glob: "*{.sh,.bash,.dash,.ksh}"
       run: git ls-files -z '*.sh' '*.bash' '*.dash' '*.ksh' | xargs -0 shellcheck --color=always --source-path=SCRIPTDIR
 
-    - name: Prettier
-      glob: "*{.md,.yml}"
+    - name: Markdown and YAML
+      glob: "*{.md,.yml,.yaml}"
       run: prettier --write {staged_files}
       stage_fixed: true
 
