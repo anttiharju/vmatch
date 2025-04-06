@@ -4,15 +4,15 @@ on:
       - main
 
 jobs:
-  planner:
-    name: Planner
+  plan:
+    name: Plan
     uses: ./.github/workflows/validate.yml
 
   release:
-    if: needs.planner.outputs.release == 'true'
-    needs:
-      - planner
     name: Release
+    needs:
+      - plan
+    if: needs.plan.outputs.release == 'true'
     runs-on: ubuntu-24.04
     permissions:
       contents: write
@@ -23,27 +23,27 @@ jobs:
         uses: anttiharju/actions/release@v0
 
   distribute:
+    name: Distribute
+    needs:
+      - plan
+      - release
     if: |
       always() && !failure() && !cancelled() && (
-      needs.planner.outputs.release == 'true' ||
-      needs.planner.outputs.distribute == 'true')
-    needs:
-      - planner
-      - release
-    name: Distribute
+      needs.plan.outputs.release == 'true' ||
+      needs.plan.outputs.distribute == 'true')
     uses: ./.github/workflows/distribute.yml
     permissions:
       contents: write
     secrets: inherit
 
   publish:
+    name: Publish
+    needs:
+      - plan
+      - release
     if: |
       always() && !failure() && !cancelled() &&
-      needs.planner.outputs.publish == 'true'
-    needs:
-      - planner
-      - release
-    name: Publish
+      needs.plan.outputs.publish == 'true'
     uses: ./.github/workflows/publish.yml
     permissions:
       contents: write
