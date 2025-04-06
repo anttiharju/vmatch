@@ -7,7 +7,7 @@ pre-commit:
   parallel: true
   jobs:
     - name: go build
-      glob: "{pkg/*,main.go,go.mod}"
+      glob: "{pkg/*,main.go,go.mod,dist/wrapper/*}"
       run: go build
 
     - name: golangci-lint
@@ -42,3 +42,8 @@ pre-commit:
     - name: MkDocs build strict
       glob: "{mkdocs.yml,docs/*}"
       run: mkdocs build --strict
+
+    # https://github.com/anttiharju/vmatch/issues/137
+    - name: Brew formula
+      glob: "dist/brew/*"
+      run: echo todo

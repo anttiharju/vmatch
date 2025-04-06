@@ -5,13 +5,38 @@ on:
       - main
 
 jobs:
+  planner:
+    name: Planner
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Find changes
+        id: changed
+        uses: ./find-changes
+      - name: Filter changes
+        id: release
+        uses: ./filter-changes
+        with:
+          changes: ${{ steps.changed.outputs.files }}
+          file: lefthook.yml
+          yq: '.pre-commit.jobs[] | select(.name == "go build") | .glob'
+    outputs:
+      release: ${{ steps.release.outputs.have_changed }}
+      distribute: ${{ steps.release.outputs.have_changed }}
+      publish: ${{ steps.release.outputs.have_changed }}
+
   validate:
     name: Validate
     uses: ./.github/workflows/validate.yml
 
   release:
+    if: |
+      needs.planner.outputs.release == 'true'
+    needs:
+      - planner
+      - validate
     name: Release
-    needs: validate
     runs-on: ubuntu-24.04
     permissions:
       contents: write
@@ -22,15 +47,24 @@ jobs:
         uses: anttiharju/actions/release@v0
 
   distribute:
+    if: |
+      needs.planner.outputs.release == 'true' ||
+      needs.planner.outputs.distribute == 'true'
+    needs:
+      - planner
+      - release
     name: Distribute
-    needs: release
     uses: ./.github/workflows/distribute.yml
     permissions:
       contents: write
     secrets: inherit
 
   publish:
+    if: |
+      needs.planner.outputs.publish == 'true'
+    needs:
+      - planner
+      - release
     name: Publish
-    needs: release
     uses: ./.github/workflows/publish.yml
     secrets: inherit
