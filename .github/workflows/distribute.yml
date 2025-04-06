@@ -47,4 +47,3 @@ jobs:
 
             https://github.com/anttiharju/vmatch/blob/${{ github.sha }}/.github/workflows/distribute.yml
           working-directory: homebrew-tap
-          strict: true
