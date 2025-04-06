@@ -23,7 +23,7 @@ jobs:
 
       - if: github.event_name == 'push'
         name: Plan CI job execution upon merge to default branch
-        id: planner
+        id: plan
         uses: ./.github/actions/find-changes
 
       - name: Find changes
