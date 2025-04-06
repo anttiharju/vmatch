@@ -11,7 +11,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: go build
+      - name: Find changes
+        id: find_changes
+        uses: ./.github/actions/find-changes
+
+      - if: always() && steps.find_changes.outputs.release_has_changed == 'true'
+        name: go build
         uses: anttiharju/actions/go-build@v0
 
       - if: always()
@@ -42,10 +47,6 @@ jobs:
         name: check-relative-markdown-links
         uses: anttiharju/actions/check-relative-markdown-links@v0
 
-      - if: always()
+      - if: always() && steps.find_changes.outputs.documentation_has_changed == 'true'
         name: MkDocs build strict
         uses: anttiharju/actions/mkdocs-build-strict@v0
-
-      - if: always()
-        name: Find changes
-        uses: ./.github/actions/find-changes
