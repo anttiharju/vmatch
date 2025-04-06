@@ -1,49 +1,54 @@
 on:
-  push:
-    branches:
-      - main
   pull_request:
   workflow_call:
 
 # Match to lefthook.yml
 jobs:
-  vmatch:
+  validate:
+    name: Validate
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: go build
+      - name: Find changes
+        id: find_changes
+        uses: ./.github/actions/find-changes
+        with:
+          force-all: ${{ github.event_name == 'push' }}
+
+      - if: always() && steps.find_changes.outputs.release_changed == 'true'
+        name: Release
         uses: anttiharju/actions/go-build@v0
 
-      - if: always()
-        name: golangci-lint
+      - if: always() && steps.find_changes.outputs.go_code_changed == 'true'
+        name: Go code
         uses: anttiharju/actions/golangci-lint@v0
 
-      - if: always()
-        name: action-validator
+      - if: always() && steps.find_changes.outputs.github_actions_changed == 'true'
+        name: GitHub Actions
         uses: anttiharju/actions/action-validator@v0
 
-      - if: always()
-        name: actionlint
+      - if: always() && steps.find_changes.outputs.github_actions_workflows_changed == 'true'
+        name: GitHub Actions Workflows
         uses: anttiharju/actions/actionlint@v0
 
-      - if: always()
-        name: ShellCheck
+      - if: always() && steps.find_changes.outputs.scripts_changed == 'true'
+        name: Scripts
         uses: anttiharju/actions/shellcheck@v0
 
       - if: always()
-        name: Prettier
+        name: Markdown and YAML
         uses: anttiharju/actions/prettier@v0
 
       - if: always()
-        name: EditorConfig-Checker
+        name: Formatting
         uses: anttiharju/actions/editorconfig-checker@v0
 
       - if: always()
-        name: check-relative-markdown-links
+        name: Relative Markdown links
         uses: anttiharju/actions/check-relative-markdown-links@v0
 
-      - if: always()
-        name: MkDocs build strict
+      - if: always() && steps.find_changes.outputs.documentation_changed == 'true'
+        name: Documentation
         uses: anttiharju/actions/mkdocs-build-strict@v0

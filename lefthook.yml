@@ -6,39 +6,44 @@ output:
 pre-commit:
   parallel: true
   jobs:
-    - name: go build
-      glob: "{pkg/*,main.go,go.mod}"
+    - name: Release
+      glob: "{pkg/*,main.go,go.mod,dist/wrapper/*}"
       run: go build
 
-    - name: golangci-lint
+    - name: Go code
       glob: "{*.go,.golangci*}"
       run: golangci-lint run --fix
       stage_fixed: true
 
-    - name: action-validator
+    - name: GitHub Actions
       glob: "{.github/workflows/*.yml,*/action.yml}"
       run: action-validator --verbose $(git ls-files '.github/workflows/*.yml' '*/action.yml')
 
-    - name: actionlint
+    - name: GitHub Actions Workflows
       glob: ".github/workflows/*.yml"
       run: actionlint -color
 
-    - name: ShellCheck
+    - name: Scripts
       glob: "*{.sh,.bash,.dash,.ksh}"
       run: git ls-files -z '*.sh' '*.bash' '*.dash' '*.ksh' | xargs -0 shellcheck --color=always --source-path=SCRIPTDIR
 
-    - name: Prettier
-      glob: "*{.md,.yml}"
+    - name: Markdown and YAML
+      glob: "*{.md,.yml,.yaml}"
       run: prettier --write {staged_files}
       stage_fixed: true
 
-    - name: EditorConfig-Checker
+    - name: Formatting
       run: editorconfig-checker {staged_files}
 
     # https://github.com/anttiharju/check-relative-markdown-links
-    - name: check-relative-markdown-links
+    - name: Relative Markdown links
       run: check-relative-markdown-links run
 
-    - name: MkDocs build strict
+    - name: Documentation
       glob: "{mkdocs.yml,docs/*}"
       run: mkdocs build --strict
+
+    # https://github.com/anttiharju/vmatch/issues/137
+    - name: Distribution
+      glob: "dist/brew/*"
+      run: echo todo
