@@ -31,8 +31,7 @@ jobs:
     uses: ./.github/workflows/validate.yml
 
   release:
-    if: |
-      needs.planner.outputs.release == 'true'
+    if: needs.planner.outputs.release == 'true'
     needs:
       - planner
       - validate
