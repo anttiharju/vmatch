@@ -19,7 +19,7 @@ jobs:
         name: go build
         uses: anttiharju/actions/go-build@v0
 
-      - if: always()
+      - if: always() && steps.find_changes.outputs.go_code_has_changed == 'true'
         name: golangci-lint
         uses: anttiharju/actions/golangci-lint@v0
 
