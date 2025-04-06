@@ -31,8 +31,8 @@ jobs:
         name: GitHub Actions Workflows
         uses: anttiharju/actions/actionlint@v0
 
-      - if: always()
-        name: ShellCheck
+      - if: always() && steps.find_changes.outputs.scripts_changed == 'true'
+        name: Scripts
         uses: anttiharju/actions/shellcheck@v0
 
       - if: always()

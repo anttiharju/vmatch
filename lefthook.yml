@@ -23,7 +23,7 @@ pre-commit:
       glob: ".github/workflows/*.yml"
       run: actionlint -color
 
-    - name: ShellCheck
+    - name: Scripts
       glob: "*{.sh,.bash,.dash,.ksh}"
       run: git ls-files -z '*.sh' '*.bash' '*.dash' '*.ksh' | xargs -0 shellcheck --color=always --source-path=SCRIPTDIR
 
