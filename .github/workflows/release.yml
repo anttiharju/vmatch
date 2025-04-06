@@ -2,12 +2,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - ".github/**/*"
-      - "dist/**/*"
-      - "pkg/**/*"
-      - "go.mod"
-      - "main.go"
 
 jobs:
   validate:
@@ -32,4 +26,10 @@ jobs:
     uses: ./.github/workflows/distribute.yml
     permissions:
       contents: write
+    secrets: inherit
+
+  publish:
+    name: Publish
+    needs: release
+    uses: ./.github/workflows/publish.yml
     secrets: inherit
