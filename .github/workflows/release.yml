@@ -14,16 +14,23 @@ jobs:
       - name: Find changes
         id: changed
         uses: anttiharju/actions/find-changes@v0
-      - name: Decide whether to do a release
+      - name: Check if release has changed
         id: release
         uses: anttiharju/actions/filter-changes@v0
         with:
           changes: ${{ steps.changed.outputs.files }}
           file: lefthook.yml
           yq: '.pre-commit.jobs[] | select(.name == "go build") | .glob'
+      - name: Check if distribution has changed
+        id: distribution
+        uses: anttiharju/actions/filter-changes@v0
+        with:
+          changes: ${{ steps.changed.outputs.files }}
+          file: lefthook.yml
+          yq: '.pre-commit.jobs[] | select(.name == "Brew formula") | .glob'
     outputs:
       release: ${{ steps.release.outputs.have_changed }}
-      distribute: ${{ steps.release.outputs.have_changed }}
+      distribute: ${{ steps.distribution.outputs.have_changed }}
       publish: ${{ steps.release.outputs.have_changed }}
 
   validate:
