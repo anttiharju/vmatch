@@ -1,6 +1,16 @@
 on:
   pull_request:
   workflow_call:
+    outputs:
+      release:
+        description: "Whether to run release job"
+        value: ${{ jobs.validate.outputs.release }}
+      distribute:
+        description: "Whether to run distribute job"
+        value: ${{ jobs.validate.outputs.distribute }}
+      publish:
+        description: "Whether to run publish job"
+        value: ${{ jobs.validate.outputs.publish }}
 
 # Match to lefthook.yml
 jobs:
@@ -10,6 +20,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - if: github.event_name == 'push'
+        name: Plan CI job execution upon merge to default branch
+        id: planner
+        uses: ./.github/actions/find-changes
 
       - name: Find changes
         id: find_changes
@@ -52,3 +67,7 @@ jobs:
       - if: always() && steps.find_changes.outputs.documentation_changed == 'true'
         name: Documentation
         uses: anttiharju/actions/mkdocs-build-strict@v0
+    outputs:
+      release: ${{ steps.find_changes.outputs.release_changed }}
+      distribute: ${{ steps.find_changes.outputs.distribution_changed }}
+      publish: ${{ steps.find_changes.outputs.documentation_changed }}
