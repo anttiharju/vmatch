@@ -4,14 +4,14 @@ on:
       - main
 
 jobs:
-  planner:
-    name: Planner
+  plan:
+    name: Plan
     uses: ./.github/workflows/validate.yml
 
   release:
-    if: needs.planner.outputs.release == 'true'
+    if: needs.plan.outputs.release == 'true'
     needs:
-      - planner
+      - plan
     name: Release
     runs-on: ubuntu-24.04
     permissions:
@@ -25,10 +25,10 @@ jobs:
   distribute:
     if: |
       always() && !failure() && !cancelled() && (
-      needs.planner.outputs.release == 'true' ||
-      needs.planner.outputs.distribute == 'true')
+      needs.plan.outputs.release == 'true' ||
+      needs.plan.outputs.distribute == 'true')
     needs:
-      - planner
+      - plan
       - release
     name: Distribute
     uses: ./.github/workflows/distribute.yml
@@ -39,9 +39,9 @@ jobs:
   publish:
     if: |
       always() && !failure() && !cancelled() &&
-      needs.planner.outputs.publish == 'true'
+      needs.plan.outputs.publish == 'true'
     needs:
-      - planner
+      - plan
       - release
     name: Publish
     uses: ./.github/workflows/publish.yml
