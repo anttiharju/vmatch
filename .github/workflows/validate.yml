@@ -4,6 +4,41 @@ on:
 
 # Match to lefthook.yml
 jobs:
+  planner:
+    name: Planner
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Find changes
+        id: changed
+        uses: anttiharju/actions/find-changes@v0
+      - name: Check if release has changed
+        id: release
+        uses: anttiharju/actions/check-changes@v0
+        with:
+          changes: ${{ steps.changed.outputs.files }}
+          file: lefthook.yml
+          yq: '.pre-commit.jobs[] | select(.name == "go build") | .glob'
+      - name: Check if distribution has changed
+        id: distribution
+        uses: anttiharju/actions/check-changes@v0
+        with:
+          changes: ${{ steps.changed.outputs.files }}
+          file: lefthook.yml
+          yq: '.pre-commit.jobs[] | select(.name == "Brew formula") | .glob'
+      - name: Check if documentation has changed
+        id: documentation
+        uses: anttiharju/actions/check-changes@v0
+        with:
+          changes: ${{ steps.changed.outputs.files }}
+          file: lefthook.yml
+          yq: '.pre-commit.jobs[] | select(.name == "MkDocs build strict") | .glob'
+    outputs:
+      release: ${{ steps.release.outputs.has_changed }}
+      distribute: ${{ steps.distribution.outputs.has_changed }}
+      publish: ${{ steps.documentation.outputs.has_changed }}
+
   validate:
     name: Validate
     runs-on: ubuntu-24.04
