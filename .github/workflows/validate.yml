@@ -1,3 +1,4 @@
+name: Pull Request
 on:
   workflow_call:
   pull_request:
