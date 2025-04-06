@@ -9,10 +9,10 @@ jobs:
     uses: ./.github/workflows/validate.yml
 
   release:
-    if: needs.plan.outputs.release == 'true'
+    name: Release
     needs:
       - plan
-    name: Release
+    if: needs.plan.outputs.release == 'true'
     runs-on: ubuntu-24.04
     permissions:
       contents: write
@@ -23,27 +23,27 @@ jobs:
         uses: anttiharju/actions/release@v0
 
   distribute:
+    name: Distribute
+    needs:
+      - plan
+      - release
     if: |
       always() && !failure() && !cancelled() && (
       needs.plan.outputs.release == 'true' ||
       needs.plan.outputs.distribute == 'true')
-    needs:
-      - plan
-      - release
-    name: Distribute
     uses: ./.github/workflows/distribute.yml
     permissions:
       contents: write
     secrets: inherit
 
   publish:
-    if: |
-      always() && !failure() && !cancelled() &&
-      needs.plan.outputs.publish == 'true'
+    name: Publish
     needs:
       - plan
       - release
-    name: Publish
+    if: |
+      always() && !failure() && !cancelled() &&
+      needs.plan.outputs.publish == 'true'
     uses: ./.github/workflows/publish.yml
     permissions:
       contents: write
