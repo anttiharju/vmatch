@@ -18,6 +18,7 @@ runs:
         changes: ${{ steps.changed.outputs.files }}
         file: lefthook.yml
         yq: '.pre-commit.jobs[] | select(.name == "Release") | .glob'
+        force-true: ${{ inputs.force-all }}
     - name: Check if distribution has changed
       id: distribution
       uses: anttiharju/actions/check-changes@v0
@@ -25,6 +26,7 @@ runs:
         changes: ${{ steps.changed.outputs.files }}
         file: lefthook.yml
         yq: '.pre-commit.jobs[] | select(.name == "Distribution") | .glob'
+        force-true: ${{ inputs.force-all }}
     - name: Check if documentation has changed
       id: documentation
       uses: anttiharju/actions/check-changes@v0
@@ -32,6 +34,7 @@ runs:
         changes: ${{ steps.changed.outputs.files }}
         file: lefthook.yml
         yq: '.pre-commit.jobs[] | select(.name == "Documentation") | .glob'
+        force-true: ${{ inputs.force-all }}
     - if: github.event_name != 'push' || inputs.force-all == 'true'
       name: Check if Go code has changed
       id: go_code
