@@ -25,7 +25,7 @@ jobs:
         uses: anttiharju/actions/check-changes@v0
         with:
           changes: ${{ steps.changed.outputs.files }}
-          file: lefthook.yaml
+          file: lefthook.yml
           yq: '.pre-commit.jobs[] | select(.name == "Brew formula") | .glob'
       - name: Check if documentation has changed
         id: documentation
