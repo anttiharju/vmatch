@@ -22,7 +22,7 @@ jobs:
         uses: actions/checkout@v4
 
       - if: github.event_name == 'push'
-        name: Plan CI jobs upon merge to default branch
+        name: Plan CI job execution upon merge to default branch
         id: planner
         uses: ./.github/actions/find-changes
 
