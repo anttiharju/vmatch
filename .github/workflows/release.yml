@@ -2,21 +2,32 @@ on:
   push:
     branches:
       - main
-    paths:
-      - ".github/**/*"
-      - "dist/**/*"
-      - "pkg/**/*"
-      - "go.mod"
-      - "main.go"
 
 jobs:
+  planner:
+    name: Planner
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Find changes
+        id: find_changes
+        uses: ./.github/actions/find-changes
+    outputs:
+      release: ${{ steps.find_changes.outputs.release_changed }}
+      distribute: ${{ steps.find_changes.outputs.distribution_changed }}
+      publish: ${{ steps.find_changes.outputs.documentation_changed }}
+
   validate:
     name: Validate
     uses: ./.github/workflows/validate.yml
 
   release:
+    if: needs.planner.outputs.release == 'true'
+    needs:
+      - planner
+      - validate
     name: Release
-    needs: validate
     runs-on: ubuntu-24.04
     permissions:
       contents: write
@@ -27,9 +38,26 @@ jobs:
         uses: anttiharju/actions/release@v0
 
   distribute:
+    if: |
+      always() && !failure() && !cancelled() && (
+      needs.planner.outputs.release == 'true' ||
+      needs.planner.outputs.distribute == 'true')
+    needs:
+      - planner
+      - release
     name: Distribute
-    needs: release
     uses: ./.github/workflows/distribute.yml
     permissions:
       contents: write
+    secrets: inherit
+
+  publish:
+    if: |
+      always() && !failure() && !cancelled() &&
+      needs.planner.outputs.publish == 'true'
+    needs:
+      - planner
+      - release
+    name: Publish
+    uses: ./.github/workflows/publish.yml
     secrets: inherit

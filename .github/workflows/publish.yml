@@ -1,10 +1,10 @@
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - "docs/**/*"
-      - "mkdocs.yml"
+  workflow_call:
+    secrets:
+      ANTTIHARJU_BOT_ID:
+        required: true
+      ANTTIHARJU_BOT_PRIVATE_KEY:
+        required: true
 
 jobs:
   update-docs:
