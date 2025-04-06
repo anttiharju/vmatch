@@ -60,4 +60,6 @@ jobs:
       - release
     name: Publish
     uses: ./.github/workflows/publish.yml
+    permissions:
+      contents: write
     secrets: inherit
