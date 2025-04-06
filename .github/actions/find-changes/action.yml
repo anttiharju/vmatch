@@ -36,7 +36,7 @@ runs:
         file: lefthook.yml
         yq: '.pre-commit.jobs[] | select(.name == "Go code") | .glob'
     - if: github.event_name != 'push'
-      name: Check if GitHub Actions has changed
+      name: Check if GitHub Actions have changed
       id: github_actions
       uses: anttiharju/actions/check-changes@v0
       with:
@@ -57,5 +57,5 @@ outputs:
     description: "Whether Go code has changed"
     value: ${{ steps.go_code.outputs.changed }}
   github_actions_changed:
-    description: "Whether GitHub Actions has changed"
+    description: "Whether GitHub Actions have changed"
     value: ${{ steps.github_actions.outputs.changed }}
