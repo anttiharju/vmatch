@@ -35,6 +35,14 @@ runs:
         changes: ${{ steps.changed.outputs.files }}
         file: lefthook.yml
         yq: '.pre-commit.jobs[] | select(.name == "Go code") | .glob'
+    - if: github.event_name != 'push'
+      name: Check if GitHub Actions has changed
+      id: github_actions
+      uses: anttiharju/actions/check-changes@v0
+      with:
+        changes: ${{ steps.changed.outputs.files }}
+        file: lefthook.yml
+        yq: '.pre-commit.jobs[] | select(.name == "GitHub Actions") | .glob'
 outputs:
   release_has_changed:
     description: "Whether release has changed"
@@ -48,3 +56,6 @@ outputs:
   go_code_has_changed:
     description: "Whether Go code has changed"
     value: ${{ steps.go_code.outputs.has_changed }}
+  github_actions_has_changed:
+    description: "Whether GitHub Actions has changed"
+    value: ${{ steps.github_actions.outputs.has_changed }}

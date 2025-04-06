@@ -15,7 +15,7 @@ pre-commit:
       run: golangci-lint run --fix
       stage_fixed: true
 
-    - name: action-validator
+    - name: GitHub Actions
       glob: "{.github/workflows/*.yml,*/action.yml}"
       run: action-validator --verbose $(git ls-files '.github/workflows/*.yml' '*/action.yml')
 
