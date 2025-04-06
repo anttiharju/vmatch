@@ -14,6 +14,8 @@ jobs:
       - name: Find changes
         id: find_changes
         uses: ./.github/actions/find-changes
+        with:
+          force-all: ${{ github.event_name == 'push' }}
 
       - if: always() && steps.find_changes.outputs.release_changed == 'true'
         name: Release

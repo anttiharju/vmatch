@@ -1,5 +1,10 @@
 name: "Find changes"
 description: "This composite action enables running check-changes in pull requests to benefit for example from its yq input validation"
+inputs:
+  force-all:
+    required: false
+    description: "Force all checks to run"
+    default: "false"
 runs:
   using: "composite"
   steps:
@@ -27,7 +32,7 @@ runs:
         changes: ${{ steps.changed.outputs.files }}
         file: lefthook.yml
         yq: '.pre-commit.jobs[] | select(.name == "Documentation") | .glob'
-    - if: github.event_name != 'push'
+    - if: github.event_name != 'push' || inputs.force-all == 'true'
       name: Check if Go code has changed
       id: go_code
       uses: anttiharju/actions/check-changes@v0
@@ -35,7 +40,8 @@ runs:
         changes: ${{ steps.changed.outputs.files }}
         file: lefthook.yml
         yq: '.pre-commit.jobs[] | select(.name == "Go code") | .glob'
-    - if: github.event_name != 'push'
+        force-true: ${{ inputs.force-all }}
+    - if: github.event_name != 'push' || inputs.force-all == 'true'
       name: Check if GitHub Actions have changed
       id: github_actions
       uses: anttiharju/actions/check-changes@v0
@@ -43,7 +49,8 @@ runs:
         changes: ${{ steps.changed.outputs.files }}
         file: lefthook.yml
         yq: '.pre-commit.jobs[] | select(.name == "GitHub Actions") | .glob'
-    - if: github.event_name != 'push'
+        force-true: ${{ inputs.force-all }}
+    - if: github.event_name != 'push' || inputs.force-all == 'true'
       name: Check if GitHub Actions Workflows have changed
       id: github_actions_workflows
       uses: anttiharju/actions/check-changes@v0
@@ -51,7 +58,8 @@ runs:
         changes: ${{ steps.changed.outputs.files }}
         file: lefthook.yml
         yq: '.pre-commit.jobs[] | select(.name == "GitHub Actions Workflows") | .glob'
-    - if: github.event_name != 'push'
+        force-true: ${{ inputs.force-all }}
+    - if: github.event_name != 'push' || inputs.force-all == 'true'
       name: Check if scripts have changed
       id: scripts
       uses: anttiharju/actions/check-changes@v0
@@ -59,7 +67,8 @@ runs:
         changes: ${{ steps.changed.outputs.files }}
         file: lefthook.yml
         yq: '.pre-commit.jobs[] | select(.name == "Scripts") | .glob'
-    - if: github.event_name != 'push'
+        force-true: ${{ inputs.force-all }}
+    - if: github.event_name != 'push' || inputs.force-all == 'true'
       name: Markdown and YAML
       id: markdown_and_yaml
       uses: anttiharju/actions/check-changes@v0
@@ -67,6 +76,7 @@ runs:
         changes: ${{ steps.changed.outputs.files }}
         file: lefthook.yml
         yq: '.pre-commit.jobs[] | select(.name == "Markdown and YAML") | .glob'
+        force-true: ${{ inputs.force-all }}
 outputs:
   release_changed:
     description: "Whether release has changed"
