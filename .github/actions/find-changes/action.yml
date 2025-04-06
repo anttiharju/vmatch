@@ -1,0 +1,39 @@
+name: "Find changes"
+description: "This composite action enables running check-changes in pull requests to benefit for example from its yq input validation"
+runs:
+  using: "composite"
+  steps:
+    - name: Find changes
+      id: changed
+      uses: anttiharju/actions/find-changes@v0
+    - name: Check if release has changed
+      id: release
+      uses: anttiharju/actions/check-changes@v0
+      with:
+        changes: ${{ steps.changed.outputs.files }}
+        file: lefthook.yml
+        yq: '.pre-commit.jobs[] | select(.name == "go build") | .glob'
+    - name: Check if distribution has changed
+      id: distribution
+      uses: anttiharju/actions/check-changes@v0
+      with:
+        changes: ${{ steps.changed.outputs.files }}
+        file: lefthook.yml
+        yq: '.pre-commit.jobs[] | select(.name == "Brew formula") | .glob'
+    - name: Check if documentation has changed
+      id: documentation
+      uses: anttiharju/actions/check-changes@v0
+      with:
+        changes: ${{ steps.changed.outputs.files }}
+        file: lefthook.yml
+        yq: '.pre-commit.jobs[] | select(.name == "MkDocs build strict") | .glob'
+outputs:
+  release_has_changed:
+    description: "Whether the release has changed"
+    value: ${{ steps.release.outputs.has_changed }}
+  distribution_has_changed:
+    description: "Whether the distribution has changed"
+    value: ${{ steps.distribution.outputs.has_changed }}
+  documentation_has_changed:
+    description: "Whether the documentation has changed"
+    value: ${{ steps.documentation.outputs.has_changed }}
