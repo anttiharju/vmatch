@@ -1,4 +1,4 @@
-name: validations
+name: Pre-release
 on:
   pull_request:
   workflow_call:
