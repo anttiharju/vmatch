@@ -1,4 +1,4 @@
-name: validations
+name: Validations
 on:
   pull_request:
   workflow_call:
