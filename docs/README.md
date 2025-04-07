@@ -1,10 +1,10 @@
 # Introduction
 
-## What?
+## What
 
 A wrapper that automatically calls the golangci-lint version matching your project.
 
-## How?
+## How
 
 It traverses filesystem upwards until it finds the file `.golangci-version` with the following format:
 
@@ -23,7 +23,7 @@ It installs the right golangci-lint version using the [Binaries](https://golangc
         └── golangci-lint
 ```
 
-## Why?
+## Why
 
 I saw mismatching linter versions causing confusion in a team so I thought to automate it.
 
@@ -33,7 +33,7 @@ Currently there's not too much code and the overall direction of the project is 
 
 Once the project is deemed feature-complete, writing automated tests (covering all platforms) would be essential for long-term maintenance.
 
-## Usage?
+## Usage
 
 The target state is that the `go` that you call is actually a shell script that wraps vmatch with right settings, the project hasn't gotten quite there yet so in the meanwhile use
 
