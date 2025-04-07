@@ -1,5 +1,5 @@
-name: "Find changes"
-description: "This composite action enables running check-lefthook-glob in pull requests to benefit for example from its yq input validation"
+name: "Detect changes"
+description: "Combines find-changes with the relevant check-lefthook-glob steps"
 runs:
   using: "composite"
   steps:

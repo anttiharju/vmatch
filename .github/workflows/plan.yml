@@ -22,27 +22,27 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Find changes
-        id: find_changes
-        uses: ./.github/actions/find-changes
+      - name: Detect changes
+        id: changed
+        uses: ./.github/actions/detect-changes
 
-      - if: always() && (steps.find_changes.outputs.binary_changed == 'true' || github.event_name == 'push')
+      - if: always() && (steps.changed.outputs.binary_changed == 'true' || github.event_name == 'push')
         name: Binary
         uses: anttiharju/actions/go-build@v0
 
-      - if: always() && (steps.find_changes.outputs.go_code_changed == 'true' || github.event_name == 'push')
+      - if: always() && (steps.changed.outputs.go_code_changed == 'true' || github.event_name == 'push')
         name: Go code
         uses: anttiharju/actions/golangci-lint@v0
 
-      - if: always() && (steps.find_changes.outputs.github_actions_changed == 'true' || github.event_name == 'push')
+      - if: always() && (steps.changed.outputs.github_actions_changed == 'true' || github.event_name == 'push')
         name: GitHub Actions
         uses: anttiharju/actions/action-validator@v0
 
-      - if: always() && (steps.find_changes.outputs.github_actions_workflows_changed == 'true' || github.event_name == 'push')
+      - if: always() && (steps.changed.outputs.github_actions_workflows_changed == 'true' || github.event_name == 'push')
         name: GitHub Actions Workflows
         uses: anttiharju/actions/actionlint@v0
 
-      - if: always() && (steps.find_changes.outputs.scripts_changed == 'true' || github.event_name == 'push')
+      - if: always() && (steps.changed.outputs.scripts_changed == 'true' || github.event_name == 'push')
         name: Scripts
         uses: anttiharju/actions/shellcheck@v0
 
@@ -58,10 +58,10 @@ jobs:
         name: Relative Markdown links
         uses: anttiharju/actions/check-relative-markdown-links@v0
 
-      - if: always() && (steps.find_changes.outputs.documentation_changed == 'true' || github.event_name == 'push')
+      - if: always() && (steps.changed.outputs.documentation_changed == 'true' || github.event_name == 'push')
         name: Documentation
         uses: anttiharju/actions/mkdocs-build-strict@v0
     outputs:
-      binary: ${{ steps.find_changes.outputs.binary_changed }}
-      distributions: ${{ steps.find_changes.outputs.distributions_changed }}
-      documentation: ${{ steps.find_changes.outputs.documentation_changed }}
+      binary: ${{ steps.changed.outputs.binary_changed }}
+      distributions: ${{ steps.changed.outputs.distributions_changed }}
+      documentation: ${{ steps.changed.outputs.documentation_changed }}
