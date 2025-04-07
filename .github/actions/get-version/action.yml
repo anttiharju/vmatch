@@ -1,5 +1,5 @@
 name: "Get Version"
-description: "Gets the latest release version from values.bash"
+description: "Gets the latest release version via values.bash"
 runs:
   using: "composite"
   steps:
