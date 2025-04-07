@@ -34,7 +34,7 @@ jobs:
           force-all: ${{ github.event_name == 'push' }}
 
       - if: always() && steps.find_changes.outputs.binary_changed == 'true'
-        name: Release
+        name: Binary
         uses: anttiharju/actions/go-build@v0
 
       - if: always() && steps.find_changes.outputs.go_code_changed == 'true'
