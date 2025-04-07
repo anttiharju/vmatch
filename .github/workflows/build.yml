@@ -1,4 +1,4 @@
-name: Build
+name: build
 on:
   push:
     branches:
@@ -10,7 +10,7 @@ jobs:
     uses: ./.github/workflows/validations.yml
 
   release:
-    name: Release
+    name: Create a GitHub release
     needs:
       - plan
     if: needs.plan.outputs.release == 'true'
@@ -23,8 +23,8 @@ jobs:
       - name: Release vmatch
         uses: anttiharju/actions/release@v0
 
-  distribute:
-    name: Distribute
+  distributions:
+    name: Distributions
     needs:
       - plan
       - release
