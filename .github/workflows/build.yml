@@ -13,7 +13,7 @@ jobs:
     name: GitHub release
     needs:
       - plan
-    if: needs.plan.outputs.release == 'true'
+    if: needs.plan.outputs.github-release == 'true'
     runs-on: ubuntu-24.04
     permissions:
       contents: write
