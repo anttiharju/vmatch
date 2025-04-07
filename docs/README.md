@@ -1,5 +1,7 @@
 # Introduction
 
+[![Build](https://github.com/anttiharju/vmatch/actions/workflows/build.yml/badge.svg)](https://github.com/anttiharju/vmatch/actions/workflows/build.yml)
+
 ## What
 
 A wrapper that automatically calls the golangci-lint version matching your project.
