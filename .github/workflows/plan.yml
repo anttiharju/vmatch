@@ -3,15 +3,15 @@ on:
   pull_request:
   workflow_call:
     outputs:
-      release:
-        description: "Whether to trigger release job"
-        value: ${{ jobs.validate.outputs.binary }}
+      github-release:
+        description: "Whether to trigger github-release job"
+        value: ${{ jobs.validate.outputs.binary_changed }}
       distributions:
         description: "Whether to trigger distributions workflow"
-        value: ${{ jobs.validate.outputs.distribute || jobs.validate.outputs.binary }}
+        value: ${{ jobs.validate.outputs.distributions_changed || jobs.validate.outputs.binary_changed }}
       documentation:
         description: "Whether to trigger documentation workflow"
-        value: ${{ jobs.validate.outputs.publish }}
+        value: ${{ jobs.validate.outputs.documentation_changed }}
 
 # Match to lefthook.yml
 jobs:
@@ -22,34 +22,27 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - if: github.event_name == 'push'
-        name: Plan CI job execution upon merge to default branch
-        id: plan
-        uses: ./.github/actions/find-changes
+      - name: Detect changes
+        id: changed
+        uses: ./.github/actions/detect-changes
 
-      - name: Find changes
-        id: find_changes
-        uses: ./.github/actions/find-changes
-        with:
-          force-all: ${{ github.event_name == 'push' }}
-
-      - if: always() && steps.find_changes.outputs.binary_changed == 'true'
+      - if: always() && (steps.changed.outputs.binary == 'true' || github.event_name == 'push')
         name: Binary
         uses: anttiharju/actions/go-build@v0
 
-      - if: always() && steps.find_changes.outputs.go_code_changed == 'true'
+      - if: always() && (steps.changed.outputs.go_code == 'true' || github.event_name == 'push')
         name: Go code
         uses: anttiharju/actions/golangci-lint@v0
 
-      - if: always() && steps.find_changes.outputs.github_actions_changed == 'true'
+      - if: always() && (steps.changed.outputs.github_actions == 'true' || github.event_name == 'push')
         name: GitHub Actions
         uses: anttiharju/actions/action-validator@v0
 
-      - if: always() && steps.find_changes.outputs.github_actions_workflows_changed == 'true'
+      - if: always() && (steps.changed.outputs.github_actions_workflows == 'true' || github.event_name == 'push')
         name: GitHub Actions Workflows
         uses: anttiharju/actions/actionlint@v0
 
-      - if: always() && steps.find_changes.outputs.scripts_changed == 'true'
+      - if: always() && (steps.changed.outputs.scripts == 'true' || github.event_name == 'push')
         name: Scripts
         uses: anttiharju/actions/shellcheck@v0
 
@@ -65,10 +58,10 @@ jobs:
         name: Relative Markdown links
         uses: anttiharju/actions/check-relative-markdown-links@v0
 
-      - if: always() && steps.find_changes.outputs.documentation_changed == 'true'
+      - if: always() && (steps.changed.outputs.documentation == 'true' || github.event_name == 'push')
         name: Documentation
         uses: anttiharju/actions/mkdocs-build-strict@v0
     outputs:
-      binary: ${{ steps.plan.outputs.binary_changed }}
-      distribute: ${{ steps.plan.outputs.distributions_changed }}
-      publish: ${{ steps.plan.outputs.documentation_changed }}
+      binary_changed: ${{ steps.changed.outputs.binary }}
+      distributions_changed: ${{ steps.changed.outputs.distributions }}
+      documentation_changed: ${{ steps.changed.outputs.documentation }}
