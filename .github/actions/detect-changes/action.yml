@@ -10,49 +10,49 @@ runs:
       id: binary
       uses: anttiharju/actions/check-lefthook-glob@v0
       with:
-        changes: ${{ steps.changes.outputs.files }}
+        changes: ${{ steps.changes.outputs.array }}
         yq: '.pre-commit.jobs[] | select(.name == "Binary") | .glob'
     - name: Check if distributions have changed
       id: distributions
       uses: anttiharju/actions/check-lefthook-glob@v0
       with:
-        changes: ${{ steps.changes.outputs.files }}
+        changes: ${{ steps.changes.outputs.array }}
         yq: '.pre-commit.jobs[] | select(.name == "Homebrew formula") | .glob'
     - name: Check if documentation has changed
       id: documentation
       uses: anttiharju/actions/check-lefthook-glob@v0
       with:
-        changes: ${{ steps.changes.outputs.files }}
+        changes: ${{ steps.changes.outputs.array }}
         yq: '.pre-commit.jobs[] | select(.name == "Documentation") | .glob'
     - name: Check if Go code has changed
       id: go_code
       uses: anttiharju/actions/check-lefthook-glob@v0
       with:
-        changes: ${{ steps.changes.outputs.files }}
+        changes: ${{ steps.changes.outputs.array }}
         yq: '.pre-commit.jobs[] | select(.name == "Go code") | .glob'
     - name: Check if GitHub Actions have changed
       id: github_actions
       uses: anttiharju/actions/check-lefthook-glob@v0
       with:
-        changes: ${{ steps.changes.outputs.files }}
+        changes: ${{ steps.changes.outputs.array }}
         yq: '.pre-commit.jobs[] | select(.name == "GitHub Actions") | .glob'
     - name: Check if GitHub Actions Workflows have changed
       id: github_actions_workflows
       uses: anttiharju/actions/check-lefthook-glob@v0
       with:
-        changes: ${{ steps.changes.outputs.files }}
+        changes: ${{ steps.changes.outputs.array }}
         yq: '.pre-commit.jobs[] | select(.name == "GitHub Actions Workflows") | .glob'
     - name: Check if scripts have changed
       id: scripts
       uses: anttiharju/actions/check-lefthook-glob@v0
       with:
-        changes: ${{ steps.changes.outputs.files }}
+        changes: ${{ steps.changes.outputs.array }}
         yq: '.pre-commit.jobs[] | select(.name == "Scripts") | .glob'
     - name: Markdown and YAML
       id: markdown_and_yaml
       uses: anttiharju/actions/check-lefthook-glob@v0
       with:
-        changes: ${{ steps.changes.outputs.files }}
+        changes: ${{ steps.changes.outputs.array }}
         yq: '.pre-commit.jobs[] | select(.name == "Markdown and YAML") | .glob'
 outputs:
   binary:
