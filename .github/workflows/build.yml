@@ -1,4 +1,4 @@
-name: build
+name: Build
 on:
   push:
     branches:
@@ -7,10 +7,10 @@ on:
 jobs:
   plan:
     name: Plan
-    uses: ./.github/workflows/validations.yml
+    uses: ./.github/workflows/pre-release.yml
 
-  release:
-    name: Create a GitHub release
+  github-release:
+    name: GitHub release
     needs:
       - plan
     if: needs.plan.outputs.release == 'true'
@@ -27,7 +27,7 @@ jobs:
     name: Distributions
     needs:
       - plan
-      - release
+      - github-release
     if: |
       always() && !failure() && !cancelled() &&
       needs.plan.outputs.distributions == 'true'
@@ -40,7 +40,7 @@ jobs:
     name: Documentation
     needs:
       - plan
-      - release
+      - github-release
     if: |
       always() && !failure() && !cancelled() &&
       needs.plan.outputs.documentation == 'true'
