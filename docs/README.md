@@ -1,5 +1,7 @@
 # Introduction
 
+[![build](https://github.com/anttiharju/vmatch/actions/workflows/build.yml/badge.svg)](https://github.com/anttiharju/vmatch/actions/workflows/build.yml) [![pages-build-deployment](https://github.com/anttiharju/vmatch/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/anttiharju/vmatch/actions/workflows/pages/pages-build-deployment)
+
 ## What
 
 A wrapper that automatically calls the golangci-lint version matching your project.
