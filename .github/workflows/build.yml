@@ -29,9 +29,8 @@ jobs:
       - plan
       - release
     if: |
-      always() && !failure() && !cancelled() && (
-      needs.plan.outputs.release == 'true' ||
-      needs.plan.outputs.distribute == 'true')
+      always() && !failure() && !cancelled() &&
+      needs.plan.outputs.distributions == 'true'
     uses: ./.github/workflows/distributions.yml
     permissions:
       contents: write
@@ -44,7 +43,7 @@ jobs:
       - release
     if: |
       always() && !failure() && !cancelled() &&
-      needs.plan.outputs.publish == 'true'
+      needs.plan.outputs.documentation == 'true'
     uses: ./.github/workflows/documentation.yml
     permissions:
       contents: write

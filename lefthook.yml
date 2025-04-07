@@ -6,7 +6,7 @@ output:
 pre-commit:
   parallel: true
   jobs:
-    - name: Release
+    - name: Binary
       glob: "{pkg/*,main.go,go.mod,dist/wrapper/*}"
       run: go build
 
@@ -44,6 +44,6 @@ pre-commit:
       run: mkdocs build --strict
 
     # https://github.com/anttiharju/vmatch/issues/137
-    - name: Distribution
+    - name: Homebrew formula
       glob: "dist/brew/*"
       run: echo todo
