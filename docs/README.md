@@ -1,6 +1,6 @@
 # Introduction
 
-[![Build](https://github.com/anttiharju/vmatch/actions/workflows/build.yml/badge.svg)](https://github.com/anttiharju/vmatch/actions/workflows/build.yml)
+[![Release](https://github.com/anttiharju/vmatch/actions/workflows/release.yml/badge.svg)](https://github.com/anttiharju/vmatch/actions/workflows/release.yml)
 
 ## What
 
