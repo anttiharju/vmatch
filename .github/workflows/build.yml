@@ -7,7 +7,7 @@ on:
 jobs:
   plan:
     name: Plan
-    uses: ./.github/workflows/validations.yml
+    uses: ./.github/workflows/pre-release.yml
 
   github-release:
     name: GitHub release
