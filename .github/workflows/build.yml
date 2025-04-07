@@ -1,3 +1,4 @@
+name: Build
 on:
   push:
     branches:
@@ -6,7 +7,7 @@ on:
 jobs:
   plan:
     name: Plan
-    uses: ./.github/workflows/validate.yml
+    uses: ./.github/workflows/validations.yml
 
   release:
     name: Release
@@ -31,20 +32,20 @@ jobs:
       always() && !failure() && !cancelled() && (
       needs.plan.outputs.release == 'true' ||
       needs.plan.outputs.distribute == 'true')
-    uses: ./.github/workflows/distribute.yml
+    uses: ./.github/workflows/distributions.yml
     permissions:
       contents: write
     secrets: inherit
 
-  publish:
-    name: Publish
+  documentation:
+    name: Documentation
     needs:
       - plan
       - release
     if: |
       always() && !failure() && !cancelled() &&
       needs.plan.outputs.publish == 'true'
-    uses: ./.github/workflows/publish.yml
+    uses: ./.github/workflows/documentation.yml
     permissions:
       contents: write
     secrets: inherit
