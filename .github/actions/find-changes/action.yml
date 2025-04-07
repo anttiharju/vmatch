@@ -11,21 +11,21 @@ runs:
     - name: Find changes
       id: changed
       uses: anttiharju/actions/find-changes@v0
-    - name: Check if release has changed
-      id: release
+    - name: Check if binary has changed
+      id: binary
       uses: anttiharju/actions/check-changes@v0
       with:
         changes: ${{ steps.changed.outputs.files }}
         file: lefthook.yml
-        yq: '.pre-commit.jobs[] | select(.name == "Release") | .glob'
+        yq: '.pre-commit.jobs[] | select(.name == "Binary") | .glob'
         force-true: ${{ inputs.force-all }}
-    - name: Check if distribution has changed
-      id: distribution
+    - name: Check if distributions have changed
+      id: distributions
       uses: anttiharju/actions/check-changes@v0
       with:
         changes: ${{ steps.changed.outputs.files }}
         file: lefthook.yml
-        yq: '.pre-commit.jobs[] | select(.name == "Distribution") | .glob'
+        yq: '.pre-commit.jobs[] | select(.name == "Homebrew formula") | .glob'
         force-true: ${{ inputs.force-all }}
     - name: Check if documentation has changed
       id: documentation
@@ -81,12 +81,12 @@ runs:
         yq: '.pre-commit.jobs[] | select(.name == "Markdown and YAML") | .glob'
         force-true: ${{ inputs.force-all }}
 outputs:
-  release_changed:
-    description: "Whether release has changed"
-    value: ${{ steps.release.outputs.changed }}
-  distribution_changed:
-    description: "Whether distribution has changed"
-    value: ${{ steps.distribution.outputs.changed }}
+  binary_changed:
+    description: "Whether binary has changed"
+    value: ${{ steps.binary.outputs.changed }}
+  distributions_changed:
+    description: "Whether distributions have changed"
+    value: ${{ steps.distributions.outputs.changed }}
   documentation_changed:
     description: "Whether documentation has changed"
     value: ${{ steps.documentation.outputs.changed }}

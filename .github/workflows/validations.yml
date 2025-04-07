@@ -4,13 +4,13 @@ on:
   workflow_call:
     outputs:
       release:
-        description: "Whether to run release job"
-        value: ${{ jobs.validate.outputs.release }}
-      distribute:
-        description: "Whether to run distribute job"
-        value: ${{ jobs.validate.outputs.distribute }}
-      publish:
-        description: "Whether to run publish job"
+        description: "Whether to trigger release job"
+        value: ${{ jobs.validate.outputs.binary }}
+      distributions:
+        description: "Whether to trigger distributions workflow"
+        value: ${{ jobs.validate.outputs.distribute || jobs.validate.outputs.binary }}
+      documentation:
+        description: "Whether to trigger documentation workflow"
         value: ${{ jobs.validate.outputs.publish }}
 
 # Match to lefthook.yml
@@ -33,7 +33,7 @@ jobs:
         with:
           force-all: ${{ github.event_name == 'push' }}
 
-      - if: always() && steps.find_changes.outputs.release_changed == 'true'
+      - if: always() && steps.find_changes.outputs.binary_changed == 'true'
         name: Release
         uses: anttiharju/actions/go-build@v0
 
@@ -69,6 +69,6 @@ jobs:
         name: Documentation
         uses: anttiharju/actions/mkdocs-build-strict@v0
     outputs:
-      release: ${{ steps.plan.outputs.release_changed }}
-      distribute: ${{ steps.plan.outputs.distribution_changed }}
+      binary: ${{ steps.plan.outputs.binary_changed }}
+      distribute: ${{ steps.plan.outputs.distributions_changed }}
       publish: ${{ steps.plan.outputs.documentation_changed }}
