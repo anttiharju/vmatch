@@ -1,10 +1,5 @@
 name: "Find changes"
-description: "This composite action enables running check-changes in pull requests to benefit for example from its yq input validation"
-inputs:
-  force-all:
-    required: false
-    description: "Force all checks to run"
-    default: "false"
+description: "This composite action enables running check-lefthook-glob in pull requests to benefit for example from its yq input validation"
 runs:
   using: "composite"
   steps:
@@ -13,73 +8,52 @@ runs:
       uses: anttiharju/actions/find-changes@v0
     - name: Check if binary has changed
       id: binary
-      uses: anttiharju/actions/check-changes@v0
+      uses: anttiharju/actions/check-lefthook-glob@v0
       with:
         changes: ${{ steps.changed.outputs.files }}
-        file: lefthook.yml
         yq: '.pre-commit.jobs[] | select(.name == "Binary") | .glob'
-        force-true: ${{ inputs.force-all }}
     - name: Check if distributions have changed
       id: distributions
-      uses: anttiharju/actions/check-changes@v0
+      uses: anttiharju/actions/check-lefthook-glob@v0
       with:
         changes: ${{ steps.changed.outputs.files }}
-        file: lefthook.yml
         yq: '.pre-commit.jobs[] | select(.name == "Homebrew formula") | .glob'
-        force-true: ${{ inputs.force-all }}
     - name: Check if documentation has changed
       id: documentation
-      uses: anttiharju/actions/check-changes@v0
+      uses: anttiharju/actions/check-lefthook-glob@v0
       with:
         changes: ${{ steps.changed.outputs.files }}
-        file: lefthook.yml
         yq: '.pre-commit.jobs[] | select(.name == "Documentation") | .glob'
-        force-true: ${{ inputs.force-all }}
-    - if: github.event_name != 'push' || inputs.force-all == 'true'
-      name: Check if Go code has changed
+    - name: Check if Go code has changed
       id: go_code
-      uses: anttiharju/actions/check-changes@v0
+      uses: anttiharju/actions/check-lefthook-glob@v0
       with:
         changes: ${{ steps.changed.outputs.files }}
-        file: lefthook.yml
         yq: '.pre-commit.jobs[] | select(.name == "Go code") | .glob'
-        force-true: ${{ inputs.force-all }}
-    - if: github.event_name != 'push' || inputs.force-all == 'true'
-      name: Check if GitHub Actions have changed
+    - name: Check if GitHub Actions have changed
       id: github_actions
-      uses: anttiharju/actions/check-changes@v0
+      uses: anttiharju/actions/check-lefthook-glob@v0
       with:
         changes: ${{ steps.changed.outputs.files }}
-        file: lefthook.yml
         yq: '.pre-commit.jobs[] | select(.name == "GitHub Actions") | .glob'
-        force-true: ${{ inputs.force-all }}
-    - if: github.event_name != 'push' || inputs.force-all == 'true'
-      name: Check if GitHub Actions Workflows have changed
+    - name: Check if GitHub Actions Workflows have changed
       id: github_actions_workflows
-      uses: anttiharju/actions/check-changes@v0
+      uses: anttiharju/actions/check-lefthook-glob@v0
       with:
         changes: ${{ steps.changed.outputs.files }}
-        file: lefthook.yml
         yq: '.pre-commit.jobs[] | select(.name == "GitHub Actions Workflows") | .glob'
-        force-true: ${{ inputs.force-all }}
-    - if: github.event_name != 'push' || inputs.force-all == 'true'
-      name: Check if scripts have changed
+    - name: Check if scripts have changed
       id: scripts
-      uses: anttiharju/actions/check-changes@v0
+      uses: anttiharju/actions/check-lefthook-glob@v0
       with:
         changes: ${{ steps.changed.outputs.files }}
-        file: lefthook.yml
         yq: '.pre-commit.jobs[] | select(.name == "Scripts") | .glob'
-        force-true: ${{ inputs.force-all }}
-    - if: github.event_name != 'push' || inputs.force-all == 'true'
-      name: Markdown and YAML
+    - name: Markdown and YAML
       id: markdown_and_yaml
-      uses: anttiharju/actions/check-changes@v0
+      uses: anttiharju/actions/check-lefthook-glob@v0
       with:
         changes: ${{ steps.changed.outputs.files }}
-        file: lefthook.yml
         yq: '.pre-commit.jobs[] | select(.name == "Markdown and YAML") | .glob'
-        force-true: ${{ inputs.force-all }}
 outputs:
   binary_changed:
     description: "Whether binary has changed"
