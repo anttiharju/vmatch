@@ -55,27 +55,27 @@ runs:
         changes: ${{ steps.changed.outputs.files }}
         yq: '.pre-commit.jobs[] | select(.name == "Markdown and YAML") | .glob'
 outputs:
-  binary_changed:
+  binary:
     description: "Whether binary has changed"
     value: ${{ steps.binary.outputs.changed }}
-  distributions_changed:
+  distributions:
     description: "Whether distributions have changed"
     value: ${{ steps.distributions.outputs.changed }}
-  documentation_changed:
+  documentation:
     description: "Whether documentation has changed"
     value: ${{ steps.documentation.outputs.changed }}
-  go_code_changed:
+  go_code:
     description: "Whether Go code has changed"
     value: ${{ steps.go_code.outputs.changed }}
-  github_actions_changed:
+  github_actions:
     description: "Whether GitHub Actions have changed"
     value: ${{ steps.github_actions.outputs.changed }}
-  github_actions_workflows_changed:
+  github_actions_workflows:
     description: "Whether GitHub Actions Worfklows have changed"
     value: ${{ steps.github_actions_workflows.outputs.changed }}
-  scripts_changed:
+  scripts:
     description: "Whether scripts have changed"
     value: ${{ steps.scripts.outputs.changed }}
-  markdown_and_yaml_changed:
+  markdown_and_yaml:
     description: "Whether Markdown and YAML have changed"
     value: ${{ steps.markdown_and_yaml.outputs.changed }}
