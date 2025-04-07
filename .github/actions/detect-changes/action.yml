@@ -1,56 +1,56 @@
 name: "Detect changes"
-description: "Combines find-changes with the relevant check-lefthook-glob steps"
+description: "Combines find-changes with the relevant compare-lefthook-glob steps"
 runs:
   using: "composite"
   steps:
     - name: Find changes
       id: changes
       uses: anttiharju/actions/find-changes@v0
-    - name: Check if binary has changed
+    - name: Compare changes to Binary Lefthook glob
       id: binary
-      uses: anttiharju/actions/check-lefthook-glob@v0
+      uses: anttiharju/actions/compare-lefthook-glob@v0
       with:
         changes: ${{ steps.changes.outputs.array }}
         yq: '.pre-commit.jobs[] | select(.name == "Binary") | .glob'
-    - name: Check if distributions have changed
+    - name: Compare changes to Distributions Lefthook glob
       id: distributions
-      uses: anttiharju/actions/check-lefthook-glob@v0
+      uses: anttiharju/actions/compare-lefthook-glob@v0
       with:
         changes: ${{ steps.changes.outputs.array }}
         yq: '.pre-commit.jobs[] | select(.name == "Homebrew formula") | .glob'
-    - name: Check if documentation has changed
+    - name: Compare changes to Documentation Lefthook glob
       id: documentation
-      uses: anttiharju/actions/check-lefthook-glob@v0
+      uses: anttiharju/actions/compare-lefthook-glob@v0
       with:
         changes: ${{ steps.changes.outputs.array }}
         yq: '.pre-commit.jobs[] | select(.name == "Documentation") | .glob'
-    - name: Check if Go code has changed
+    - name: Compare changes to Go code Lefthook glob
       id: go_code
-      uses: anttiharju/actions/check-lefthook-glob@v0
+      uses: anttiharju/actions/compare-lefthook-glob@v0
       with:
         changes: ${{ steps.changes.outputs.array }}
         yq: '.pre-commit.jobs[] | select(.name == "Go code") | .glob'
-    - name: Check if GitHub Actions have changed
+    - name: Compare changes to GitHub Actions Lefthook glob
       id: github_actions
-      uses: anttiharju/actions/check-lefthook-glob@v0
+      uses: anttiharju/actions/compare-lefthook-glob@v0
       with:
         changes: ${{ steps.changes.outputs.array }}
         yq: '.pre-commit.jobs[] | select(.name == "GitHub Actions") | .glob'
-    - name: Check if GitHub Actions Workflows have changed
+    - name: Compare changes to GitHub Actions Workflows Lefthook glob
       id: github_actions_workflows
-      uses: anttiharju/actions/check-lefthook-glob@v0
+      uses: anttiharju/actions/compare-lefthook-glob@v0
       with:
         changes: ${{ steps.changes.outputs.array }}
         yq: '.pre-commit.jobs[] | select(.name == "GitHub Actions Workflows") | .glob'
-    - name: Check if scripts have changed
+    - name: Compare changes to Scripts Lefthook glob
       id: scripts
-      uses: anttiharju/actions/check-lefthook-glob@v0
+      uses: anttiharju/actions/compare-lefthook-glob@v0
       with:
         changes: ${{ steps.changes.outputs.array }}
         yq: '.pre-commit.jobs[] | select(.name == "Scripts") | .glob'
-    - name: Markdown and YAML
+    - name: Compare changes to Markdown and YAML Lefthook glob
       id: markdown_and_yaml
-      uses: anttiharju/actions/check-lefthook-glob@v0
+      uses: anttiharju/actions/compare-lefthook-glob@v0
       with:
         changes: ${{ steps.changes.outputs.array }}
         yq: '.pre-commit.jobs[] | select(.name == "Markdown and YAML") | .glob'
