@@ -13,16 +13,16 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Generate token
+      - name: Generate deploy token
         uses: actions/create-github-app-token@v1
-        id: generate-token
+        id: deploy
         with:
           app-id: ${{ secrets.ANTTIHARJU_BOT_ID }}
           private-key: ${{ secrets.ANTTIHARJU_BOT_PRIVATE_KEY }}
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          token: ${{ steps.generate-token.outputs.token }}
+          token: ${{ steps.deploy.outputs.token }}
       - name: Deploy to GitHub Pages
         uses: anttiharju/actions/mkdocs-gh-deploy@v0
         with:
