@@ -8,8 +8,8 @@ on:
         required: true
 
 jobs:
-  github-pages:
-    name: GitHub Pages
+  website:
+    name: Website
     runs-on: ubuntu-24.04
     permissions:
       contents: write
