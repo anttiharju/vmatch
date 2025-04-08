@@ -1,4 +1,4 @@
-name: Distributions
+name: Distribute
 on:
   workflow_call:
     secrets:
