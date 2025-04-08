@@ -23,15 +23,15 @@ jobs:
       - name: Release vmatch
         uses: anttiharju/actions/release@v0
 
-  distribute:
-    name: Distribute
+  distribution:
+    name: Distribution
     needs:
       - plan
       - release
     if: |
       always() && !failure() && !cancelled() &&
-      needs.plan.outputs.distribute == 'true'
-    uses: ./.github/workflows/distribute.yml
+      needs.plan.outputs.distribution == 'true'
+    uses: ./.github/workflows/distribution.yml
     permissions:
       contents: write
     secrets: inherit

@@ -6,8 +6,8 @@ on:
       release:
         description: "Whether to trigger github-release job"
         value: ${{ jobs.validate.outputs.binary_changed }}
-      distribute:
-        description: "Whether to trigger distribute workflow"
+      distribution:
+        description: "Whether to trigger distribution workflow"
         value: ${{ jobs.validate.outputs.homebrew_formula_changed || jobs.validate.outputs.binary_changed }}
       documentation:
         description: "Whether to trigger documentation workflow"
