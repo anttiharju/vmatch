@@ -3,7 +3,7 @@ on:
   pull_request:
   workflow_call:
     outputs:
-      github-release:
+      release:
         description: "Whether to trigger github-release job"
         value: ${{ jobs.validate.outputs.binary_changed }}
       distribute:

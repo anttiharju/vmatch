@@ -9,11 +9,11 @@ jobs:
     name: Plan
     uses: ./.github/workflows/plan.yml
 
-  github-release:
-    name: GitHub release
+  release:
+    name: Release
     needs:
       - plan
-    if: needs.plan.outputs.github-release == 'true'
+    if: needs.plan.outputs.release == 'true'
     runs-on: ubuntu-24.04
     permissions:
       contents: write
@@ -27,7 +27,7 @@ jobs:
     name: Distribute
     needs:
       - plan
-      - github-release
+      - release
     if: |
       always() && !failure() && !cancelled() &&
       needs.plan.outputs.distribute == 'true'
@@ -40,7 +40,7 @@ jobs:
     name: Documentation
     needs:
       - plan
-      - github-release
+      - release
     if: |
       always() && !failure() && !cancelled() &&
       needs.plan.outputs.documentation == 'true'
