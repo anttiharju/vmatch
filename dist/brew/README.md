@@ -1,7 +1,5 @@
 # Homebrew distribution
 
-<!--meaningless change-->
-
 This directory contains bash scripts:
 
 - [`values.bash`](./values.bash) is required by the [render-template](https://github.com/anttiharju/actions/tree/v0/render-template) action.
