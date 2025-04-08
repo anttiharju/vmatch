@@ -12,12 +12,6 @@ runs:
       with:
         changes: ${{ steps.changes.outputs.array }}
         yq: '.pre-commit.jobs[] | select(.name == "Binary") | .glob'
-    - name: Compare changes to Distributions Lefthook glob
-      id: distributions
-      uses: anttiharju/actions/compare-lefthook-glob@v0
-      with:
-        changes: ${{ steps.changes.outputs.array }}
-        yq: '.pre-commit.jobs[] | select(.name == "Homebrew formula") | .glob'
     - name: Compare changes to Documentation Lefthook glob
       id: documentation
       uses: anttiharju/actions/compare-lefthook-glob@v0
@@ -54,16 +48,16 @@ runs:
       with:
         changes: ${{ steps.changes.outputs.array }}
         yq: '.pre-commit.jobs[] | select(.name == "Markdown and YAML") | .glob'
+    - name: Compare changes to Homebrew formula Lefthook glob
+      id: homebrew_formula
+      uses: anttiharju/actions/compare-lefthook-glob@v0
+      with:
+        changes: ${{ steps.changes.outputs.array }}
+        yq: '.pre-commit.jobs[] | select(.name == "Homebrew formula") | .glob'
 outputs:
   binary:
     description: "Whether binary has changed"
     value: ${{ steps.binary.outputs.changed }}
-  distributions:
-    description: "Whether distributions have changed"
-    value: ${{ steps.distributions.outputs.changed }}
-  documentation:
-    description: "Whether documentation has changed"
-    value: ${{ steps.documentation.outputs.changed }}
   go_code:
     description: "Whether Go code has changed"
     value: ${{ steps.go_code.outputs.changed }}
@@ -79,3 +73,9 @@ outputs:
   markdown_and_yaml:
     description: "Whether Markdown and YAML have changed"
     value: ${{ steps.markdown_and_yaml.outputs.changed }}
+  documentation:
+    description: "Whether documentation has changed"
+    value: ${{ steps.documentation.outputs.changed }}
+  homebrew_formula:
+    description: "Whether Homebrew formula has changed"
+    value: ${{ steps.homebrew_formula.outputs.changed }}
