@@ -6,6 +6,10 @@
 
 A wrapper that automatically calls the golangci-lint version matching your project.
 
+## Why
+
+I saw mismatching linter versions causing confusion in a team so I thought to automate it.
+
 ## How
 
 It traverses filesystem upwards until it finds the file `.golangci-version` with the following format:
@@ -24,10 +28,6 @@ It installs the right golangci-lint version using the [Binaries](https://golangc
     └── v1.63.4
         └── golangci-lint
 ```
-
-## Why
-
-I saw mismatching linter versions causing confusion in a team so I thought to automate it.
 
 ## Lack of tests
 

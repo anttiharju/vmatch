@@ -6,9 +6,9 @@ on:
       github-release:
         description: "Whether to trigger github-release job"
         value: ${{ jobs.validate.outputs.binary_changed }}
-      distributions:
-        description: "Whether to trigger distributions workflow"
-        value: ${{ jobs.validate.outputs.distributions_changed || jobs.validate.outputs.binary_changed }}
+      distribute:
+        description: "Whether to trigger distribute workflow"
+        value: ${{ jobs.validate.outputs.homebrew_formula_changed || jobs.validate.outputs.binary_changed }}
       documentation:
         description: "Whether to trigger documentation workflow"
         value: ${{ jobs.validate.outputs.documentation_changed }}
@@ -63,5 +63,5 @@ jobs:
         uses: anttiharju/actions/mkdocs-build-strict@v0
     outputs:
       binary_changed: ${{ steps.changed.outputs.binary }}
-      distributions_changed: ${{ steps.changed.outputs.distributions }}
+      homebrew_formula_changed: ${{ steps.changed.outputs.homebrew_formula }}
       documentation_changed: ${{ steps.changed.outputs.documentation }}
