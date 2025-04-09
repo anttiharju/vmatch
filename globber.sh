@@ -224,7 +224,11 @@ extract_paths_and_commands() {
 
 # Main function
 main() {
-    echo "# Lefthook jobs generated from workflow wildcards"
+    echo "output:"
+    echo "  - success"
+    echo "  - failure"
+    echo ""
+    echo "# Match to plan.yml"
     echo "pre-commit:"
     echo "  parallel: true"
     echo "  jobs:"
