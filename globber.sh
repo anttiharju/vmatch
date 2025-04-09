@@ -1,5 +1,5 @@
 #!/bin/bash
-# filepath: /Users/antti/anttiharju/vmatch/globber.sh
+# filepath: /Users/antti/anttiharju/vmatch/wildcardber.sh
 
 set -euo pipefail
 
@@ -31,7 +31,7 @@ extract_paths() {
     echo "Found paths:" >&2
     echo "$paths" >&2
 
-    # Convert the paths to a comma-separated list for lefthook glob format
+    # Convert the paths to a comma-separated list for lefthook wildcard format
     local formatted_paths=""
     while IFS= read -r path; do
         # Replace /**/* pattern with /* for lefthook compatibility
@@ -46,14 +46,21 @@ extract_paths() {
 
     # Output the lefthook job format
     echo "    - name: $job_name"
-    echo "      glob: \"{$formatted_paths}\""
+
+    # Only add curly braces if there's more than one item
+    if [[ "$formatted_paths" == *","* ]]; then
+        echo "      wildcard: \"{$formatted_paths}\""
+    else
+        echo "      wildcard: \"$formatted_paths\""
+    fi
+
     echo "      run: echo \"TODO: Add command for $job_name\""
     echo ""
 }
 
 # Main function
 main() {
-    echo "# Lefthook jobs generated from workflow globs"
+    echo "# Lefthook jobs generated from workflow wildcards"
     echo "pre-commit:"
     echo "  parallel: true"
     echo "  jobs:"
@@ -66,11 +73,11 @@ main() {
     fi
 
     # List all workflow files that match the pattern
-    echo "Looking for glob-*.yml files in $WORKFLOW_DIR" >&2
-    ls -la "$WORKFLOW_DIR"/glob-*.yml >&2 || echo "No glob workflow files found" >&2
+    echo "Looking for wildcard-*.yml files in $WORKFLOW_DIR" >&2
+    ls -la "$WORKFLOW_DIR"/wildcard-*.yml >&2 || echo "No wildcard workflow files found" >&2
 
-    # Process each glob workflow file
-    for file in "$WORKFLOW_DIR"/glob-*.yml; do
+    # Process each wildcard workflow file
+    for file in "$WORKFLOW_DIR"/wildcard-*.yml; do
         if [ -f "$file" ]; then
             echo "Found workflow file: $file" >&2
 
