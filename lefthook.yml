@@ -7,7 +7,7 @@ pre-commit:
   parallel: true
   jobs:
     - name: Binary
-      glob: "{pkg/*,main.go,go.mod,dist/wrapper/*}"
+      glob: "{pkg/*,main.go,go.mod,dist/wrap/*}"
       run: go build
 
     - name: Go code
