@@ -1,0 +1,16 @@
+on:
+  pull_request:
+    branches:
+      - wildcard
+    paths:
+      - "**/*.md"
+      - "**/*.yml"
+
+jobs:
+  lefthook-job:
+    runs-on: ubuntu-latest
+    if: false
+    steps:
+      - name: Prettier
+        run: git ls-files -z '*.md' '*.yml' | xargs -0 prettier --write
+      # stage_fixed: true
