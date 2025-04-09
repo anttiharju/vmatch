@@ -2,7 +2,7 @@ output:
   - success
   - failure
 
-# Match to validate.yml
+# Match to plan.yml
 pre-commit:
   parallel: true
   jobs:
