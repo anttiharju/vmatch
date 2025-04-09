@@ -30,6 +30,20 @@ extract_paths_and_commands() {
     echo "Found paths:" >&2
     echo "$paths" >&2
 
+    # Extract any comments above the step name
+    local step_comment
+    step_comment=$(awk '
+        BEGIN { found=0; comment=""; in_steps=0; }
+        /^\/\// { next; }  # Skip comment lines starting with //
+        /steps:/ { in_steps=1; next; }
+        in_steps==1 && /^ *#/ { comment=comment $0 "\n"; next; }
+        in_steps==1 && /^ *- name:/ { found=1; exit; }
+        in_steps==1 && /^ *[^#]/ && comment != "" { found=0; exit; }
+        END { if (found) print comment; }
+    ' "$file" | sed 's/^ *//g')
+
+    echo "Found comment: $step_comment" >&2
+
     # Extract the run command
     local run_command
     run_command=$(awk '
@@ -52,6 +66,11 @@ extract_paths_and_commands() {
             formatted_paths="$path"
         fi
     done <<< "$paths"
+
+    # Output the comment if found
+    if [ -n "$step_comment" ]; then
+        echo "    $step_comment"
+    fi
 
     # Output the lefthook job format
     echo "    - name: $job_name"
