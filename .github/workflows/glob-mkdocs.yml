@@ -1,13 +1,11 @@
-name: Release glob
+name: MkDocs build glob
 on:
   pull_request:
     branches:
       - this-branch-should-never-exist-because-the-name-is-so-long-and-even-if-it-did-it-would-be-very-unlikely-to-be-used
     paths:
-      - "dist/wrap/**/*"
-      - "pkg/**/*"
-      - "go.mod"
-      - "main.go"
+      - "docs/**/*"
+      - "mkdocs.yml"
 
 jobs:
   do-nothing:
