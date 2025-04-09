@@ -1,5 +1,4 @@
 #!/bin/bash
-# filepath: /Users/antti/anttiharju/vmatch/wildcardber.sh
 
 set -euo pipefail
 
@@ -7,7 +6,7 @@ set -euo pipefail
 WORKFLOW_DIR=".github/workflows"
 
 # Function to extract paths from a workflow file and format them for lefthook
-extract_paths() {
+extract_paths_and_commands() {
     local file="$1"
     local job_name="$2"
 
@@ -30,6 +29,16 @@ extract_paths() {
 
     echo "Found paths:" >&2
     echo "$paths" >&2
+
+    # Extract the run command
+    local run_command
+    run_command=$(awk '
+        BEGIN { found=0; }
+        /^\/\// { next; }  # Skip comment lines starting with //
+        /run:/ { sub(/^.*run: /, ""); print; exit; }
+    ' "$file")
+
+    echo "Found command: $run_command" >&2
 
     # Convert the paths to a comma-separated list for lefthook wildcard format
     local formatted_paths=""
@@ -54,7 +63,12 @@ extract_paths() {
         echo "      wildcard: \"$formatted_paths\""
     fi
 
-    echo "      run: echo \"TODO: Add command for $job_name\""
+    # Use the actual run command if found, otherwise use the placeholder
+    if [ -n "$run_command" ]; then
+        echo "      run: $run_command"
+    else
+        echo "      run: echo \"TODO: Add command for $job_name\""
+    fi
     echo ""
 }
 
@@ -96,7 +110,7 @@ main() {
 
             echo "Job name: $job_name" >&2
 
-            extract_paths "$file" "$job_name"
+            extract_paths_and_commands "$file" "$job_name"
         fi
     done
 }
