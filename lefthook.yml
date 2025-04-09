@@ -39,7 +39,7 @@ pre-commit:
     - name: check-relative-markdown-links
       run: check-relative-markdown-links run
 
-    - name: mkdocs build --strict
+    - name: MkDocs
       glob: "{mkdocs.yml,docs/*}"
       run: mkdocs build --strict
 

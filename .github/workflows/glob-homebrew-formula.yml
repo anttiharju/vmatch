@@ -1,4 +1,4 @@
-name: Distribution glob
+name: Homebrew formula glob
 on:
   pull_request:
     branches:
