@@ -20,11 +20,6 @@ extract_paths_and_commands() {
         found==1 && /^ *- / { print $0; }
     ' "$file" | sed 's/^ *- //g' | sed 's/"//g')
 
-    if [ -z "$paths" ]; then
-        echo "No paths found in $file" >&2
-        return
-    fi
-
     # Extract any comments above the step name
     local step_comment
     step_comment=$(awk '
@@ -53,7 +48,6 @@ extract_paths_and_commands() {
         job_name="$step_name"
     fi
 
-    # Extract the run command - handling multiline with | character
     # Extract the run command - handling multiline with | character
     local run_command
     run_command=$(awk '
@@ -127,70 +121,73 @@ extract_paths_and_commands() {
     local has_md=false
     local special_paths=()
 
-    # First pass - identify groups of extensions
-    while IFS= read -r path; do
-        # Check for common extension patterns to group
-        if [[ "$path" == "**/*.sh" ]]; then
-            shell_exts+=(".sh")
-        elif [[ "$path" == "**/*.bash" ]]; then
-            shell_exts+=(".bash")
-        elif [[ "$path" == "**/*.dash" ]]; then
-            shell_exts+=(".dash")
-        elif [[ "$path" == "**/*.ksh" ]]; then
-            shell_exts+=(".ksh")
-        elif [[ "$path" == "**/*.go" ]]; then
-            has_go=true
-        elif [[ "$path" == "**/*.yml" ]]; then
-            has_yml=true
-        elif [[ "$path" == "**/action.yml" ]]; then
-            # Handle action.yml files specifically to keep the */action.yml format
-            special_paths+=("*/action.yml")
-        elif [[ "$path" == "**/*.yaml" ]]; then
-            has_yaml=true
-        elif [[ "$path" == "**/*.md" ]]; then
-            has_md=true
-        elif [[ "$path" =~ ^([^*]+)/\*\*/\*$ ]]; then
-            # Handle patterns like "dist/brew/**/*" -> "dist/brew/*"
-            special_paths+=("${BASH_REMATCH[1]}/*")
-        elif [[ "$path" =~ ^([^*]+)/\*\*/\*\*$ ]]; then
-            # Handle patterns like "dist/brew/**/**" -> "dist/brew/*"
-            special_paths+=("${BASH_REMATCH[1]}/*")
-        else
-            # Handle specific paths that shouldn't be grouped
-            path=${path//\*\*\//*/}
-            special_paths+=("$path")
-        fi
-    done <<< "$paths"
+    # Only process paths if we found any
+    if [ -n "$paths" ]; then
+        # First pass - identify groups of extensions
+        while IFS= read -r path; do
+            # Check for common extension patterns to group
+            if [[ "$path" == "**/*.sh" ]]; then
+                shell_exts+=(".sh")
+            elif [[ "$path" == "**/*.bash" ]]; then
+                shell_exts+=(".bash")
+            elif [[ "$path" == "**/*.dash" ]]; then
+                shell_exts+=(".dash")
+            elif [[ "$path" == "**/*.ksh" ]]; then
+                shell_exts+=(".ksh")
+            elif [[ "$path" == "**/*.go" ]]; then
+                has_go=true
+            elif [[ "$path" == "**/*.yml" ]]; then
+                has_yml=true
+            elif [[ "$path" == "**/action.yml" ]]; then
+                # Handle action.yml files specifically to keep the */action.yml format
+                special_paths+=("*/action.yml")
+            elif [[ "$path" == "**/*.yaml" ]]; then
+                has_yaml=true
+            elif [[ "$path" == "**/*.md" ]]; then
+                has_md=true
+            elif [[ "$path" =~ ^([^*]+)/\*\*/\*$ ]]; then
+                # Handle patterns like "dist/brew/**/*" -> "dist/brew/*"
+                special_paths+=("${BASH_REMATCH[1]}/*")
+            elif [[ "$path" =~ ^([^*]+)/\*\*/\*\*$ ]]; then
+                # Handle patterns like "dist/brew/**/**" -> "dist/brew/*"
+                special_paths+=("${BASH_REMATCH[1]}/*")
+            else
+                # Handle specific paths that shouldn't be grouped
+                path=${path//\*\*\//*/}
+                special_paths+=("$path")
+            fi
+        done <<< "$paths"
 
-    # Build groups of extensions for cleaner glob patterns
-    if [[ ${#shell_exts[@]} -gt 0 ]]; then
-        # Join shell extensions into a single pattern like "*{.sh,.bash,.dash,.ksh}"
-        local shell_pattern="*{"
-        for i in "${!shell_exts[@]}"; do
-            shell_pattern+="${shell_exts[$i]}"
-            if [[ $i -lt $((${#shell_exts[@]} - 1)) ]]; then
-                shell_pattern+=","
+        # Build groups of extensions for cleaner glob patterns
+        if [[ ${#shell_exts[@]} -gt 0 ]]; then
+            # Join shell extensions into a single pattern like "*{.sh,.bash,.dash,.ksh}"
+            local shell_pattern="*{"
+            for i in "${!shell_exts[@]}"; do
+                shell_pattern+="${shell_exts[$i]}"
+                if [[ $i -lt $((${#shell_exts[@]} - 1)) ]]; then
+                    shell_pattern+=","
+                fi
+            done
+            shell_pattern+="}"
+            # Don't wrap this pattern again since it already has braces
+            special_paths+=("$shell_pattern")
+        fi
+
+        # Add other grouped extensions
+        [[ "$has_go" = true ]] && special_paths+=("*.go")
+        [[ "$has_yml" = true ]] && special_paths+=("*.yml")
+        [[ "$has_yaml" = true ]] && special_paths+=("*.yaml")
+        [[ "$has_md" = true ]] && special_paths+=("*.md")
+
+        # Now generate the final formatted paths
+        for path in "${special_paths[@]}"; do
+            if [ -n "$formatted_paths" ]; then
+                formatted_paths="$formatted_paths,$path"
+            else
+                formatted_paths="$path"
             fi
         done
-        shell_pattern+="}"
-        # Don't wrap this pattern again since it already has braces
-        special_paths+=("$shell_pattern")
     fi
-
-    # Add other grouped extensions
-    [[ "$has_go" = true ]] && special_paths+=("*.go")
-    [[ "$has_yml" = true ]] && special_paths+=("*.yml")
-    [[ "$has_yaml" = true ]] && special_paths+=("*.yaml")
-    [[ "$has_md" = true ]] && special_paths+=("*.md")
-
-    # Now generate the final formatted paths
-    for path in "${special_paths[@]}"; do
-        if [ -n "$formatted_paths" ]; then
-            formatted_paths="$formatted_paths,$path"
-        else
-            formatted_paths="$path"
-        fi
-    done
 
     # Output the comment if found
     if [ -n "$step_comment" ]; then
@@ -200,11 +197,14 @@ extract_paths_and_commands() {
     # Output the lefthook job format
     echo "    - name: $job_name"
 
-    # Only add curly braces if there's more than one item and the path doesn't already have braces
-    if [[ "$formatted_paths" == *","* ]] && [[ "$formatted_paths" != *"{"* ]]; then
-        echo "      glob: \"{$formatted_paths}\""
-    else
-        echo "      glob: \"$formatted_paths\""
+    # Only output glob if we have paths
+    if [ -n "$formatted_paths" ]; then
+        # Only add curly braces if there's more than one item and the path doesn't already have braces
+        if [[ "$formatted_paths" == *","* ]] && [[ "$formatted_paths" != *"{"* ]]; then
+            echo "      glob: \"{$formatted_paths}\""
+        else
+            echo "      glob: \"$formatted_paths\""
+        fi
     fi
 
     # Use the actual run command if found, otherwise use the placeholder
@@ -239,7 +239,6 @@ main() {
     # Process each wildcard workflow file
     for file in "$WORKFLOW_DIR"/wildcard-*.yml; do
         if [ -f "$file" ]; then
-
             # Extract job name from filename
             local job_name
             job_name=$(basename "$file" | sed 's/^wildcard-//;s/\.yml$//')

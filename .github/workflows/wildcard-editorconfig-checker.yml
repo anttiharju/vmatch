@@ -1,0 +1,14 @@
+on:
+  pull_request:
+    branches:
+      - wildcard
+
+jobs:
+  lefthook-job:
+    runs-on: ubuntu-latest
+    if: false
+    steps:
+      - name: EditorConfig-Checker
+        run: |
+          # shellcheck disable=SC1083
+          prettier --write {staged_files}
