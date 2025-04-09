@@ -1,0 +1,13 @@
+on:
+  pull_request:
+    branches:
+      - wildcard
+
+jobs:
+  lefthook-job:
+    runs-on: ubuntu-latest
+    if: false
+    steps:
+      # https://github.com/anttiharju/check-relative-markdown-links
+      - name: check-relative-markdown-links
+        run: check-relative-markdown-links run
