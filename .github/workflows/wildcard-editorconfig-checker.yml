@@ -11,4 +11,4 @@ jobs:
       - name: EditorConfig-Checker
         run: |
           # shellcheck disable=SC1083
-          prettier --write {staged_files}
+          editorconfig-checker {staged_files}
