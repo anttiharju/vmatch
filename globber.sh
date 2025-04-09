@@ -61,13 +61,46 @@ extract_paths_and_commands() {
         echo "Using step name from workflow: $job_name" >&2
     fi
 
-    # Extract the run command
+    # Extract the run command - handling multiline with | character
+    # Extract the run command - handling multiline with | character
     local run_command
     run_command=$(awk '
-        BEGIN { found=0; in_steps=0; }
+        BEGIN { found=0; in_steps=0; in_run=0; command=""; }
         /^\/\// { next; }  # Skip comment lines starting with //
         /steps:/ { in_steps=1; }
-        in_steps==1 && /run:/ { sub(/^.*run: /, ""); print; exit; }
+        in_steps==1 && /run:/ {
+            if ($0 ~ /run: \|/) {
+                in_run=1;
+                next;
+            } else {
+                sub(/^.*run: /, "");
+                print;
+                exit;
+            }
+        }
+        in_run==1 && /^ +/ {
+            # Collect indented lines after run: |
+            gsub(/^[ \t]+/, "", $0);  # Remove leading spaces
+
+            # Skip comment-only lines
+            if ($0 ~ /^#/) {
+                next;
+            }
+
+            # Append line to command
+            if (command == "") {
+                command = $0;
+            } else {
+                command = command "; " $0;
+            }
+        }
+        in_run==1 && /^ *$/ { next; }  # Skip empty lines
+        in_run==1 && (/^ *[^- ]/ && !/^ +/) { in_run=0; }  # End of run block
+        END {
+            if (command != "") {
+                print command;
+            }
+        }
     ' "$file")
 
     echo "Found command: $run_command" >&2
@@ -78,24 +111,26 @@ extract_paths_and_commands() {
         BEGIN { found=0; in_steps=0; after_run=0; }
         /^\/\// { next; }  # Skip comment lines starting with //
         /steps:/ { in_steps=1; }
-        in_steps==1 && /run:/ { after_run=1; next; }
+        in_steps==1 && /run:/ {
+            after_run=1;
+            if ($0 ~ /run: \|/) {
+                # For multiline run, keep reading until indentation changes
+                next;
+            } else {
+                next;
+            }
+        }
+        after_run==1 && /^ +[^- #]/ && /run: \|/ {
+            # Skip content lines of multiline run
+            next;
+        }
         after_run==1 && /# stage_fixed:/ { print; exit; }
+        after_run==1 && /stage_fixed:/ { print; exit; }
     ' "$file")
-
-    # Also check for uncommented stage_fixed property
-    if [ -z "$stage_fixed" ]; then
-        stage_fixed=$(awk '
-            BEGIN { found=0; in_steps=0; }
-            /^\/\// { next; }  # Skip comment lines starting with //
-            /steps:/ { in_steps=1; }
-            in_steps==1 && /stage_fixed:/ { print; exit; }
-        ' "$file")
-    fi
 
     echo "Found stage_fixed: $stage_fixed" >&2
 
     # Convert the paths to a comma-separated list for lefthook wildcard format
-        # Convert the paths to a comma-separated list for lefthook wildcard format
     local formatted_paths=""
     local shell_exts=()
     local has_go=false
