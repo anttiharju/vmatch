@@ -97,17 +97,24 @@ extract_paths_and_commands() {
     # Convert the paths to a comma-separated list for lefthook wildcard format
     local formatted_paths=""
     while IFS= read -r path; do
-        # Special handling for "**/*.go" pattern - convert to proper lefthook format
+        # Convert GitHub Actions path patterns to lefthook-compatible glob patterns
+
+        # Handle specific patterns
         if [[ "$path" == "**/*.go" ]]; then
+            # For Go files in any directory, just use *.go in lefthook
             path="*.go"
-        # Special handling for dist/**/* format
+        elif [[ "$path" == "**/*.yml" || "$path" == "**/action.yml" ]]; then
+            # For yml files in any directory, use *.yml in lefthook
+            path=${path#**/}
         elif [[ "$path" =~ ^([^*]+)/\*\*/\*$ ]]; then
+            # Handle patterns like "dist/brew/**/*" -> "dist/brew/*"
             path="${BASH_REMATCH[1]}/*"
         elif [[ "$path" =~ ^([^*]+)/\*\*/\*\*$ ]]; then
+            # Handle patterns like "dist/brew/**/**" -> "dist/brew/*"
             path="${BASH_REMATCH[1]}/*"
         else
-            # Replace /**/* pattern with /* for lefthook compatibility
-            path=$(echo "$path" | sed 's/\/\*\*\/\*/\/\*/g')
+            # General replacement: any **/ pattern becomes just *
+            path=${path//\*\*\//*/}
         fi
 
         if [ -n "$formatted_paths" ]; then
