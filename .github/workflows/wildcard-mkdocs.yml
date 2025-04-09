@@ -8,8 +8,9 @@ on:
       - "mkdocs.yml"
 
 jobs:
-  do-nothing:
+  lefthook-job:
     runs-on: ubuntu-latest
     if: false
     steps:
-      - run: echo "This will never run"
+      - name: MkDocs
+        run: mkdocs build --strict
