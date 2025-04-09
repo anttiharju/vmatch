@@ -1,9 +1,13 @@
-#glob: "{pkg/*,main.go,go.mod,dist/wrap/*}"
 name: Release glob
 on:
   pull_request:
     branches:
       - this-branch-should-never-exist-because-the-name-is-so-long-and-even-if-it-did-it-would-be-very-unlikely-to-be-used
+    paths:
+      - "dist/wrap/**/*"
+      - "pkg/**/*"
+      - "go.mod"
+      - "main.go"
 
 jobs:
   do-nothing:
