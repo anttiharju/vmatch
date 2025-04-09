@@ -170,6 +170,7 @@ extract_paths_and_commands() {
             fi
         done
         shell_pattern+="}"
+        # Don't wrap this pattern again since it already has braces
         special_paths+=("$shell_pattern")
     fi
 
@@ -196,8 +197,8 @@ extract_paths_and_commands() {
     # Output the lefthook job format
     echo "    - name: $job_name"
 
-    # Only add curly braces if there's more than one item
-    if [[ "$formatted_paths" == *","* ]]; then
+    # Only add curly braces if there's more than one item and the path doesn't already have braces
+    if [[ "$formatted_paths" == *","* ]] && [[ "$formatted_paths" != *"{"* ]]; then
         echo "      glob: \"{$formatted_paths}\""
     else
         echo "      glob: \"$formatted_paths\""
