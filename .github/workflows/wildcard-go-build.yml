@@ -10,8 +10,9 @@ on:
       - "main.go"
 
 jobs:
-  do-nothing:
+  lefthook-job:
     runs-on: ubuntu-latest
     if: false
     steps:
-      - run: echo "This will never run"
+      - name: Go build
+        run: go build

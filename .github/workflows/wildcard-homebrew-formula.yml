@@ -7,8 +7,9 @@ on:
       - "dist/brew/**/*"
 
 jobs:
-  do-nothing:
+  lefthook-job:
     runs-on: ubuntu-latest
     if: false
     steps:
-      - run: echo "This will never run"
+      - name: Homebrew formula
+        run: echo todo
