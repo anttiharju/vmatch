@@ -42,23 +42,73 @@ extract_paths_and_commands() {
         END { if (found) print comment; }
     ' "$file" | sed 's/^ *//g')
 
+    # Remove trailing newline if present
+    step_comment=${step_comment%$'\n'}
+
     echo "Found comment: $step_comment" >&2
+
+    # Extract the step name
+    local step_name
+    step_name=$(awk '
+        BEGIN { found=0; }
+        /^\/\// { next; }  # Skip comment lines starting with //
+        /- name:/ { sub(/.*name: /, ""); print; exit; }
+    ' "$file")
+
+    # If step name is found, use it instead of the filename-based job name
+    if [ -n "$step_name" ]; then
+        job_name="$step_name"
+        echo "Using step name from workflow: $job_name" >&2
+    fi
 
     # Extract the run command
     local run_command
     run_command=$(awk '
-        BEGIN { found=0; }
+        BEGIN { found=0; in_steps=0; }
         /^\/\// { next; }  # Skip comment lines starting with //
-        /run:/ { sub(/^.*run: /, ""); print; exit; }
+        /steps:/ { in_steps=1; }
+        in_steps==1 && /run:/ { sub(/^.*run: /, ""); print; exit; }
     ' "$file")
 
     echo "Found command: $run_command" >&2
 
+    # Check for stage_fixed comment after the run command
+    local stage_fixed
+    stage_fixed=$(awk '
+        BEGIN { found=0; in_steps=0; after_run=0; }
+        /^\/\// { next; }  # Skip comment lines starting with //
+        /steps:/ { in_steps=1; }
+        in_steps==1 && /run:/ { after_run=1; next; }
+        after_run==1 && /# stage_fixed:/ { print; exit; }
+    ' "$file")
+
+    # Also check for uncommented stage_fixed property
+    if [ -z "$stage_fixed" ]; then
+        stage_fixed=$(awk '
+            BEGIN { found=0; in_steps=0; }
+            /^\/\// { next; }  # Skip comment lines starting with //
+            /steps:/ { in_steps=1; }
+            in_steps==1 && /stage_fixed:/ { print; exit; }
+        ' "$file")
+    fi
+
+    echo "Found stage_fixed: $stage_fixed" >&2
+
     # Convert the paths to a comma-separated list for lefthook wildcard format
     local formatted_paths=""
     while IFS= read -r path; do
-        # Replace /**/* pattern with /* for lefthook compatibility
-        path=$(echo "$path" | sed 's/\/\*\*\/\*/\/\*/g')
+        # Special handling for "**/*.go" pattern - convert to proper lefthook format
+        if [[ "$path" == "**/*.go" ]]; then
+            path="*.go"
+        # Special handling for dist/**/* format
+        elif [[ "$path" =~ ^([^*]+)/\*\*/\*$ ]]; then
+            path="${BASH_REMATCH[1]}/*"
+        elif [[ "$path" =~ ^([^*]+)/\*\*/\*\*$ ]]; then
+            path="${BASH_REMATCH[1]}/*"
+        else
+            # Replace /**/* pattern with /* for lefthook compatibility
+            path=$(echo "$path" | sed 's/\/\*\*\/\*/\/\*/g')
+        fi
 
         if [ -n "$formatted_paths" ]; then
             formatted_paths="$formatted_paths,$path"
@@ -77,9 +127,9 @@ extract_paths_and_commands() {
 
     # Only add curly braces if there's more than one item
     if [[ "$formatted_paths" == *","* ]]; then
-        echo "      wildcard: \"{$formatted_paths}\""
+        echo "      glob: \"{$formatted_paths}\""
     else
-        echo "      wildcard: \"$formatted_paths\""
+        echo "      glob: \"$formatted_paths\""
     fi
 
     # Use the actual run command if found, otherwise use the placeholder
@@ -88,6 +138,12 @@ extract_paths_and_commands() {
     else
         echo "      run: echo \"TODO: Add command for $job_name\""
     fi
+
+    # Add stage_fixed: true if found in comments or as property
+    if [[ "$stage_fixed" == *"stage_fixed: true"* ]] || [[ "$stage_fixed" == *"# stage_fixed: true"* ]]; then
+        echo "      stage_fixed: true"
+    fi
+
     echo ""
 }
 
@@ -105,27 +161,17 @@ main() {
         return 1
     fi
 
-    # List all workflow files that match the pattern
-    echo "Looking for wildcard-*.yml files in $WORKFLOW_DIR" >&2
-    ls -la "$WORKFLOW_DIR"/wildcard-*.yml >&2 || echo "No wildcard workflow files found" >&2
-
     # Process each wildcard workflow file
     for file in "$WORKFLOW_DIR"/wildcard-*.yml; do
         if [ -f "$file" ]; then
             echo "Found workflow file: $file" >&2
 
-            # Skip comment lines at the start and extract workflow name
-            local workflow_name
-            workflow_name=$(awk '
-                /^\/\// { next; }  # Skip comment lines starting with //
-                /^name:/ { sub(/^name: /, ""); print $0; exit; }
-            ' "$file")
-
-            echo "Workflow name: $workflow_name" >&2
-
-            # Extract job name from workflow name
+            # Extract job name from filename
             local job_name
-            job_name=$(echo "$workflow_name" | cut -d ' ' -f 2-)
+            job_name=$(basename "$file" | sed 's/^wildcard-//;s/\.yml$//')
+
+            # Replace hyphens with spaces and capitalize first letter
+            job_name=$(echo "$job_name" | sed -E 's/-/ /g' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2)} 1')
 
             echo "Job name: $job_name" >&2
 
