@@ -10,8 +10,6 @@ extract_paths_and_commands() {
     local file="$1"
     local job_name="$2"
 
-    echo "Processing file: $file" >&2
-
     # Extract the paths section, skipping any comment lines at the start
     local paths
     paths=$(awk '
@@ -26,9 +24,6 @@ extract_paths_and_commands() {
         echo "No paths found in $file" >&2
         return
     fi
-
-    echo "Found paths:" >&2
-    echo "$paths" >&2
 
     # Extract any comments above the step name
     local step_comment
@@ -45,8 +40,6 @@ extract_paths_and_commands() {
     # Remove trailing newline if present
     step_comment=${step_comment%$'\n'}
 
-    echo "Found comment: $step_comment" >&2
-
     # Extract the step name
     local step_name
     step_name=$(awk '
@@ -58,7 +51,6 @@ extract_paths_and_commands() {
     # If step name is found, use it instead of the filename-based job name
     if [ -n "$step_name" ]; then
         job_name="$step_name"
-        echo "Using step name from workflow: $job_name" >&2
     fi
 
     # Extract the run command - handling multiline with | character
@@ -103,8 +95,6 @@ extract_paths_and_commands() {
         }
     ' "$file")
 
-    echo "Found command: $run_command" >&2
-
     # Check for stage_fixed comment after the run command
     local stage_fixed
     stage_fixed=$(awk '
@@ -127,8 +117,6 @@ extract_paths_and_commands() {
         after_run==1 && /# stage_fixed:/ { print; exit; }
         after_run==1 && /stage_fixed:/ { print; exit; }
     ' "$file")
-
-    echo "Found stage_fixed: $stage_fixed" >&2
 
     # Convert the paths to a comma-separated list for lefthook wildcard format
     local formatted_paths=""
@@ -247,7 +235,6 @@ main() {
     # Process each wildcard workflow file
     for file in "$WORKFLOW_DIR"/wildcard-*.yml; do
         if [ -f "$file" ]; then
-            echo "Found workflow file: $file" >&2
 
             # Extract job name from filename
             local job_name
@@ -255,8 +242,6 @@ main() {
 
             # Replace hyphens with spaces and capitalize first letter
             job_name=$(echo "$job_name" | sed -E 's/-/ /g' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2)} 1')
-
-            echo "Job name: $job_name" >&2
 
             extract_paths_and_commands "$file" "$job_name"
         fi
