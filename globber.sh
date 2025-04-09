@@ -240,9 +240,16 @@ main() {
         return 1
     fi
 
+    # Count total files first
+    total_files=$(find "$WORKFLOW_DIR" -name "wildcard-*.yml" -type f | wc -l)
+    current_file=0
+
     # Process each wildcard workflow file
     for file in "$WORKFLOW_DIR"/wildcard-*.yml; do
         if [ -f "$file" ]; then
+            # Increment file counter
+            current_file=$((current_file + 1))
+
             # Extract job name from filename
             local job_name
             job_name=$(basename "$file" | sed 's/^wildcard-//;s/\.yml$//')
@@ -250,7 +257,15 @@ main() {
             # Replace hyphens with spaces and capitalize first letter
             job_name=$(echo "$job_name" | sed -E 's/-/ /g' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2)} 1')
 
-            extract_paths_and_commands "$file" "$job_name"
+            # For the last file, we'll capture output and remove the trailing newline
+            if [ "$current_file" -eq "$total_files" ]; then
+                # For the last file, don't add an extra newline at the end
+                output=$(extract_paths_and_commands "$file" "$job_name")
+                # Remove the trailing newline from the last file's output
+                echo "${output%$'\n'}"
+            else
+                extract_paths_and_commands "$file" "$job_name"
+            fi
         fi
     done
 }
