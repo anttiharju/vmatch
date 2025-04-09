@@ -6,40 +6,40 @@ output:
 pre-commit:
   parallel: true
   jobs:
-    - name: Binary
+    - name: Go build
       glob: "{pkg/*,main.go,go.mod,dist/wrap/*}"
       run: go build
 
-    - name: Go code
+    - name: golangci-lint
       glob: "{*.go,.golangci*}"
       run: golangci-lint run --fix
       stage_fixed: true
 
-    - name: GitHub Actions
+    - name: action-validator
       glob: "{.github/workflows/*.yml,*/action.yml}"
       run: action-validator --verbose $(git ls-files '.github/workflows/*.yml' '*/action.yml')
 
-    - name: GitHub Actions Workflows
+    - name: actionlint
       glob: ".github/workflows/*.yml"
       run: actionlint -color
 
-    - name: Scripts
+    - name: ShellCheck
       glob: "*{.sh,.bash,.dash,.ksh}"
       run: git ls-files -z '*.sh' '*.bash' '*.dash' '*.ksh' | xargs -0 shellcheck --color=always --source-path=SCRIPTDIR
 
-    - name: Markdown and YAML
+    - name: Prettier
       glob: "*{.md,.yml,.yaml}"
       run: prettier --write {staged_files}
       stage_fixed: true
 
-    - name: Formatting
+    - name: EditorConfig-Checker
       run: editorconfig-checker {staged_files}
 
     # https://github.com/anttiharju/check-relative-markdown-links
-    - name: Relative Markdown links
+    - name: check-relative-markdown-links
       run: check-relative-markdown-links run
 
-    - name: Documentation
+    - name: mkdocs build --strict
       glob: "{mkdocs.yml,docs/*}"
       run: mkdocs build --strict
 
