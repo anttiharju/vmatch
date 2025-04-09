@@ -140,8 +140,11 @@ extract_paths_and_commands() {
             shell_exts+=(".ksh")
         elif [[ "$path" == "**/*.go" ]]; then
             has_go=true
-        elif [[ "$path" == "**/*.yml" || "$path" == "**/action.yml" ]]; then
+        elif [[ "$path" == "**/*.yml" ]]; then
             has_yml=true
+        elif [[ "$path" == "**/action.yml" ]]; then
+            # Handle action.yml files specifically to keep the */action.yml format
+            special_paths+=("*/action.yml")
         elif [[ "$path" == "**/*.yaml" ]]; then
             has_yaml=true
         elif [[ "$path" == "**/*.md" ]]; then
