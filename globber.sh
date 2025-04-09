@@ -95,34 +95,75 @@ extract_paths_and_commands() {
     echo "Found stage_fixed: $stage_fixed" >&2
 
     # Convert the paths to a comma-separated list for lefthook wildcard format
+        # Convert the paths to a comma-separated list for lefthook wildcard format
     local formatted_paths=""
-    while IFS= read -r path; do
-        # Convert GitHub Actions path patterns to lefthook-compatible glob patterns
+    local shell_exts=()
+    local has_go=false
+    local has_yml=false
+    local has_yaml=false
+    local has_md=false
+    local special_paths=()
 
-        # Handle specific patterns
-        if [[ "$path" == "**/*.go" || "$path" == "**/*.sh" || "$path" == "**/*.bash" || "$path" == "**/*.dash" || "$path" == "**/*.ksh" ]]; then
-            # For files with these extensions in any directory, just use *.extension in lefthook
-            path=${path#**/}
+    # First pass - identify groups of extensions
+    while IFS= read -r path; do
+        # Check for common extension patterns to group
+        if [[ "$path" == "**/*.sh" ]]; then
+            shell_exts+=(".sh")
+        elif [[ "$path" == "**/*.bash" ]]; then
+            shell_exts+=(".bash")
+        elif [[ "$path" == "**/*.dash" ]]; then
+            shell_exts+=(".dash")
+        elif [[ "$path" == "**/*.ksh" ]]; then
+            shell_exts+=(".ksh")
+        elif [[ "$path" == "**/*.go" ]]; then
+            has_go=true
         elif [[ "$path" == "**/*.yml" || "$path" == "**/action.yml" ]]; then
-            # For yml files in any directory, use *.yml in lefthook
-            path=${path#**/}
+            has_yml=true
+        elif [[ "$path" == "**/*.yaml" ]]; then
+            has_yaml=true
+        elif [[ "$path" == "**/*.md" ]]; then
+            has_md=true
         elif [[ "$path" =~ ^([^*]+)/\*\*/\*$ ]]; then
             # Handle patterns like "dist/brew/**/*" -> "dist/brew/*"
-            path="${BASH_REMATCH[1]}/*"
+            special_paths+=("${BASH_REMATCH[1]}/*")
         elif [[ "$path" =~ ^([^*]+)/\*\*/\*\*$ ]]; then
             # Handle patterns like "dist/brew/**/**" -> "dist/brew/*"
-            path="${BASH_REMATCH[1]}/*"
+            special_paths+=("${BASH_REMATCH[1]}/*")
         else
-            # General replacement: any **/ pattern becomes just *
+            # Handle specific paths that shouldn't be grouped
             path=${path//\*\*\//*/}
+            special_paths+=("$path")
         fi
+    done <<< "$paths"
 
+    # Build groups of extensions for cleaner glob patterns
+    if [[ ${#shell_exts[@]} -gt 0 ]]; then
+        # Join shell extensions into a single pattern like "*{.sh,.bash,.dash,.ksh}"
+        local shell_pattern="*{"
+        for i in "${!shell_exts[@]}"; do
+            shell_pattern+="${shell_exts[$i]}"
+            if [[ $i -lt $((${#shell_exts[@]} - 1)) ]]; then
+                shell_pattern+=","
+            fi
+        done
+        shell_pattern+="}"
+        special_paths+=("$shell_pattern")
+    fi
+
+    # Add other grouped extensions
+    [[ "$has_go" = true ]] && special_paths+=("*.go")
+    [[ "$has_yml" = true ]] && special_paths+=("*.yml")
+    [[ "$has_yaml" = true ]] && special_paths+=("*.yaml")
+    [[ "$has_md" = true ]] && special_paths+=("*.md")
+
+    # Now generate the final formatted paths
+    for path in "${special_paths[@]}"; do
         if [ -n "$formatted_paths" ]; then
             formatted_paths="$formatted_paths,$path"
         else
             formatted_paths="$path"
         fi
-    done <<< "$paths"
+    done
 
     # Output the comment if found
     if [ -n "$step_comment" ]; then
