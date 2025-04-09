@@ -6,6 +6,14 @@ output:
 pre-commit:
   parallel: true
   jobs:
+    - name: action-validator
+      glob: "{.github/workflows/*.yml,*/action.yml}"
+      run: action-validator --verbose $(git ls-files '.github/workflows/*.yml' '*/action.yml')
+
+    - name: actionlint
+      glob: ".github/workflows/*.yml"
+      run: actionlint -color
+
     - name: Go build
       glob: "{pkg/*,main.go,go.mod,dist/wrap/*}"
       run: go build
@@ -15,22 +23,23 @@ pre-commit:
       run: golangci-lint run --fix
       stage_fixed: true
 
-    - name: action-validator
-      glob: "{.github/workflows/*.yml,*/action.yml}"
-      run: action-validator --verbose $(git ls-files '.github/workflows/*.yml' '*/action.yml')
+    # https://github.com/anttiharju/vmatch/issues/137
+    - name: Homebrew formula
+      glob: "dist/brew/*"
+      run: echo todo
 
-    - name: actionlint
-      glob: ".github/workflows/*.yml"
-      run: actionlint -color
-
-    - name: ShellCheck
-      glob: "*{.sh,.bash,.dash,.ksh}"
-      run: git ls-files -z '*.sh' '*.bash' '*.dash' '*.ksh' | xargs -0 shellcheck --color=always --source-path=SCRIPTDIR
+    - name: MkDocs
+      glob: "{mkdocs.yml,docs/*}"
+      run: mkdocs build --strict
 
     - name: Prettier
       glob: "*{.md,.yml,.yaml}"
       run: prettier --write {staged_files}
       stage_fixed: true
+
+    - name: ShellCheck
+      glob: "*{.sh,.bash,.dash,.ksh}"
+      run: git ls-files -z '*.sh' '*.bash' '*.dash' '*.ksh' | xargs -0 shellcheck --color=always --source-path=SCRIPTDIR
 
     - name: EditorConfig-Checker
       run: editorconfig-checker {staged_files}
@@ -38,12 +47,3 @@ pre-commit:
     # https://github.com/anttiharju/check-relative-markdown-links
     - name: check-relative-markdown-links
       run: check-relative-markdown-links run
-
-    - name: MkDocs
-      glob: "{mkdocs.yml,docs/*}"
-      run: mkdocs build --strict
-
-    # https://github.com/anttiharju/vmatch/issues/137
-    - name: Homebrew formula
-      glob: "dist/brew/*"
-      run: echo todo
