@@ -14,6 +14,9 @@ pre-commit:
       glob: ".github/workflows/*.yml"
       run: actionlint -color
 
+    - name: EditorConfig-Checker
+      run: editorconfig-checker {staged_files}
+
     - name: Go build
       glob: "{dist/wrap/*,pkg/*,go.mod,main.go}"
       run: go build
@@ -40,9 +43,6 @@ pre-commit:
     - name: ShellCheck
       glob: "*{.sh,.bash}"
       run: git ls-files -z '*.sh' '*.bash' | xargs -0 shellcheck --color=always --source-path=SCRIPTDIR
-
-    - name: EditorConfig-Checker
-      run: editorconfig-checker {staged_files}
 
     # https://github.com/anttiharju/check-relative-markdown-links
     - name: check-relative-markdown-links
