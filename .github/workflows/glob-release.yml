@@ -1,0 +1,13 @@
+#glob: "{mkdocs.yml,docs/*}"
+#glob: "{pkg/*,main.go,go.mod,dist/wrap/*}"
+#glob: "dist/brew/*"
+name: Distribution glob
+on:
+  pull_request:
+
+jobs:
+  do-nothing:
+    runs-on: ubuntu-latest
+    if: false
+    steps:
+      - run: echo "This will never run"
