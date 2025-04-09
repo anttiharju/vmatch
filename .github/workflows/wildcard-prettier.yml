@@ -12,5 +12,7 @@ jobs:
     if: false
     steps:
       - name: Prettier
-        run: git ls-files -z '*.md' '*.yml' | xargs -0 prettier --write
+        run: |
+          # shellcheck disable=SC1083
+          prettier --write {staged_files}
       # stage_fixed: true
