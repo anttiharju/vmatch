@@ -100,9 +100,9 @@ extract_paths_and_commands() {
         # Convert GitHub Actions path patterns to lefthook-compatible glob patterns
 
         # Handle specific patterns
-        if [[ "$path" == "**/*.go" ]]; then
-            # For Go files in any directory, just use *.go in lefthook
-            path="*.go"
+        if [[ "$path" == "**/*.go" || "$path" == "**/*.sh" || "$path" == "**/*.bash" || "$path" == "**/*.dash" || "$path" == "**/*.ksh" ]]; then
+            # For files with these extensions in any directory, just use *.extension in lefthook
+            path=${path#**/}
         elif [[ "$path" == "**/*.yml" || "$path" == "**/action.yml" ]]; then
             # For yml files in any directory, use *.yml in lefthook
             path=${path#**/}
