@@ -1,0 +1,15 @@
+on:
+  pull_request:
+    branches:
+      - wildcard
+    paths:
+      - "**/*.sh"
+      - "**/*.bash"
+
+jobs:
+  lefthook-job:
+    runs-on: ubuntu-latest
+    if: false
+    steps:
+      - name: ShellCheck
+        run: git ls-files -z '*.sh' '*.bash' | xargs -0 shellcheck --color=always --source-path=SCRIPTDIR

@@ -1,0 +1,18 @@
+on:
+  pull_request:
+    branches:
+      - wildcard
+    paths:
+      - "**/*.md"
+      - "**/*.yml"
+
+jobs:
+  lefthook-job:
+    runs-on: ubuntu-latest
+    if: false
+    steps:
+      - name: Prettier
+        run: |
+          # shellcheck disable=SC1083
+          prettier --write {staged_files}
+      # stage_fixed: true

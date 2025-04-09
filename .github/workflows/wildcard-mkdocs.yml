@@ -1,0 +1,15 @@
+on:
+  pull_request:
+    branches:
+      - wildcard
+    paths:
+      - "docs/**/*"
+      - "mkdocs.yml"
+
+jobs:
+  lefthook-job:
+    runs-on: ubuntu-latest
+    if: false
+    steps:
+      - name: MkDocs
+        run: mkdocs build --strict

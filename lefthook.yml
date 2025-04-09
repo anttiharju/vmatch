@@ -2,48 +2,48 @@ output:
   - success
   - failure
 
-# Match to validate.yml
+# Match to plan.yml
 pre-commit:
   parallel: true
   jobs:
-    - name: Binary
-      glob: "{pkg/*,main.go,go.mod,dist/wrap/*}"
-      run: go build
-
-    - name: Go code
-      glob: "{*.go,.golangci*}"
-      run: golangci-lint run --fix
-      stage_fixed: true
-
-    - name: GitHub Actions
+    - name: action-validator
       glob: "{.github/workflows/*.yml,*/action.yml}"
-      run: action-validator --verbose $(git ls-files '.github/workflows/*.yml' '*/action.yml')
+      run: git ls-files -z '.github/workflows/*.yml' '*/action.yml' | xargs -0 action-validator --verbose
 
-    - name: GitHub Actions Workflows
+    - name: actionlint
       glob: ".github/workflows/*.yml"
       run: actionlint -color
 
-    - name: Scripts
-      glob: "*{.sh,.bash,.dash,.ksh}"
-      run: git ls-files -z '*.sh' '*.bash' '*.dash' '*.ksh' | xargs -0 shellcheck --color=always --source-path=SCRIPTDIR
-
-    - name: Markdown and YAML
-      glob: "*{.md,.yml,.yaml}"
-      run: prettier --write {staged_files}
-      stage_fixed: true
-
-    - name: Formatting
-      run: editorconfig-checker {staged_files}
-
     # https://github.com/anttiharju/check-relative-markdown-links
-    - name: Relative Markdown links
+    - name: check-relative-markdown-links
       run: check-relative-markdown-links run
 
-    - name: Documentation
-      glob: "{mkdocs.yml,docs/*}"
-      run: mkdocs build --strict
+    - name: EditorConfig-Checker
+      run: editorconfig-checker {staged_files}
+
+    - name: Go build
+      glob: "{dist/wrap/*,pkg/*,go.mod,main.go}"
+      run: go build
+
+    - name: golangci-lint
+      glob: "{.golangci-version,.golangci.yml,*.go}"
+      run: golangci-lint run --fix
+      stage_fixed: true
 
     # https://github.com/anttiharju/vmatch/issues/137
     - name: Homebrew formula
       glob: "dist/brew/*"
       run: echo todo
+
+    - name: MkDocs
+      glob: "{docs/*,mkdocs.yml}"
+      run: mkdocs build --strict
+
+    - name: Prettier
+      glob: "{*.yml,*.md}"
+      run: prettier --write {staged_files}
+      stage_fixed: true
+
+    - name: ShellCheck
+      glob: "*{.sh,.bash}"
+      run: git ls-files -z '*.sh' '*.bash' | xargs -0 shellcheck --color=always --source-path=SCRIPTDIR
