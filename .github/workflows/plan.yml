@@ -19,12 +19,15 @@ jobs:
     name: Validate
     runs-on: ubuntu-24.04
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Find changes
+        id: changes
+        uses: anttiharju/actions/find-changes@v0
 
       - name: Detect changes
         id: changed
         uses: ./.github/actions/detect-changes
+        with:
+          changes: ${{ steps.changes.outputs.array }}
 
       - if: always() && (steps.changed.outputs.github_actions == 'true' || github.event_name == 'push')
         name: action-validator
