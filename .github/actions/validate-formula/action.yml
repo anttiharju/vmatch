@@ -3,4 +3,5 @@ description: Validates the Homebrew formula
 runs:
   using: "composite"
   steps:
-    - run: echo todo
+    - shell: sh
+      run: echo todo
