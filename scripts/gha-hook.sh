@@ -93,10 +93,8 @@ parse_wildcard_files() {
     workflows=("${workflows_list[@]}")
     ids=("${ids_list[@]}")
     descriptions=("${descriptions_list[@]}")
-    paths=("${paths_list[@]}")
     step_names=("${step_names_list[@]}")
     action_refs=("${action_refs_list[@]}")
-    always=("${always_list[@]}")
 }
 
 # Generate the detect-changes action.yml file
@@ -356,10 +354,8 @@ main() {
     declare -a workflows
     declare -a ids
     declare -a descriptions
-    declare -a paths
     declare -a step_names
     declare -a action_refs
-    declare -a always
 
     # Parse wildcard workflow files
     parse_wildcard_files
