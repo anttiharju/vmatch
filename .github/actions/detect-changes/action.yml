@@ -7,76 +7,68 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Compare changes to action-validator glob
-      id: github_actions
-      uses: anttiharju/actions/compare-lefthook-glob@v0
+    - id: github_actions
+      uses: anttiharju/actions/compare-changes@v0
       with:
+        wildcard: action-validator
         changes: ${{ inputs.changes }}
-        yq: '.pre-commit.jobs[] | select(.name == "action-validator") | .glob'
-    - name: Compare changes to actionlint Lefthook glob
-      id: github_actions_workflows
-      uses: anttiharju/actions/compare-lefthook-glob@v0
+    - id: github_actions_workflows
+      uses: anttiharju/actions/compare-changes@v0
       with:
+        wildcard: actionlint
         changes: ${{ inputs.changes }}
-        yq: '.pre-commit.jobs[] | select(.name == "actionlint") | .glob'
-    - name: Compare changes to Go build Lefthook glob
-      id: binary
-      uses: anttiharju/actions/compare-lefthook-glob@v0
+    - id: binary
+      uses: anttiharju/actions/compare-changes@v0
       with:
+        wildcard: go-build
         changes: ${{ inputs.changes }}
-        yq: '.pre-commit.jobs[] | select(.name == "Go build") | .glob'
-    - name: Compare changes to golangci-lint Lefthook glob
-      id: go_code
-      uses: anttiharju/actions/compare-lefthook-glob@v0
+    - id: go_code
+      uses: anttiharju/actions/compare-changes@v0
       with:
+        wildcard: golangci-lint
         changes: ${{ inputs.changes }}
-        yq: '.pre-commit.jobs[] | select(.name == "golangci-lint") | .glob'
-    - name: Compare changes to Homebrew formula Lefthook glob
-      id: homebrew_formula
-      uses: anttiharju/actions/compare-lefthook-glob@v0
+    - id: homebrew_formula
+      uses: anttiharju/actions/compare-changes@v0
       with:
+        wildcard: homebrew-formula
         changes: ${{ inputs.changes }}
-        yq: '.pre-commit.jobs[] | select(.name == "Homebrew formula") | .glob'
-    - name: Compare changes to MkDocs Lefthook glob
-      id: documentation
-      uses: anttiharju/actions/compare-lefthook-glob@v0
+    - id: documentation
+      uses: anttiharju/actions/compare-changes@v0
       with:
+        wildcard: mkdocs
         changes: ${{ inputs.changes }}
-        yq: '.pre-commit.jobs[] | select(.name == "MkDocs") | .glob'
-    - name: Compare changes to Prettier Lefthook glob
-      id: markdown_and_yaml
-      uses: anttiharju/actions/compare-lefthook-glob@v0
+    - id: markdown_and_yaml
+      uses: anttiharju/actions/compare-changes@v0
       with:
+        wildcard: prettier
         changes: ${{ inputs.changes }}
-        yq: '.pre-commit.jobs[] | select(.name == "Prettier") | .glob'
-    - name: Compare changes to ShellCheck Lefthook glob
-      id: scripts
-      uses: anttiharju/actions/compare-lefthook-glob@v0
+    - id: scripts
+      uses: anttiharju/actions/compare-changes@v0
       with:
+        wildcard: shellcheck
         changes: ${{ inputs.changes }}
-        yq: '.pre-commit.jobs[] | select(.name == "ShellCheck") | .glob'
 outputs:
-  binary:
-    description: "Whether binary has changed"
-    value: ${{ steps.binary.outputs.changed }}
-  go_code:
-    description: "Whether Go code has changed"
-    value: ${{ steps.go_code.outputs.changed }}
   github_actions:
     description: "Whether GitHub Actions have changed"
     value: ${{ steps.github_actions.outputs.changed }}
   github_actions_workflows:
     description: "Whether GitHub Actions Worfklows have changed"
     value: ${{ steps.github_actions_workflows.outputs.changed }}
-  scripts:
-    description: "Whether scripts have changed"
-    value: ${{ steps.scripts.outputs.changed }}
-  markdown_and_yaml:
-    description: "Whether Markdown and YAML have changed"
-    value: ${{ steps.markdown_and_yaml.outputs.changed }}
-  documentation:
-    description: "Whether documentation has changed"
-    value: ${{ steps.documentation.outputs.changed }}
+  binary:
+    description: "Whether binary has changed"
+    value: ${{ steps.binary.outputs.changed }}
+  go_code:
+    description: "Whether Go code has changed"
+    value: ${{ steps.go_code.outputs.changed }}
   homebrew_formula:
     description: "Whether Homebrew formula has changed"
     value: ${{ steps.homebrew_formula.outputs.changed }}
+  documentation:
+    description: "Whether documentation has changed"
+    value: ${{ steps.documentation.outputs.changed }}
+  markdown_and_yaml:
+    description: "Whether Markdown and YAML have changed"
+    value: ${{ steps.markdown_and_yaml.outputs.changed }}
+  scripts:
+    description: "Whether scripts have changed"
+    value: ${{ steps.scripts.outputs.changed }}
