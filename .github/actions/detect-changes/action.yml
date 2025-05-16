@@ -20,7 +20,7 @@ runs:
     - id: always
       uses: anttiharju/actions/compare-changes@v0
       with:
-        wildcard: check-relative-markdown-links
+        wildcard: editorconfig-checker
         changes: ${{ inputs.changes }}
     - id: binary
       uses: anttiharju/actions/compare-changes@v0

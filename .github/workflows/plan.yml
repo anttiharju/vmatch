@@ -36,11 +36,11 @@ jobs:
         name: actionlint
         uses: anttiharju/actions/actionlint@v0
 
-      - if: always() || github.event_name == 'push'
+      - if: always()
         name: check-relative-markdown-links
         uses: anttiharju/actions/check-relative-markdown-links@v0
 
-      - if: always() || github.event_name == 'push'
+      - if: always()
         name: EditorConfig-Checker
         uses: anttiharju/actions/editorconfig-checker@v0
 

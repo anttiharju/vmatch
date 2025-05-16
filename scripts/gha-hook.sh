@@ -134,9 +134,15 @@ EOF
     # Add steps for each workflow
     for i in "${!workflows[@]}"; do
         local id="${ids[$i]}"
+        local workflow="${workflows[$i]}"
 
         # Skip if we already have a step with this ID
         if is_id_used "$id"; then
+            continue
+        fi
+
+        # Skip check-relative-markdown-links as it doesn't need a detect-changes step
+        if [[ "$workflow" == "check-relative-markdown-links" ]]; then
             continue
         fi
 
@@ -148,7 +154,7 @@ EOF
     - id: ${id}
       uses: anttiharju/actions/compare-changes@v0
       with:
-        wildcard: ${workflows[$i]}
+        wildcard: ${workflow}
         changes: \${{ inputs.changes }}
 EOF
         fi
@@ -163,9 +169,10 @@ EOF
     # Add outputs for each job
     for i in "${!workflows[@]}"; do
         local id="${ids[$i]}"
+        local workflow="${workflows[$i]}"
 
         # Skip duplicate IDs and always jobs (they don't need outputs)
-        if is_id_used "$id" || [[ "$id" == "always" ]]; then
+        if is_id_used "$id" || [[ "$id" == "always" ]] || [[ "$workflow" == "check-relative-markdown-links" ]]; then
             continue
         fi
 
@@ -266,6 +273,7 @@ EOF
     # Add conditional steps for each workflow
     for i in "${!workflows[@]}"; do
         local id="${ids[$i]}"
+        local workflow="${workflows[$i]}"
         local step_name="${step_names[$i]}"
         local action_ref="${action_refs[$i]}"
 
@@ -276,14 +284,23 @@ EOF
         used_steps+=("$step_name")
 
         if [[ -n "$step_name" && -n "$action_ref" ]]; then
-            # For 'always' jobs, they always run regardless of changes
-            if [[ "$id" == "always" ]]; then
+            # Special handling for check-relative-markdown-links and editorconfig-checker
+            if [[ "$workflow" == "check-relative-markdown-links" || "$workflow" == "editorconfig-checker" ]]; then
+                cat >> "$tempfile" << EOF
+      - if: always()
+        name: ${step_name}
+        uses: ${action_ref}
+
+EOF
+            # For other 'always' jobs, they run regardless of changes plus on push
+            elif [[ "$id" == "always" ]]; then
                 cat >> "$tempfile" << EOF
       - if: always() || github.event_name == 'push'
         name: ${step_name}
         uses: ${action_ref}
 
 EOF
+            # Normal conditional steps
             else
                 cat >> "$tempfile" << EOF
       - if: always() && (steps.changed.outputs.${id} == 'true' || github.event_name == 'push')
