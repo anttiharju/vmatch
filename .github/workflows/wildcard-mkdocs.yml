@@ -16,3 +16,5 @@ jobs:
 
       - name: MkDocs
         uses: anttiharju/actions/mkdocs-build-strict@v0
+    outputs:
+      release: ${{ github.event_name }}

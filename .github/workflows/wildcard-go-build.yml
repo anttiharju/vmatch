@@ -18,3 +18,5 @@ jobs:
 
       - name: Go build
         uses: anttiharju/actions/go-build@v0
+    outputs:
+      release: ${{ github.event_name }}
