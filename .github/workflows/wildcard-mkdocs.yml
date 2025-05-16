@@ -7,9 +7,12 @@ on:
       - "mkdocs.yml"
 
 jobs:
-  lefthook-job:
+  mkdocs:
     runs-on: ubuntu-latest
     if: false
     steps:
       - name: MkDocs
         run: mkdocs build --strict
+
+      - name: MkDocs
+        uses: anttiharju/actions/mkdocs-build-strict@v0

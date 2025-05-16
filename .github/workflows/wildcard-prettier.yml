@@ -7,7 +7,7 @@ on:
       - "**/*.yml"
 
 jobs:
-  lefthook-job:
+  prettier:
     runs-on: ubuntu-latest
     if: false
     steps:
@@ -16,3 +16,5 @@ jobs:
           # shellcheck disable=SC1083
           prettier --write {staged_files}
       # stage_fixed: true
+      - name: Prettier
+        uses: anttiharju/actions/prettier@v0

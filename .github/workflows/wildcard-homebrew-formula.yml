@@ -6,10 +6,12 @@ on:
       - "dist/brew/**/*"
 
 jobs:
-  lefthook-job:
+  homebrew-formula:
     runs-on: ubuntu-latest
     if: false
     steps:
       # https://github.com/anttiharju/vmatch/issues/137
       - name: Homebrew formula
         run: echo todo
+
+      # todo

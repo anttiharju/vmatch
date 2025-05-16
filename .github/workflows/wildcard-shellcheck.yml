@@ -7,9 +7,12 @@ on:
       - "**/*.bash"
 
 jobs:
-  lefthook-job:
+  shellcheck:
     runs-on: ubuntu-latest
     if: false
     steps:
       - name: ShellCheck
         run: git ls-files -z '*.sh' '*.bash' | xargs -0 shellcheck --color=always --source-path=SCRIPTDIR
+
+      - name: ShellCheck
+        uses: anttiharju/actions/shellcheck@v0

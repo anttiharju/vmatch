@@ -8,10 +8,13 @@ on:
       - ".golangci.yml"
 
 jobs:
-  lefthook-job:
+  golangci-lint:
     runs-on: ubuntu-latest
     if: false
     steps:
       - name: golangci-lint
         run: golangci-lint run --fix
       # stage_fixed: true
+
+      - name: golangci-lint
+        uses: anttiharju/actions/golangci-lint@v0

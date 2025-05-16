@@ -4,7 +4,7 @@ on:
       - wildcard
 
 jobs:
-  lefthook-job:
+  editorconfig-checker:
     runs-on: ubuntu-latest
     if: false
     steps:
@@ -12,3 +12,6 @@ jobs:
         run: |
           # shellcheck disable=SC1083
           editorconfig-checker {staged_files}
+
+      - name: EditorConfig-Checker
+        uses: anttiharju/actions/editorconfig-checker@v0
