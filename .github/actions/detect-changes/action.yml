@@ -22,11 +22,6 @@ runs:
       with:
         wildcard: check-relative-markdown-links
         changes: ${{ inputs.changes }}
-    - id: always
-      uses: anttiharju/actions/compare-changes@v0
-      with:
-        wildcard: editorconfig-checker
-        changes: ${{ inputs.changes }}
     - id: binary
       uses: anttiharju/actions/compare-changes@v0
       with:
@@ -64,12 +59,6 @@ outputs:
   github_actions_workflows:
     description: "Whether Actionlint have changed"
     value: ${{ steps.github_actions_workflows.outputs.changed }}
-  always:
-    description: "Whether Check Relative Markdown Links have changed"
-    value: ${{ steps.always.outputs.changed }}
-  always:
-    description: "Whether Editorconfig Checker have changed"
-    value: ${{ steps.always.outputs.changed }}
   binary:
     description: "Whether Go Build have changed"
     value: ${{ steps.binary.outputs.changed }}

@@ -17,6 +17,7 @@ parse_wildcard_files() {
     local paths_list=()
     local step_names_list=()
     local action_refs_list=()
+    local always_list=()  # New array to track if the check should run always
 
     # Get all wildcard workflow files
     for file in "${WORKFLOW_DIR}"/wildcard-*.yml; do
@@ -30,7 +31,16 @@ parse_wildcard_files() {
             local job_id
             job_id=$(grep -A 3 "jobs:" "$file" | grep -v "jobs:" | grep ":" | head -n 1 | sed 's/://')
             job_id=$(echo "$job_id" | tr -d ' ')
+
+            # Check if this job should always run (no paths in the trigger)
+            local should_always_run=false
+            if ! grep -q "paths:" "$file"; then
+                should_always_run=true
+                job_id="always"  # Use 'always' as the ID
+            fi
+
             ids_list+=("$job_id")
+            always_list+=("$should_always_run")
 
             # Generate a readable description
             local desc
@@ -79,13 +89,14 @@ parse_wildcard_files() {
         fi
     done
 
-    # Make arrays available globally using a different approach
+    # Make arrays available globally
     workflows=("${workflows_list[@]}")
     ids=("${ids_list[@]}")
     descriptions=("${descriptions_list[@]}")
     paths=("${paths_list[@]}")
     step_names=("${step_names_list[@]}")
     action_refs=("${action_refs_list[@]}")
+    always=("${always_list[@]}")
 }
 
 # Generate the detect-changes action.yml file
@@ -105,11 +116,36 @@ runs:
   steps:
 EOF
 
+    # Instead of associative arrays, we'll use regular arrays and checking functions
+    local used_ids=()
+
+    # Function to check if an ID is already used
+    is_id_used() {
+        local id="$1"
+        local i
+        for i in "${!used_ids[@]}"; do
+            if [[ "${used_ids[$i]}" == "$id" ]]; then
+                return 0  # true, ID is used
+            fi
+        done
+        return 1  # false, ID is not used
+    }
+
     # Add steps for each workflow
     for i in "${!workflows[@]}"; do
-        if [[ -n "${ids[$i]}" ]]; then
+        local id="${ids[$i]}"
+
+        # Skip if we already have a step with this ID
+        if is_id_used "$id"; then
+            continue
+        fi
+
+        # Mark this ID as used
+        used_ids+=("$id")
+
+        if [[ -n "$id" ]]; then
             cat >> "$ACTION_YML" << EOF
-    - id: ${ids[$i]}
+    - id: ${id}
       uses: anttiharju/actions/compare-changes@v0
       with:
         wildcard: ${workflows[$i]}
@@ -121,13 +157,25 @@ EOF
     # Add outputs section
     echo "outputs:" >> "$ACTION_YML"
 
+    # Reset the used IDs array for outputs
+    used_ids=()
+
     # Add outputs for each job
     for i in "${!workflows[@]}"; do
-        if [[ -n "${ids[$i]}" ]]; then
+        local id="${ids[$i]}"
+
+        # Skip duplicate IDs and always jobs (they don't need outputs)
+        if is_id_used "$id" || [[ "$id" == "always" ]]; then
+            continue
+        fi
+
+        used_ids+=("$id")
+
+        if [[ -n "$id" ]]; then
             cat >> "$ACTION_YML" << EOF
-  ${ids[$i]}:
+  ${id}:
     description: "Whether ${descriptions[$i]} have changed"
-    value: \${{ steps.${ids[$i]}.outputs.changed }}
+    value: \${{ steps.${id}.outputs.changed }}
 EOF
         fi
     done
@@ -164,6 +212,9 @@ jobs:
     name: Validate
     runs-on: ubuntu-24.04
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Find changes
         id: changes
         uses: anttiharju/actions/find-changes@v0
@@ -197,15 +248,50 @@ EOF
         ' "$PLAN_YML" > "$tempfile"
     fi
 
+    # Instead of associative arrays, we'll use regular arrays and a check function
+    local used_steps=()
+
+    # Function to check if a step is already used
+    is_step_used() {
+        local step="$1"
+        local i
+        for i in "${!used_steps[@]}"; do
+            if [[ "${used_steps[$i]}" == "$step" ]]; then
+                return 0  # true, step is used
+            fi
+        done
+        return 1  # false, step is not used
+    }
+
     # Add conditional steps for each workflow
     for i in "${!workflows[@]}"; do
-        if [[ -n "${ids[$i]}" && -n "${step_names[$i]}" && -n "${action_refs[$i]}" ]]; then
-            cat >> "$tempfile" << EOF
-      - if: always() && (steps.changed.outputs.${ids[$i]} == 'true' || github.event_name == 'push')
-        name: ${step_names[$i]}
-        uses: ${action_refs[$i]}
+        local id="${ids[$i]}"
+        local step_name="${step_names[$i]}"
+        local action_ref="${action_refs[$i]}"
+
+        # Skip if we've already added this step
+        if is_step_used "$step_name"; then
+            continue
+        fi
+        used_steps+=("$step_name")
+
+        if [[ -n "$step_name" && -n "$action_ref" ]]; then
+            # For 'always' jobs, they always run regardless of changes
+            if [[ "$id" == "always" ]]; then
+                cat >> "$tempfile" << EOF
+      - if: always() || github.event_name == 'push'
+        name: ${step_name}
+        uses: ${action_ref}
 
 EOF
+            else
+                cat >> "$tempfile" << EOF
+      - if: always() && (steps.changed.outputs.${id} == 'true' || github.event_name == 'push')
+        name: ${step_name}
+        uses: ${action_ref}
+
+EOF
+            fi
         fi
     done
 
@@ -214,14 +300,30 @@ EOF
     outputs:
 EOF
 
-    # Add outputs for each job that needs to be exposed
+    # Check for specific job IDs that need to be exposed as outputs
+    local has_binary=false
+    local has_doc=false
+    local has_formula=false
+
     for i in "${!ids[@]}"; do
-        if [[ "${ids[$i]}" == "binary" || "${ids[$i]}" == "documentation" || "${ids[$i]}" == "homebrew_formula" ]]; then
-            cat >> "$tempfile" << EOF
-      ${ids[$i]}_changed: \${{ steps.changed.outputs.${ids[$i]} }}
-EOF
+        if [[ "${ids[$i]}" == "binary" ]]; then
+            has_binary=true
+        elif [[ "${ids[$i]}" == "documentation" ]]; then
+            has_doc=true
+        elif [[ "${ids[$i]}" == "validate-formula" ]]; then
+            has_formula=true
         fi
     done
+
+    if $has_binary; then
+        echo '      binary_changed: ${{ steps.changed.outputs.binary }}' >> "$tempfile"
+    fi
+    if $has_doc; then
+        echo '      documentation_changed: ${{ steps.changed.outputs.documentation }}' >> "$tempfile"
+    fi
+    if $has_formula; then
+        echo '      homebrew_formula_changed: ${{ steps.changed.outputs.validate-formula }}' >> "$tempfile"
+    fi
 
     # Replace the plan.yml file
     mv "$tempfile" "$PLAN_YML"
@@ -240,6 +342,7 @@ main() {
     declare -a paths
     declare -a step_names
     declare -a action_refs
+    declare -a always
 
     # Parse wildcard workflow files
     parse_wildcard_files
