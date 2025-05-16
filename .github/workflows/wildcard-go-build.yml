@@ -9,7 +9,7 @@ on:
       - "main.go"
 
 jobs:
-  go-build:
+  binary:
     runs-on: ubuntu-latest
     if: false
     steps:

@@ -4,7 +4,7 @@ on:
       - wildcard
 
 jobs:
-  editorconfig-checker:
+  always:
     runs-on: ubuntu-latest
     if: false
     steps:

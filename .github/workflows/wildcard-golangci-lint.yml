@@ -8,7 +8,7 @@ on:
       - ".golangci.yml"
 
 jobs:
-  golangci-lint:
+  go_code:
     runs-on: ubuntu-latest
     if: false
     steps:

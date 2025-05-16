@@ -7,7 +7,7 @@ on:
       - "mkdocs.yml"
 
 jobs:
-  mkdocs:
+  documentation:
     runs-on: ubuntu-latest
     if: false
     steps:

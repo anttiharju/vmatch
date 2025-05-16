@@ -7,7 +7,7 @@ on:
       - "**/*.bash"
 
 jobs:
-  shellcheck:
+  scripts:
     runs-on: ubuntu-latest
     if: false
     steps:

@@ -6,7 +6,7 @@ on:
       - "dist/brew/**/*"
 
 jobs:
-  homebrew-formula:
+  always:
     runs-on: ubuntu-latest
     if: false
     steps:

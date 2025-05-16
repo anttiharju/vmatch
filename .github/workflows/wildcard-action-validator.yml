@@ -7,7 +7,7 @@ on:
       - "**/action.yml"
 
 jobs:
-  action-validator:
+  github_actions:
     runs-on: ubuntu-latest
     if: false
     steps:
