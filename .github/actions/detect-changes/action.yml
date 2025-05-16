@@ -7,4 +7,84 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - id: github_actions
+      uses: anttiharju/actions/compare-changes@v0
+      with:
+        wildcard: action-validator
+        changes: ${{ inputs.changes }}
+    - id: github_actions_workflows
+      uses: anttiharju/actions/compare-changes@v0
+      with:
+        wildcard: actionlint
+        changes: ${{ inputs.changes }}
+    - id: always
+      uses: anttiharju/actions/compare-changes@v0
+      with:
+        wildcard: check-relative-markdown-links
+        changes: ${{ inputs.changes }}
+    - id: always
+      uses: anttiharju/actions/compare-changes@v0
+      with:
+        wildcard: editorconfig-checker
+        changes: ${{ inputs.changes }}
+    - id: binary
+      uses: anttiharju/actions/compare-changes@v0
+      with:
+        wildcard: go-build
+        changes: ${{ inputs.changes }}
+    - id: go_code
+      uses: anttiharju/actions/compare-changes@v0
+      with:
+        wildcard: golangci-lint
+        changes: ${{ inputs.changes }}
+    - id: validate-formula
+      uses: anttiharju/actions/compare-changes@v0
+      with:
+        wildcard: homebrew-formula
+        changes: ${{ inputs.changes }}
+    - id: documentation
+      uses: anttiharju/actions/compare-changes@v0
+      with:
+        wildcard: mkdocs
+        changes: ${{ inputs.changes }}
+    - id: markdown_and_yaml
+      uses: anttiharju/actions/compare-changes@v0
+      with:
+        wildcard: prettier
+        changes: ${{ inputs.changes }}
+    - id: scripts
+      uses: anttiharju/actions/compare-changes@v0
+      with:
+        wildcard: shellcheck
+        changes: ${{ inputs.changes }}
 outputs:
+  github_actions:
+    description: "Whether Action Validator have changed"
+    value: ${{ steps.github_actions.outputs.changed }}
+  github_actions_workflows:
+    description: "Whether Actionlint have changed"
+    value: ${{ steps.github_actions_workflows.outputs.changed }}
+  always:
+    description: "Whether Check Relative Markdown Links have changed"
+    value: ${{ steps.always.outputs.changed }}
+  always:
+    description: "Whether Editorconfig Checker have changed"
+    value: ${{ steps.always.outputs.changed }}
+  binary:
+    description: "Whether Go Build have changed"
+    value: ${{ steps.binary.outputs.changed }}
+  go_code:
+    description: "Whether Golangci Lint have changed"
+    value: ${{ steps.go_code.outputs.changed }}
+  validate-formula:
+    description: "Whether Homebrew Formula have changed"
+    value: ${{ steps.validate-formula.outputs.changed }}
+  documentation:
+    description: "Whether Mkdocs have changed"
+    value: ${{ steps.documentation.outputs.changed }}
+  markdown_and_yaml:
+    description: "Whether Prettier have changed"
+    value: ${{ steps.markdown_and_yaml.outputs.changed }}
+  scripts:
+    description: "Whether Shellcheck have changed"
+    value: ${{ steps.scripts.outputs.changed }}

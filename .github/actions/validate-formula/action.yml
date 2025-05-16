@@ -1,0 +1,6 @@
+name: Validate formula
+description: Validates the Homebrew formula
+runs:
+  using: "composite"
+  steps:
+    - run: echo todo

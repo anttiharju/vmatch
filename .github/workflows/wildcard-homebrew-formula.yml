@@ -6,7 +6,7 @@ on:
       - "dist/brew/**/*"
 
 jobs:
-  always:
+  validate-formula:
     runs-on: ubuntu-latest
     if: false
     steps:
@@ -15,5 +15,7 @@ jobs:
         run: echo todo
 
       # todo
+      - name: Validate formula
+        uses: ./.github/actions/validate-formula
     outputs:
       release: ${{ github.event_name }}

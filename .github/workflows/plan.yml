@@ -28,7 +28,42 @@ jobs:
         with:
           changes: ${{ steps.changes.outputs.array }}
 
+      - if: always() && (steps.changed.outputs.github_actions == 'true' || github.event_name == 'push')
+        name: action-validator
+        uses: anttiharju/actions/action-validator@v0
+
+      - if: always() && (steps.changed.outputs.github_actions_workflows == 'true' || github.event_name == 'push')
+        name: actionlint
+        uses: anttiharju/actions/actionlint@v0
+
+      - if: always() && (steps.changed.outputs.always == 'true' || github.event_name == 'push')
+        name: check-relative-markdown-links
+        uses: anttiharju/actions/check-relative-markdown-links@v0
+
+      - if: always() && (steps.changed.outputs.always == 'true' || github.event_name == 'push')
+        name: EditorConfig-Checker
+        uses: anttiharju/actions/editorconfig-checker@v0
+
+      - if: always() && (steps.changed.outputs.binary == 'true' || github.event_name == 'push')
+        name: Go build
+        uses: anttiharju/actions/go-build@v0
+
+      - if: always() && (steps.changed.outputs.go_code == 'true' || github.event_name == 'push')
+        name: golangci-lint
+        uses: anttiharju/actions/golangci-lint@v0
+
+      - if: always() && (steps.changed.outputs.documentation == 'true' || github.event_name == 'push')
+        name: MkDocs
+        uses: anttiharju/actions/mkdocs-build-strict@v0
+
+      - if: always() && (steps.changed.outputs.markdown_and_yaml == 'true' || github.event_name == 'push')
+        name: Prettier
+        uses: anttiharju/actions/prettier@v0
+
+      - if: always() && (steps.changed.outputs.scripts == 'true' || github.event_name == 'push')
+        name: ShellCheck
+        uses: anttiharju/actions/shellcheck@v0
+
     outputs:
       binary_changed: ${{ steps.changed.outputs.binary }}
-      homebrew_formula_changed: ${{ steps.changed.outputs.homebrew_formula }}
       documentation_changed: ${{ steps.changed.outputs.documentation }}
