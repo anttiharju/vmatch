@@ -1,0 +1,20 @@
+on:
+  push:
+    branches:
+      - wildcard
+    paths:
+      - "**/*.md"
+      - "**/*.yml"
+
+jobs:
+  markdown_and_yaml:
+    runs-on: ubuntu-latest
+    if: false
+    steps:
+      - name: Prettier
+        run: |
+          # shellcheck disable=SC1083
+          prettier --write {staged_files}
+      # stage_fixed: true
+      - name: Prettier
+        uses: anttiharju/actions/prettier@v0

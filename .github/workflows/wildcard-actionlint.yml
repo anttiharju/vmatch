@@ -1,0 +1,17 @@
+on:
+  push:
+    branches:
+      - wildcard
+    paths:
+      - ".github/workflows/*.yml"
+
+jobs:
+  github_actions_workflows:
+    runs-on: ubuntu-latest
+    if: false
+    steps:
+      - name: actionlint
+        run: actionlint -color
+
+      - name: actionlint
+        uses: anttiharju/actions/actionlint@v0

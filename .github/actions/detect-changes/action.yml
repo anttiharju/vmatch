@@ -1,81 +1,74 @@
 name: "Detect changes"
-description: "Combines find-changes with the relevant compare-lefthook-glob steps"
+description: "Decide what steps need running based on changes"
+inputs:
+  changes:
+    description: "JSON array of changed files"
+    required: true
 runs:
   using: "composite"
   steps:
-    - name: Find changes
-      id: changes
-      uses: anttiharju/actions/find-changes@v0
-    - name: Compare changes to Binary Lefthook glob
-      id: binary
-      uses: anttiharju/actions/compare-lefthook-glob@v0
+    - id: github_actions
+      uses: anttiharju/actions/compare-changes@v0
       with:
-        changes: ${{ steps.changes.outputs.array }}
-        yq: '.pre-commit.jobs[] | select(.name == "Binary") | .glob'
-    - name: Compare changes to Documentation Lefthook glob
-      id: documentation
-      uses: anttiharju/actions/compare-lefthook-glob@v0
+        wildcard: action-validator
+        changes: ${{ inputs.changes }}
+    - id: github_actions_workflows
+      uses: anttiharju/actions/compare-changes@v0
       with:
-        changes: ${{ steps.changes.outputs.array }}
-        yq: '.pre-commit.jobs[] | select(.name == "Documentation") | .glob'
-    - name: Compare changes to Go code Lefthook glob
-      id: go_code
-      uses: anttiharju/actions/compare-lefthook-glob@v0
+        wildcard: actionlint
+        changes: ${{ inputs.changes }}
+    - id: binary
+      uses: anttiharju/actions/compare-changes@v0
       with:
-        changes: ${{ steps.changes.outputs.array }}
-        yq: '.pre-commit.jobs[] | select(.name == "Go code") | .glob'
-    - name: Compare changes to GitHub Actions Lefthook glob
-      id: github_actions
-      uses: anttiharju/actions/compare-lefthook-glob@v0
+        wildcard: go-build
+        changes: ${{ inputs.changes }}
+    - id: go_code
+      uses: anttiharju/actions/compare-changes@v0
       with:
-        changes: ${{ steps.changes.outputs.array }}
-        yq: '.pre-commit.jobs[] | select(.name == "GitHub Actions") | .glob'
-    - name: Compare changes to GitHub Actions Workflows Lefthook glob
-      id: github_actions_workflows
-      uses: anttiharju/actions/compare-lefthook-glob@v0
+        wildcard: golangci-lint
+        changes: ${{ inputs.changes }}
+    - id: validate-formula
+      uses: anttiharju/actions/compare-changes@v0
       with:
-        changes: ${{ steps.changes.outputs.array }}
-        yq: '.pre-commit.jobs[] | select(.name == "GitHub Actions Workflows") | .glob'
-    - name: Compare changes to Scripts Lefthook glob
-      id: scripts
-      uses: anttiharju/actions/compare-lefthook-glob@v0
+        wildcard: homebrew-formula
+        changes: ${{ inputs.changes }}
+    - id: documentation
+      uses: anttiharju/actions/compare-changes@v0
       with:
-        changes: ${{ steps.changes.outputs.array }}
-        yq: '.pre-commit.jobs[] | select(.name == "Scripts") | .glob'
-    - name: Compare changes to Markdown and YAML Lefthook glob
-      id: markdown_and_yaml
-      uses: anttiharju/actions/compare-lefthook-glob@v0
+        wildcard: mkdocs
+        changes: ${{ inputs.changes }}
+    - id: markdown_and_yaml
+      uses: anttiharju/actions/compare-changes@v0
       with:
-        changes: ${{ steps.changes.outputs.array }}
-        yq: '.pre-commit.jobs[] | select(.name == "Markdown and YAML") | .glob'
-    - name: Compare changes to Homebrew formula Lefthook glob
-      id: homebrew_formula
-      uses: anttiharju/actions/compare-lefthook-glob@v0
+        wildcard: prettier
+        changes: ${{ inputs.changes }}
+    - id: scripts
+      uses: anttiharju/actions/compare-changes@v0
       with:
-        changes: ${{ steps.changes.outputs.array }}
-        yq: '.pre-commit.jobs[] | select(.name == "Homebrew formula") | .glob'
+        wildcard: shellcheck
+        changes: ${{ inputs.changes }}
 outputs:
-  binary:
-    description: "Whether binary has changed"
-    value: ${{ steps.binary.outputs.changed }}
-  go_code:
-    description: "Whether Go code has changed"
-    value: ${{ steps.go_code.outputs.changed }}
   github_actions:
-    description: "Whether GitHub Actions have changed"
+    description: "Whether Action Validator have changed"
     value: ${{ steps.github_actions.outputs.changed }}
   github_actions_workflows:
-    description: "Whether GitHub Actions Worfklows have changed"
+    description: "Whether Actionlint have changed"
     value: ${{ steps.github_actions_workflows.outputs.changed }}
-  scripts:
-    description: "Whether scripts have changed"
-    value: ${{ steps.scripts.outputs.changed }}
-  markdown_and_yaml:
-    description: "Whether Markdown and YAML have changed"
-    value: ${{ steps.markdown_and_yaml.outputs.changed }}
+  binary:
+    description: "Whether Go Build have changed"
+    value: ${{ steps.binary.outputs.changed }}
+  go_code:
+    description: "Whether Golangci Lint have changed"
+    value: ${{ steps.go_code.outputs.changed }}
+  validate-formula:
+    description: "Whether Homebrew Formula have changed"
+    value: ${{ steps.validate-formula.outputs.changed }}
   documentation:
-    description: "Whether documentation has changed"
+    description: "Whether Mkdocs have changed"
     value: ${{ steps.documentation.outputs.changed }}
-  homebrew_formula:
-    description: "Whether Homebrew formula has changed"
-    value: ${{ steps.homebrew_formula.outputs.changed }}
+  markdown_and_yaml:
+    description: "Whether Prettier have changed"
+    value: ${{ steps.markdown_and_yaml.outputs.changed }}
+  scripts:
+    description: "Whether Shellcheck have changed"
+    value: ${{ steps.scripts.outputs.changed }}

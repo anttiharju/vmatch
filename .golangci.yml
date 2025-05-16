@@ -1,29 +1,29 @@
+version: "2"
 linters:
   enable:
-    - copyloopvar
-    - intrange
     - asasalint
     - asciicheck
     - bidichk
     - bodyclose
     - containedctx
     - contextcheck
+    - copyloopvar
     - cyclop
     - decorder
     - dogsled
     - dupl
     - dupword
     - durationcheck
-    - errcheck
     - errchkjson
     - errname
     - errorlint
     - exhaustive
     - forcetypeassert
     - funlen
-    - gci
     - ginkgolinter
     - gocheckcompilerdirectives
+    - gochecknoglobals
+    - gochecknoinits
     - gochecksumtype
     - gocognit
     - goconst
@@ -33,20 +33,19 @@ linters:
     - gomodguard
     - goprintffuncname
     - gosec
-    - gosimple
     - gosmopolitan
-    - govet
     - grouper
     - importas
     - inamedparam
-    - ineffassign
     - interfacebloat
+    - intrange
     - ireturn
     - lll
     - loggercheck
     - maintidx
     - makezero
     - mirror
+    - misspell
     - musttag
     - nakedret
     - nestif
@@ -62,6 +61,7 @@ linters:
     - prealloc
     - predeclared
     - promlinter
+    - protogetter
     - reassign
     - revive
     - rowserrcheck
@@ -69,29 +69,40 @@ linters:
     - spancheck
     - sqlclosecheck
     - staticcheck
-    - stylecheck
     - tagliatelle
     - testableexamples
     - testifylint
     - thelper
     - tparallel
-    - typecheck
     - unconvert
     - unparam
-    - unused
     - usestdlibvars
     - varnamelen
     - wastedassign
+    - whitespace
     - wrapcheck
     - wsl
     - zerologlint
-    # https://peter.bourgon.org/blog/2017/06/09/theory-of-modern-go.html
-    - gochecknoglobals
-    - gochecknoinits
-    # run with --fix
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+formatters:
+  enable:
+    - gci
     - gofmt
     - gofumpt
     - goimports
-    - misspell
-    - protogetter
-    - whitespace
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$

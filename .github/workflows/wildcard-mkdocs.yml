@@ -1,0 +1,20 @@
+on:
+  push:
+    branches:
+      - wildcard
+    paths:
+      - "docs/**/*"
+      - "mkdocs.yml"
+
+jobs:
+  documentation:
+    runs-on: ubuntu-latest
+    if: false
+    steps:
+      - name: MkDocs
+        run: mkdocs build --strict
+
+      - name: MkDocs
+        uses: anttiharju/actions/mkdocs-build-strict@v0
+    outputs:
+      release: ${{ github.event_name }}

@@ -13,55 +13,58 @@ on:
         description: "Whether to trigger documentation workflow"
         value: ${{ jobs.validate.outputs.documentation_changed }}
 
-# Match to lefthook.yml
 jobs:
   validate:
     name: Validate
     runs-on: ubuntu-24.04
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Find changes
+        id: changes
+        uses: anttiharju/actions/find-changes@v0
 
       - name: Detect changes
         id: changed
         uses: ./.github/actions/detect-changes
-
-      - if: always() && (steps.changed.outputs.binary == 'true' || github.event_name == 'push')
-        name: Binary
-        uses: anttiharju/actions/go-build@v0
-
-      - if: always() && (steps.changed.outputs.go_code == 'true' || github.event_name == 'push')
-        name: Go code
-        uses: anttiharju/actions/golangci-lint@v0
+        with:
+          changes: ${{ steps.changes.outputs.array }}
 
       - if: always() && (steps.changed.outputs.github_actions == 'true' || github.event_name == 'push')
-        name: GitHub Actions
+        name: action-validator
         uses: anttiharju/actions/action-validator@v0
 
       - if: always() && (steps.changed.outputs.github_actions_workflows == 'true' || github.event_name == 'push')
-        name: GitHub Actions Workflows
+        name: actionlint
         uses: anttiharju/actions/actionlint@v0
 
-      - if: always() && (steps.changed.outputs.scripts == 'true' || github.event_name == 'push')
-        name: Scripts
-        uses: anttiharju/actions/shellcheck@v0
-
       - if: always()
-        name: Markdown and YAML
-        uses: anttiharju/actions/prettier@v0
-
-      - if: always()
-        name: Formatting
-        uses: anttiharju/actions/editorconfig-checker@v0
-
-      - if: always()
-        name: Relative Markdown links
+        name: check-relative-markdown-links
         uses: anttiharju/actions/check-relative-markdown-links@v0
 
+      - if: always()
+        name: EditorConfig-Checker
+        uses: anttiharju/actions/editorconfig-checker@v0
+
+      - if: always() && (steps.changed.outputs.binary == 'true' || github.event_name == 'push')
+        name: Go build
+        uses: anttiharju/actions/go-build@v0
+
+      - if: always() && (steps.changed.outputs.go_code == 'true' || github.event_name == 'push')
+        name: golangci-lint
+        uses: anttiharju/actions/golangci-lint@v0
+
       - if: always() && (steps.changed.outputs.documentation == 'true' || github.event_name == 'push')
-        name: Documentation
+        name: MkDocs
         uses: anttiharju/actions/mkdocs-build-strict@v0
+
+      - if: always() && (steps.changed.outputs.markdown_and_yaml == 'true' || github.event_name == 'push')
+        name: Prettier
+        uses: anttiharju/actions/prettier@v0
+
+      - if: always() && (steps.changed.outputs.scripts == 'true' || github.event_name == 'push')
+        name: ShellCheck
+        uses: anttiharju/actions/shellcheck@v0
+
     outputs:
       binary_changed: ${{ steps.changed.outputs.binary }}
-      homebrew_formula_changed: ${{ steps.changed.outputs.homebrew_formula }}
       documentation_changed: ${{ steps.changed.outputs.documentation }}
+      homebrew_formula_changed: ${{ steps.changed.outputs.validate-formula }}
