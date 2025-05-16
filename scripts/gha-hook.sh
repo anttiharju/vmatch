@@ -331,13 +331,13 @@ EOF
     done
 
     if $has_binary; then
-        echo '      binary_changed: ${{ steps.changed.outputs.binary }}' >> "$tempfile"
+        echo "      binary_changed: \${{ steps.changed.outputs.binary }}" >> "$tempfile"
     fi
     if $has_doc; then
-        echo '      documentation_changed: ${{ steps.changed.outputs.documentation }}' >> "$tempfile"
+        echo "      documentation_changed: \${{ steps.changed.outputs.documentation }}" >> "$tempfile"
     fi
     if $has_formula; then
-        echo '      homebrew_formula_changed: ${{ steps.changed.outputs.validate-formula }}' >> "$tempfile"
+        echo "      homebrew_formula_changed: \${{ steps.changed.outputs.validate-formula }}" >> "$tempfile"
     fi
 
     # Replace the plan.yml file
