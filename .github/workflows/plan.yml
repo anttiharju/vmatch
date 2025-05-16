@@ -13,7 +13,6 @@ on:
         description: "Whether to trigger documentation workflow"
         value: ${{ jobs.validate.outputs.documentation_changed }}
 
-# Match to lefthook.yml
 jobs:
   validate:
     name: Validate

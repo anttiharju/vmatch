@@ -1,5 +1,5 @@
 name: "Detect changes"
-description: "Combines find-changes with the relevant compare-lefthook-glob steps"
+description: "Decide what steps need running based on changes"
 inputs:
   changes:
     description: "JSON array of changed files"
