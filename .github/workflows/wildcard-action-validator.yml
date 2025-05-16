@@ -7,12 +7,9 @@ on:
       - "**/action.yml"
 
 jobs:
-  github_actions:
+  wildcard:
     runs-on: ubuntu-latest
     if: false
     steps:
-      - name: action-validator
-        run: git ls-files -z '.github/workflows/*.yml' '*/action.yml' | xargs -0 action-validator --verbose
-
-      - name: action-validator
-        uses: anttiharju/actions/action-validator@v0
+      - run: |
+          true

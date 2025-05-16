@@ -4,13 +4,9 @@ on:
       - wildcard
 
 jobs:
-  always:
+  wildcard:
     runs-on: ubuntu-latest
     if: false
     steps:
-      # https://github.com/anttiharju/check-relative-markdown-links
-      - name: check-relative-markdown-links
-        run: check-relative-markdown-links run
-
-      - name: check-relative-markdown-links
-        uses: anttiharju/actions/check-relative-markdown-links@v0
+      - run: |
+          true

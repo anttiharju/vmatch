@@ -56,5 +56,3 @@ Remember that you need to have `go.mod` with Go version for go usage and respect
 [![Stargazers over time](https://starchart.cc/anttiharju/vmatch.svg?variant=adaptive)](https://starchart.cc/anttiharju/vmatch)
 
 Starring the project helps to get it eventually distributed via homebrew/core :)
-
-<!--dummy change-->

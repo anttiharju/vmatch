@@ -8,7 +8,6 @@ import (
 	"github.com/anttiharju/vmatch/pkg/interrupt"
 )
 
-// dummy change
 func main() {
 	go interrupt.Listen(os.Interrupt)
 

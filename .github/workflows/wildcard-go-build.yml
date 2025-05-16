@@ -9,14 +9,9 @@ on:
       - "main.go"
 
 jobs:
-  binary:
+  wildcard:
     runs-on: ubuntu-latest
     if: false
     steps:
-      - name: Go build
-        run: go build
-
-      - name: Go build
-        uses: anttiharju/actions/go-build@v0
-    outputs:
-      release: ${{ github.event_name }}
+      - run: |
+          true
