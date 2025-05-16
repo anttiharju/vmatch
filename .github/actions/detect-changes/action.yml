@@ -17,11 +17,6 @@ runs:
       with:
         wildcard: actionlint
         changes: ${{ inputs.changes }}
-    - id: always
-      uses: anttiharju/actions/compare-changes@v0
-      with:
-        wildcard: editorconfig-checker
-        changes: ${{ inputs.changes }}
     - id: binary
       uses: anttiharju/actions/compare-changes@v0
       with:

@@ -141,8 +141,8 @@ EOF
             continue
         fi
 
-        # Skip check-relative-markdown-links as it doesn't need a detect-changes step
-        if [[ "$workflow" == "check-relative-markdown-links" ]]; then
+        # Skip any workflow with id "always"
+        if [[ "$id" == "always" ]]; then
             continue
         fi
 
