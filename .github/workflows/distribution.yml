@@ -24,14 +24,20 @@ jobs:
         id: set-up-homebrew
         uses: Homebrew/actions/setup-homebrew@master
 
-      - name: Debug
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create a local tap
+        shell: sh
         run: |
-          ls
+          ./dist/brew/render.bash --tap
+          git add --all
+          git commit -m "Render formula to build ${{ runner.os }} bottle"
+          brew tap anttiharju/vmatch file://${{ github.workspace }}
 
       - name: Build bottle
         run: |
-          #brew tap anttiharju/vmatch file://${{ github.workspace }}
-          #brew install --build-bottle vmatch
+          brew install --build-bottle vmatch
           brew bottle vmatch
 
   homebrew-tap:
