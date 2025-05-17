@@ -11,8 +11,32 @@ permissions:
   contents: write
 
 jobs:
+  build-bottles:
+    name: Build bottle
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - macos-15
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Set up Homebrew
+        id: set-up-homebrew
+        uses: Homebrew/actions/setup-homebrew@master
+
+      - name: Debug
+        run: |
+          ls
+
+      - name: Build bottle
+        run: |
+          #brew tap anttiharju/vmatch file://${{ github.workspace }}
+          #brew install --build-bottle vmatch
+          brew bottle vmatch
+
   homebrew-tap:
     name: Homebrew tap
+    needs: build-bottles
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
