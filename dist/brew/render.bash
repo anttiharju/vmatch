@@ -32,5 +32,12 @@ set +a
 # Template
 envsubst < "$template_file" > .formula.rb
 
+tap_mode=false
+[[ " $* " =~ " --tap " ]] && tap_mode=true
+if [[ "$tap_mode" == true ]]; then
+    mkdir -p ../../Formula
+    mv .formula.rb ../../Formula/vmatch.rb
+fi
+
 # Easier diffing
 cp "$template_file" .formula.tpl.rb
