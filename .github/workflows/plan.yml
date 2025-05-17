@@ -5,10 +5,7 @@ on:
     outputs:
       release:
         description: "Whether to trigger github-release job"
-        value: ${{ jobs.validate.outputs.binary_changed }}
-      distribution:
-        description: "Whether to trigger distribution workflow"
-        value: ${{ jobs.validate.outputs.homebrew_formula_changed || jobs.validate.outputs.binary_changed }}
+        value: ${{ jobs.validate.outputs.binary_changed || jobs.validate.outputs.homebrew_formula_changed }}
       documentation:
         description: "Whether to trigger documentation workflow"
         value: ${{ jobs.validate.outputs.documentation_changed }}
@@ -63,7 +60,6 @@ jobs:
       - if: always() && (steps.changed.outputs.scripts == 'true' || github.event_name == 'push')
         name: ShellCheck
         uses: anttiharju/actions/shellcheck@v0
-
     outputs:
       binary_changed: ${{ steps.changed.outputs.binary }}
       documentation_changed: ${{ steps.changed.outputs.documentation }}

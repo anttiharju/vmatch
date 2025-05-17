@@ -14,9 +14,9 @@ jobs:
     needs:
       - plan
     if: needs.plan.outputs.release == 'true'
-    runs-on: ubuntu-24.04
     permissions:
       contents: write
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -28,12 +28,10 @@ jobs:
     needs:
       - plan
       - release
-    if: |
-      always() && !failure() && !cancelled() &&
-      needs.plan.outputs.distribution == 'true'
-    uses: ./.github/workflows/distribution.yml
+    if: needs.plan.outputs.release == 'true'
     permissions:
       contents: write
+    uses: ./.github/workflows/distribution.yml
     secrets: inherit
 
   documentation:
@@ -44,7 +42,7 @@ jobs:
     if: |
       always() && !failure() && !cancelled() &&
       needs.plan.outputs.documentation == 'true'
-    uses: ./.github/workflows/documentation.yml
     permissions:
       contents: write
+    uses: ./.github/workflows/documentation.yml
     secrets: inherit
