@@ -1,6 +1,10 @@
 name: Distribute
 on:
   workflow_call:
+    inputs:
+      tag:
+        required: true
+        type: string
     secrets:
       ANTTIHARJU_BOT_ID:
         required: true
@@ -27,7 +31,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # required by render.bash
+      # required by values.bash through render.bash
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
@@ -47,16 +51,22 @@ jobs:
           brew install --build-bottle vmatch
           brew bottle vmatch
 
-  homebrew-tap:
-    name: Homebrew tap
+      - name: Upload bottle to GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          find . -maxdepth 1 -name 'vmatch--*.bottle.*.tar.gz' -exec gh release upload build95 {} \;
+
+  update-homebrew-tap:
+    name: Update homebrew-tap
     needs: build-bottles
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Generate commit token
-        uses: actions/create-github-app-token@v1
         id: generate-token
+        uses: actions/create-github-app-token@v1
         with:
           app-id: ${{ secrets.ANTTIHARJU_BOT_ID }}
           private-key: ${{ secrets.ANTTIHARJU_BOT_PRIVATE_KEY }}
@@ -67,21 +77,22 @@ jobs:
           repository: anttiharju/homebrew-tap
           token: ${{ steps.generate-token.outputs.token }}
           path: homebrew-tap
+      - name: Setup tag environment variable for values.bash
+        env:
+          tag: ${{ inputs.tag }}
+        run: echo "tag=$tag" >> "$GITHUB_ENV"
       - name: Render formula template
         uses: anttiharju/actions/render-template@v0
         with:
-          template: dist/brew/formula.tpl.rb
+          template: dist/brew/template.rb
           values: dist/brew/values.bash
           output: homebrew-tap/Formula/${{ github.event.repository.name }}.rb
-      - name: Get version
-        id: get-version
-        uses: ./.github/actions/get-version
       - name: Commit changes
         uses: anttiharju/actions/commit-changes@v0
         with:
           committer: "anttiharju[bot]"
           message: |
-            Update vmatch formula to ${{ steps.get-version.outputs.version }}
+            Update vmatch formula to ${{ inputs.tag }}
 
             https://github.com/anttiharju/vmatch/blob/${{ github.sha }}/.github/workflows/distribute.yml
           working-directory: homebrew-tap

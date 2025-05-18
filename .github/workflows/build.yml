@@ -20,8 +20,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Release vmatch
+      - name: Create a GitHub release
+        id: release
         uses: anttiharju/actions/release@v0
+    outputs:
+      tag: ${{ steps.release.outputs.tag }}
 
   distribution:
     name: Distribution
@@ -32,6 +35,8 @@ jobs:
     permissions:
       contents: write
     uses: ./.github/workflows/distribution.yml
+    with:
+      tag: ${{ needs.release.outputs.tag }}
     secrets: inherit
 
   documentation:

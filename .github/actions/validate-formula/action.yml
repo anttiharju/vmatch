@@ -1,7 +1,0 @@
-name: Validate formula
-description: Validates the Homebrew formula
-runs:
-  using: "composite"
-  steps:
-    - shell: sh
-      run: echo todo

@@ -25,7 +25,7 @@ jobs:
         with:
           changes: ${{ steps.changes.outputs.array }}
 
-      - if: always() && (steps.changed.outputs.github_actions == 'true' || github.event_name == 'push')
+      - if: always()
         name: action-validator
         uses: anttiharju/actions/action-validator@v0
 
@@ -53,7 +53,11 @@ jobs:
         name: MkDocs
         uses: anttiharju/actions/mkdocs-build-strict@v0
 
-      - if: always() && (steps.changed.outputs.markdown_and_yaml == 'true' || github.event_name == 'push')
+      - if: always()
+        name: no-yaml
+        uses: anttiharju/actions/no-yaml@v0
+
+      - if: always() && (steps.changed.outputs.md_and_yml == 'true' || github.event_name == 'push')
         name: Prettier
         uses: anttiharju/actions/prettier@v0
 

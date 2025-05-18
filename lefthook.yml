@@ -7,7 +7,6 @@ pre-commit:
   parallel: true
   jobs:
     - name: action-validator
-      glob: "{.github/workflows/*.yml,*/action.yml}"
       run: git ls-files -z '.github/workflows/*.yml' '*/action.yml' | xargs -0 action-validator --verbose
 
     - name: actionlint
@@ -38,6 +37,10 @@ pre-commit:
     - name: MkDocs
       glob: "{docs/*,mkdocs.yml}"
       run: mkdocs build --strict
+
+    - name: No .yaml
+      glob: "*.yaml"
+      run: echo "You are trying to commit .yaml files. Please use .yml instead for the following files:" && echo {staged_files} && exit 1
 
     - name: Prettier
       glob: "{*.yml,*.md}"

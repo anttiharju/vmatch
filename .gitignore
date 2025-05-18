@@ -37,6 +37,9 @@ site
 homebrew-tap
 
 # Brew dist local render
-.formula.rb
-.formula.tpl.rb
-values.cache
+dist/brew/values.cache
+dist/brew/vmatch.rb
+dist/brew/vmatch.template.rb
+
+# Brew bottles
+*.tar.gz
