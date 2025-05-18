@@ -8,8 +8,11 @@ if [[ ! -f "$template_file" ]]; then
     exit 1
 fi
 
-# Mock relevant parts of GitHub Actions env
+# Mock GitHub Actions env
 GITHUB_REPOSITORY=anttiharju/vmatch
+
+# Mock what would normally be provided by release job so we can run this locally
+TAG="$(basename "$(gh api "repos/$GITHUB_REPOSITORY/releases/latest" --jq .tarball_url)")"
 
 # Cache logic for faster iteration
 cache_file=values.cache

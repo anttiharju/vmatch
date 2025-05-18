@@ -90,6 +90,10 @@ jobs:
           repository: anttiharju/homebrew-tap
           token: ${{ steps.generate-token.outputs.token }}
           path: homebrew-tap
+      - name: Setup tag environment variable for values.bash
+        env:
+          tag: ${{ inputs.tag }}
+        run: echo "tag=$tag" >> "$GITHUB_ENV"
       - name: Render formula template
         uses: anttiharju/actions/render-template@v0
         with:
