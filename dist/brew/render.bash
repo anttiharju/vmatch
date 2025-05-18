@@ -27,7 +27,7 @@ else
     echo "Generating fresh values"
     source values.bash | tee "$cache_file"
 fi
-# Cache file only exists if this script has been ran
+# Cache file is gitignored and we cannot guarantee its existence
 # shellcheck disable=SC1090
 source "$cache_file"
 set +a
