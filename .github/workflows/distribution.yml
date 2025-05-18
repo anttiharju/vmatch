@@ -1,6 +1,10 @@
 name: Distribute
 on:
   workflow_call:
+    inputs:
+      tag:
+        required: true
+        type: string
     secrets:
       ANTTIHARJU_BOT_ID:
         required: true
@@ -27,7 +31,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # required by render.bash
+      # required by values.bash through render.bash
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
@@ -92,15 +96,12 @@ jobs:
           template: dist/brew/formula.tpl.rb
           values: dist/brew/values.bash
           output: homebrew-tap/Formula/${{ github.event.repository.name }}.rb
-      - name: Get version
-        id: get-version
-        uses: ./.github/actions/get-version
       - name: Commit changes
         uses: anttiharju/actions/commit-changes@v0
         with:
           committer: "anttiharju[bot]"
           message: |
-            Update vmatch formula to ${{ steps.get-version.outputs.version }}
+            Update vmatch formula to ${{ inputs.tag }}
 
             https://github.com/anttiharju/vmatch/blob/${{ github.sha }}/.github/workflows/distribute.yml
           working-directory: homebrew-tap
