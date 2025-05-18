@@ -2,7 +2,7 @@
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
-template_file=formula.tpl.rb
+template_file=template.rb
 if [[ ! -f "$template_file" ]]; then
     echo "Formula template is missing: $template_file"
     exit 1

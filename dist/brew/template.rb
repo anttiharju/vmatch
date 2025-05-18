@@ -8,7 +8,7 @@ class ${class_name} < Formula
   desc '${description}'
   homepage '${homepage}'
 
-  url '${TARBALL_URL}'
+  url '${url}'
   sha256 '${sha256}'
   head 'https://${repository}'
   license "GPL-3.0-only"

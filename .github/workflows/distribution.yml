@@ -97,7 +97,7 @@ jobs:
       - name: Render formula template
         uses: anttiharju/actions/render-template@v0
         with:
-          template: dist/brew/formula.tpl.rb
+          template: dist/brew/template.rb
           values: dist/brew/values.bash
           output: homebrew-tap/Formula/${{ github.event.repository.name }}.rb
       - name: Commit changes
