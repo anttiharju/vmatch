@@ -21,7 +21,6 @@ jobs:
         uses: anttiharju/actions/release@v0
       - name: Setup cache
         id: cache
-        shell: sh
         run: |
           if [ -f "go.sum" ]; then
             echo "enabled=true" >> "$GITHUB_OUTPUT"
@@ -34,21 +33,20 @@ jobs:
           go-version-file: "go.mod"
           cache: ${{ steps.cache.outputs.enabled }}
       - name: Build Linux amd64
-        shell: sh
         env:
           GOOS: linux
           GOARCH: amd64
+          version: ${{ steps.release.outputs.tag }}
         run: |
-          go build -o "tmp/$GOOS-$GOARCH/vmatch"
+          go build -ldflags "-s -w -buildid=github-$version" -o "tmp/$GOOS-$GOARCH/vmatch"
       - name: Build Linux arm64
-        shell: sh
         env:
           GOOS: linux
           GOARCH: arm64
+          version: ${{ steps.release.outputs.tag }}
         run: |
-          go build -o "tmp/$GOOS-$GOARCH/vmatch"
+          go build -ldflags "-s -w -buildid=github-$version" -o "tmp/$GOOS-$GOARCH/vmatch"
       - name: Create archives
-        shell: sh
         run: |
           cp LICENSE tmp
           cp docs/README.md tmp
