@@ -46,3 +46,6 @@ pre-commit:
     - name: ShellCheck
       glob: "*{.sh,.bash}"
       run: git ls-files -z '*.sh' '*.bash' | xargs -0 shellcheck --color=always --source-path=SCRIPTDIR
+
+    - name: No .yaml
+      run: test -z "$(git ls-files '*.yaml')" || (echo "Found .yaml files. Please use .yml extension instead." && git ls-files '*.yaml' && exit 1)
