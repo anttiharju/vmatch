@@ -24,7 +24,7 @@ jobs:
           - macos-14
           - macos-15
           - ubuntu-24.04
-          - ubuntu-24.04-arm
+          # - ubuntu-24.04-arm # https://github.com/Homebrew/brew/issues/19208
     runs-on: ${{ matrix.os }}
     steps:
       - name: Set up Homebrew
@@ -37,6 +37,10 @@ jobs:
       - name: Create a local tap
         env:
           GH_TOKEN: ${{ github.token }}
+          GIT_AUTHOR_NAME: ${{ github.actor }}
+          GIT_AUTHOR_EMAIL: "${{ github.actor }}@users.noreply.github.com"
+          GIT_COMMITTER_NAME: "anttiharju[bot]"
+          GIT_COMMITTER_EMAIL: "anttiharju[bot]@users.noreply.github.com"
         run: |
           ./dist/brew/render.bash --local-tap
           git add --all
@@ -48,6 +52,7 @@ jobs:
           brew install --build-bottle vmatch
           brew bottle vmatch
 
+      # https://github.com/Homebrew/brew/issues/19970
       - name: Rename bottles (historical quirk)
         run: |
           find . -maxdepth 1 -name 'vmatch--*.bottle.*.tar.gz' -exec sh -c 'mv "$1" "$(echo $1 | sed s/vmatch--/vmatch-/)"' sh {} \;

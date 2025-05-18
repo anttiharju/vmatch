@@ -26,15 +26,15 @@ jobs:
     outputs:
       tag: ${{ steps.release.outputs.tag }}
 
-  distribution:
-    name: Distribution
+  distribute:
+    name: Distribute
     needs:
       - plan
       - release
     if: needs.plan.outputs.release == 'true'
     permissions:
       contents: write
-    uses: ./.github/workflows/distribution.yml
+    uses: ./.github/workflows/distribute.yml
     with:
       tag: ${{ needs.release.outputs.tag }}
     secrets: inherit
