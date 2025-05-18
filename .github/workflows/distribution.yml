@@ -55,8 +55,19 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
-  homebrew-tap:
-    name: Homebrew tap
+  upload-bottles:
+    name: Upload bottles
+    needs: build-bottles
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Download bottle
+        uses: actions/download-artifact@v4
+        with:
+          pattern: vmatch--*.bottle.*.tar.gz
+          merge-multiple: true
+
+  update-homebrew-tap:
+    name: Update homebrew-tap
     needs: build-bottles
     runs-on: ubuntu-24.04
     steps:
