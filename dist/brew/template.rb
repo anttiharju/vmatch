@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# testing
 # Homebrew formula for vmatch - a tool that automates
 # matching golangci-lint and Go versions to your project.
 #
