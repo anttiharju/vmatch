@@ -18,6 +18,7 @@ TAG="$(basename "$(gh api "repos/$GITHUB_REPOSITORY/releases/latest" --jq .tarba
 cache_file=values.cache
 quick_mode=false
 [[ " $* " =~ " --quick " ]] && quick_mode=true
+[[ " $* " =~ " --skip-bottles " ]] && SKIP_BOTTLES=true
 
 set -a
 if [[ "$quick_mode" == true ]] && [[ -f "$cache_file" ]]; then
