@@ -10,7 +10,7 @@ pre-commit:
       run: git ls-files -z '.github/workflows/*.yml' '*/action.yml' '.github/workflows/*.yaml' '*/action.yaml' | xargs -0 action-validator --verbose
 
     - name: actionlint
-      glob: ".github/workflows/*.yml"
+      glob: "{.github/workflows/*.yml,.github/workflows/*.yaml}"
       run: actionlint -color
 
     # https://github.com/anttiharju/check-relative-markdown-links
@@ -25,7 +25,7 @@ pre-commit:
       run: go build
 
     - name: golangci-lint
-      glob: "{.golangci-version,.golangci.yml,*.go}"
+      glob: "{.golangci-version,.golangci.yml,.golangci.yaml,*.go}"
       run: golangci-lint run --fix
       stage_fixed: true
 
@@ -35,11 +35,11 @@ pre-commit:
       run: echo todo
 
     - name: MkDocs
-      glob: "{docs/*,mkdocs.yml}"
+      glob: "{docs/*,mkdocs.yml,mkdocs.yaml}"
       run: mkdocs build --strict
 
     - name: Prettier
-      glob: "{*.yml,*.md}"
+      glob: "{*.yml,*.yaml,*.md}"
       run: prettier --write {staged_files}
       stage_fixed: true
 
