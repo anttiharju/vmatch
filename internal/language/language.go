@@ -10,10 +10,10 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/anttiharju/vmatch/pkg/exitcode"
-	"github.com/anttiharju/vmatch/pkg/finder"
-	"github.com/anttiharju/vmatch/pkg/install"
-	"github.com/anttiharju/vmatch/pkg/wrapper"
+	"github.com/anttiharju/vmatch/internal/exitcode"
+	"github.com/anttiharju/vmatch/internal/finder"
+	"github.com/anttiharju/vmatch/internal/install"
+	"github.com/anttiharju/vmatch/internal/wrapper"
 )
 
 type WrappedLanguage struct {

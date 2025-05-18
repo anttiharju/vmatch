@@ -5,7 +5,7 @@ import (
 	"os"
 	"os/signal"
 
-	"github.com/anttiharju/vmatch/pkg/exitcode"
+	"github.com/anttiharju/vmatch/internal/exitcode"
 )
 
 func Listen(signals ...os.Signal) {
