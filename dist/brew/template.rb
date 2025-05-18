@@ -13,8 +13,8 @@ class ${class_name} < Formula
   head 'https://${repository}'
   license 'GPL-3.0-only'
 
-  depends_on 'go@${go_version}' => :build
-${bottle}
+  depends_on 'go@${go_version}' => :build${bottle}
+
   def install
     ENV['GOPATH'] = buildpath
 
