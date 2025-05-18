@@ -7,11 +7,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - id: github_actions
-      uses: anttiharju/actions/compare-changes@v0
-      with:
-        wildcard: action-validator
-        changes: ${{ inputs.changes }}
     - id: github_actions_workflows
       uses: anttiharju/actions/compare-changes@v0
       with:
@@ -48,9 +43,6 @@ runs:
         wildcard: shellcheck
         changes: ${{ inputs.changes }}
 outputs:
-  github_actions:
-    description: "Whether Action Validator have changed"
-    value: ${{ steps.github_actions.outputs.changed }}
   github_actions_workflows:
     description: "Whether Actionlint have changed"
     value: ${{ steps.github_actions_workflows.outputs.changed }}

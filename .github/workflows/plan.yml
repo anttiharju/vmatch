@@ -25,7 +25,7 @@ jobs:
         with:
           changes: ${{ steps.changes.outputs.array }}
 
-      - if: always() && (steps.changed.outputs.github_actions == 'true' || github.event_name == 'push')
+      - if: always()
         name: action-validator
         uses: anttiharju/actions/action-validator@v0
 

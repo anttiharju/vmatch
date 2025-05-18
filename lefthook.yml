@@ -7,8 +7,7 @@ pre-commit:
   parallel: true
   jobs:
     - name: action-validator
-      glob: "{.github/workflows/*.yml,*/action.yml}"
-      run: git ls-files -z '.github/workflows/*.yml' '*/action.yml' | xargs -0 action-validator --verbose
+      run: git ls-files -z '.github/workflows/*.yml' '*/action.yml' '.github/workflows/*.yaml' '*/action.yaml' | xargs -0 action-validator --verbose
 
     - name: actionlint
       glob: ".github/workflows/*.yml"
