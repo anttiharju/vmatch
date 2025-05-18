@@ -40,3 +40,6 @@ homebrew-tap
 .formula.rb
 .formula.tpl.rb
 values.cache
+
+# Brew bottles
+*.tar.gz
