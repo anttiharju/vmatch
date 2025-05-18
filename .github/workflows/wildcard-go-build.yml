@@ -4,7 +4,7 @@ on:
       - wildcard
     paths:
       - "dist/wrap/**/*"
-      - "pkg/**/*"
+      - "internal/**/*"
       - "go.mod"
       - "main.go"
 

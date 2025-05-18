@@ -21,7 +21,7 @@ pre-commit:
       run: editorconfig-checker {staged_files}
 
     - name: Go build
-      glob: "{dist/wrap/*,pkg/*,go.mod,main.go}"
+      glob: "{dist/wrap/*,internal/*,go.mod,main.go}"
       run: go build
 
     - name: golangci-lint

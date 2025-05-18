@@ -4,8 +4,8 @@ import (
 	"context"
 	"os"
 
-	"github.com/anttiharju/vmatch/pkg/choose"
-	"github.com/anttiharju/vmatch/pkg/interrupt"
+	"github.com/anttiharju/vmatch/internal/choose"
+	"github.com/anttiharju/vmatch/internal/interrupt"
 )
 
 func main() {
