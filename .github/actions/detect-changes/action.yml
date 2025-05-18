@@ -32,7 +32,7 @@ runs:
       with:
         wildcard: mkdocs
         changes: ${{ inputs.changes }}
-    - id: markdown_and_yaml
+    - id: md_and_yml
       uses: anttiharju/actions/compare-changes@v0
       with:
         wildcard: prettier
@@ -58,9 +58,9 @@ outputs:
   documentation:
     description: "Whether Mkdocs have changed"
     value: ${{ steps.documentation.outputs.changed }}
-  markdown_and_yaml:
+  md_and_yml:
     description: "Whether Prettier have changed"
-    value: ${{ steps.markdown_and_yaml.outputs.changed }}
+    value: ${{ steps.md_and_yml.outputs.changed }}
   scripts:
     description: "Whether Shellcheck have changed"
     value: ${{ steps.scripts.outputs.changed }}
