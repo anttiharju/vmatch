@@ -6,8 +6,8 @@ on:
       release:
         description: "Whether to trigger release workflows"
         value: ${{ jobs.validate.outputs.binary_changed == 'true' || jobs.validate.outputs.brew_dist_changed == 'true' }}
-      documentation:
-        description: "Whether to trigger documentation workflow"
+      update_docs:
+        description: "Whether to update the documentation website"
         value: ${{ jobs.validate.outputs.documentation_changed == 'true' }}
 
 jobs:
