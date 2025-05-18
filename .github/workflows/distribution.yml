@@ -52,23 +52,8 @@ jobs:
           brew bottle vmatch
 
       - name: Upload bottle
-        uses: actions/upload-artifact@v4
-        with:
-          name: bottle-${{ runner.os }}
-          path: vmatch--*.bottle.*.tar.gz
-          if-no-files-found: error
-          retention-days: 1
-
-  upload-bottles:
-    name: Upload bottles
-    needs: build-bottles
-    runs-on: ubuntu-24.04
-    steps:
-      - name: Download bottle
-        uses: actions/download-artifact@v4
-        with:
-          pattern: vmatch--*.bottle.*.tar.gz
-          merge-multiple: true
+        run: |
+          find . -maxdepth 1 -name 'vmatch--*.bottle.*.tar.gz' -exec gh release upload build95 {} \;
 
   update-homebrew-tap:
     name: Update homebrew-tap
