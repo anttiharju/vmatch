@@ -38,8 +38,9 @@ envsubst < "$template_file" > vmatch.rb
 tap_mode=false
 [[ " $* " =~ " --tap " ]] && tap_mode=true
 if [[ "$tap_mode" == true ]]; then
-    mkdir -p ../../Formula
-    mv vmatch.rb ../../Formula/vmatch.rb
+    dir=../../Formula
+    mkdir -p "$dir"
+    cp vmatch.rb "$dir"
 fi
 
 # Easier diffing
