@@ -54,13 +54,16 @@ jobs:
       - name: Upload bottle to GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag }}
         run: |
-          find . -maxdepth 1 -name 'vmatch--*.bottle.*.tar.gz' -exec gh release upload build95 {} \;
+          find . -maxdepth 1 -name 'vmatch--*.bottle.*.tar.gz' -exec gh release upload "$TAG" {} \;
 
   update-homebrew-tap:
     name: Update homebrew-tap
     needs: build-bottles
     runs-on: ubuntu-24.04
+    env:
+      TAG: ${{ inputs.tag }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -77,10 +80,6 @@ jobs:
           repository: anttiharju/homebrew-tap
           token: ${{ steps.generate-token.outputs.token }}
           path: homebrew-tap
-      - name: Setup tag environment variable for values.bash
-        env:
-          tag: ${{ inputs.tag }}
-        run: echo "tag=$tag" >> "$GITHUB_ENV"
       - name: Render formula template
         uses: anttiharju/actions/render-template@v0
         with:
