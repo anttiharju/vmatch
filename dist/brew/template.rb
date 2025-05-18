@@ -14,7 +14,7 @@ class ${class_name} < Formula
   license "GPL-3.0-only"
 
   depends_on 'go@${go_version}' => :build
-
+  ${bottle}
   def install
     ENV['GOPATH'] = buildpath
 
