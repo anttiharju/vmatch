@@ -20,7 +20,7 @@ pre-commit:
     - name: EditorConfig-Checker
       run: editorconfig-checker {staged_files}
 
-    - name: Go build
+    - name: Go compiles
       glob: "{dist/wrap/*,internal/*,go.mod,main.go}"
       run: go build
 
@@ -28,11 +28,6 @@ pre-commit:
       glob: "{.golangci-version,.golangci.yml,*.go}"
       run: golangci-lint run --fix
       stage_fixed: true
-
-    # https://github.com/anttiharju/vmatch/issues/137
-    - name: Homebrew formula
-      glob: "dist/brew/*"
-      run: echo todo
 
     - name: MkDocs
       glob: "{docs/*,mkdocs.yml}"

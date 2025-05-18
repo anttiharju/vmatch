@@ -4,10 +4,10 @@ on:
   workflow_call:
     outputs:
       release:
-        description: "Whether to trigger github-release job"
-        value: ${{ jobs.validate.outputs.binary_changed == 'true' || jobs.validate.outputs.homebrew_formula_changed == 'true' }}
-      documentation:
-        description: "Whether to trigger documentation workflow"
+        description: "Whether to trigger release workflows"
+        value: ${{ jobs.validate.outputs.binary_changed == 'true' || jobs.validate.outputs.brew_dist_changed == 'true' }}
+      update_docs:
+        description: "Whether to update the documentation website"
         value: ${{ jobs.validate.outputs.documentation_changed == 'true' }}
 
 jobs:
@@ -42,8 +42,8 @@ jobs:
         uses: anttiharju/actions/editorconfig-checker@v0
 
       - if: always() && (steps.changed.outputs.binary == 'true' || github.event_name == 'push')
-        name: Go build
-        uses: anttiharju/actions/go-build@v0
+        name: Go compiles
+        uses: anttiharju/actions/go-compiles@v0
 
       - if: always() && (steps.changed.outputs.go_code == 'true' || github.event_name == 'push')
         name: golangci-lint
@@ -66,5 +66,5 @@ jobs:
         uses: anttiharju/actions/shellcheck@v0
     outputs:
       binary_changed: ${{ steps.changed.outputs.binary }}
+      brew_dist_changed: ${{ steps.changed.outputs.brew_dist }}
       documentation_changed: ${{ steps.changed.outputs.documentation }}
-      homebrew_formula_changed: ${{ steps.changed.outputs.homebrew_formula }}

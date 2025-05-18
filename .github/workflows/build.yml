@@ -16,15 +16,7 @@ jobs:
     if: needs.plan.outputs.release == 'true'
     permissions:
       contents: write
-    runs-on: ubuntu-24.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Create a GitHub release
-        id: release
-        uses: anttiharju/actions/release@v0
-    outputs:
-      tag: ${{ steps.release.outputs.tag }}
+    uses: ./.github/workflows/release.yml
 
   distribute:
     name: Distribute
@@ -39,15 +31,15 @@ jobs:
       tag: ${{ needs.release.outputs.tag }}
     secrets: inherit
 
-  documentation:
-    name: Documentation
+  update-docs:
+    name: Update docs
     needs:
       - plan
       - release
     if: |
       always() && !failure() && !cancelled() &&
-      needs.plan.outputs.documentation == 'true'
+      needs.plan.outputs.update_docs == 'true'
     permissions:
       contents: write
-    uses: ./.github/workflows/documentation.yml
+    uses: ./.github/workflows/update-docs.yml
     secrets: inherit
