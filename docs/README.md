@@ -50,6 +50,12 @@ vmatch golangci-lint (any args you would give to golangci-lint)
 brew install anttiharju/tap/vmatch
 ```
 
+This distribution channel is recommended because it simplifies access to updates. Update with
+
+```sh
+brew update && brew upgrade vmatch
+```
+
 ### Manual
 
 `most unix-like operating systems`
