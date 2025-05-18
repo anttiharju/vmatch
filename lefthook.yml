@@ -29,11 +29,6 @@ pre-commit:
       run: golangci-lint run --fix
       stage_fixed: true
 
-    # https://github.com/anttiharju/vmatch/issues/137
-    - name: Homebrew formula
-      glob: "dist/brew/*"
-      run: echo todo
-
     - name: MkDocs
       glob: "{docs/*,mkdocs.yml}"
       run: mkdocs build --strict
