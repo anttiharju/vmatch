@@ -48,6 +48,7 @@ jobs:
           brew install --build-bottle vmatch
           brew bottle vmatch
 
+      # https://github.com/Homebrew/brew/issues/19970
       - name: Rename bottles (historical quirk)
         run: |
           find . -maxdepth 1 -name 'vmatch--*.bottle.*.tar.gz' -exec sh -c 'mv "$1" "$(echo $1 | sed s/vmatch--/vmatch-/)"' sh {} \;
