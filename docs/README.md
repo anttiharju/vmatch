@@ -26,6 +26,36 @@ vmatch also works when switching between branches that have a different version 
 
 Tool version management is something that can be automated; therefore it should be automated.
 
+## Usage
+
+The target state is that the `go` that you call is actually a shell script that wraps vmatch with right settings, the project hasn't gotten quite there yet so in the meanwhile use
+
+```sh
+vmatch go (any args you would give to go)
+```
+
+or
+
+```sh
+vmatch golangci-lint (any args you would give to golangci-lint)
+```
+
+## Installation
+
+### Brew
+
+`macOS 14 or above with Apple Silicon` `x86_64 Linux`
+
+```sh
+brew install anttiharju/tap/vmatch
+```
+
+### Manual
+
+`most unix-like operating systems`
+
+Clone the git repository and run `go build` on a version of Go that supports the one specified in `go.mod`. No support will be provided for this installation method.
+
 ## How
 
 It traverses filesystem upwards until it finds the file `.golangci-version`. A good place to have the version file is your git repo root.
@@ -40,20 +70,6 @@ It installs the right golangci-lint version using the [Binaries](https://golangc
 ```
 
 Go binaries are stored in a similar fashion.
-
-## Usage
-
-The target state is that the `go` that you call is actually a shell script that wraps vmatch with right settings, the project hasn't gotten quite there yet so in the meanwhile use
-
-```sh
-vmatch go (any args you would give to go)
-```
-
-or
-
-```sh
-vmatch golangci-lint (any args you would give to golangci-lint)
-```
 
 ## Stargazers over time
 
