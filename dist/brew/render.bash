@@ -43,5 +43,5 @@ if [[ "$tap_mode" == true ]]; then
     cp vmatch.rb "$dir"
 fi
 
-# Easier diffing
-cp "$template_file" vmatch.tpl.rb
+# Easier visual diffing
+cp "$template_file" vmatch.template.rb

@@ -39,7 +39,7 @@ homebrew-tap
 # Brew dist local render
 dist/brew/values.cache
 dist/brew/vmatch.rb
-dist/brew/vmatch.tpl.rb
+dist/brew/vmatch.template.rb
 
 # Brew bottles
 *.tar.gz
