@@ -46,12 +46,16 @@ jobs:
           brew install --build-bottle vmatch
           brew bottle vmatch
 
+      - name: Rename bottles (historical quirk)
+        run: |
+          find . -maxdepth 1 -name 'vmatch--*.bottle.*.tar.gz' -exec sh -c 'mv "$1" "$(echo $1 | sed s/vmatch--/vmatch-/)"' sh {} \;
+
       - name: Upload bottle to GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ inputs.tag }}
         run: |
-          find . -maxdepth 1 -name 'vmatch--*.bottle.*.tar.gz' -exec gh release upload "$TAG" {} \;
+          find . -maxdepth 1 -name 'vmatch-*.bottle.*.tar.gz' -exec gh release upload "$TAG" {} \;
 
   update-homebrew-tap:
     name: Update homebrew-tap
@@ -80,7 +84,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ inputs.tag }}
         run: |
-          gh release download "$TAG" --pattern 'vmatch--*.bottle.*.tar.gz'
+          gh release download "$TAG" --pattern 'vmatch-*.bottle.*.tar.gz'
       - name: Render formula template
         uses: anttiharju/actions/render-template@v0
         with:
