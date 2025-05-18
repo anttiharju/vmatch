@@ -1,0 +1,64 @@
+name: Release
+on:
+  workflow_call:
+    outputs:
+      tag:
+        description: "Whether to trigger release workflows"
+        value: ${{ jobs.github.outputs.tag }}
+
+permissions:
+  contents: write
+
+jobs:
+  github:
+    name: GitHub
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Create GitHub release
+        id: release
+        uses: anttiharju/actions/release@v0
+      - name: Setup cache
+        id: cache
+        shell: sh
+        run: |
+          if [ -f "go.sum" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: "go.mod"
+          cache: ${{ steps.cache.outputs.enabled }}
+      - name: Build Linux amd64
+        shell: sh
+        env:
+          GOOS: linux
+          GOARCH: amd64
+        run: |
+          go build -o "tmp/$GOOS-$GOARCH/vmatch"
+      - name: Build Linux arm64
+        shell: sh
+        env:
+          GOOS: linux
+          GOARCH: arm64
+        run: |
+          go build -o "tmp/$GOOS-$GOARCH/vmatch"
+      - name: Create archives
+        shell: sh
+        run: |
+          cp LICENSE tmp
+          cp docs/README.md tmp
+          tar -czf vmatch-linux-amd64.tar.gz -C tmp LICENSE README.md linux-amd64
+          tar -czf vmatch-linux-arm64.tar.gz -C tmp LICENSE README.md linux-arm64
+      - name: Upload archives to release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.release.outputs.tag }}
+        run: |
+          find . -maxdepth 1 -name 'vmatch-*-*.tar.gz' -exec gh release upload "$TAG" {} \;
+    outputs:
+      tag: ${{ steps.release.outputs.tag }}

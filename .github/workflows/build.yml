@@ -16,15 +16,7 @@ jobs:
     if: needs.plan.outputs.release == 'true'
     permissions:
       contents: write
-    runs-on: ubuntu-24.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Create a GitHub release
-        id: release
-        uses: anttiharju/actions/release@v0
-    outputs:
-      tag: ${{ steps.release.outputs.tag }}
+    uses: ./.github/workflows/release.yml
 
   distribute:
     name: Distribute
