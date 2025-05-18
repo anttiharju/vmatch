@@ -54,8 +54,9 @@ jobs:
       - name: Upload bottle to GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag }}
         run: |
-          find . -maxdepth 1 -name 'vmatch--*.bottle.*.tar.gz' -exec gh release upload build95 {} \;
+          find . -maxdepth 1 -name 'vmatch--*.bottle.*.tar.gz' -exec gh release upload "$TAG" {} \;
 
   update-homebrew-tap:
     name: Update homebrew-tap
