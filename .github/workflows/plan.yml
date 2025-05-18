@@ -34,10 +34,6 @@ jobs:
         uses: anttiharju/actions/actionlint@v0
 
       - if: always()
-        name: ban-yaml
-        uses: anttiharju/actions/ban-yaml@v0
-
-      - if: always()
         name: check-relative-markdown-links
         uses: anttiharju/actions/check-relative-markdown-links@v0
 
@@ -56,6 +52,10 @@ jobs:
       - if: always() && (steps.changed.outputs.documentation == 'true' || github.event_name == 'push')
         name: MkDocs
         uses: anttiharju/actions/mkdocs-build-strict@v0
+
+      - if: always()
+        name: no-yaml
+        uses: anttiharju/actions/no-yaml@v0
 
       - if: always() && (steps.changed.outputs.md_and_yml == 'true' || github.event_name == 'push')
         name: Prettier
