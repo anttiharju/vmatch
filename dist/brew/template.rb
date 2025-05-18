@@ -11,9 +11,9 @@ class ${class_name} < Formula
   url '${url}'
   sha256 '${sha256}'
   head 'https://${repository}'
-  license "GPL-3.0-only"
+  license 'GPL-3.0-only'
 
-  depends_on 'go@${go_version}' => :build
+  depends_on 'go@${go_version}' => :build${bottle}
 
   def install
     ENV['GOPATH'] = buildpath
