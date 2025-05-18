@@ -12,7 +12,7 @@ capture() {
 }
 
 repo_name="$(basename "$GITHUB_REPOSITORY")"
-tarball_url="https://api.github.com/repos/anttiharju/vmatch/tarball/$TAG"
+tarball_url="https://api.github.com/repos/anttiharju/$repo_name/tarball/$TAG"
 
 capture class_name "$(awk 'BEGIN{print toupper(substr("'"$repo_name"'",1,1)) substr("'"$repo_name"'",2)}')"
 capture description "$(gh repo view --json description --jq .description)"
@@ -29,7 +29,7 @@ if [[ -n "${SKIP_BOTTLES:-}" ]]; then
 else
     capture bottle "
   bottle do
-    root_url 'https://github.com/anttiharju/vmatch/releases/download/build102'
+    root_url 'https://github.com/anttiharju/$repo_name/releases/download/$TAG'
     rebuild 1
     sha256 cellar: :any, arm64_sonoma: 'a9a8bf4915c020acf579f96f59d0ebf1fc27742e8979ada188d4352d9969f44a'
     sha256 cellar: :any, arm64_sequoia: '81c4aa1255440c92f5233dbcbc9d9b8b60585090128754b13b2ebc91229dd5e7'
