@@ -2,9 +2,9 @@
 
 [![Build](https://github.com/anttiharju/vmatch/actions/workflows/build.yml/badge.svg)](https://github.com/anttiharju/vmatch/actions/workflows/build.yml)
 
-## The promise
-
 **NB! The project is currently in alpha**; things might not be fully functional just yet. Steady progress is being made. Things are taking a little bit longer because automating things that would make maintenance cumbersome will take some time. The idea is to commit to maintaining this project.
+
+## The promise
 
 With vmatch you or your coworkers will never have to think about what version of `golangci-lint`\* or `Go` you need to have installed when working on a given Go project. This is especially useful if you move around repositories as a DevOps engineer a lot, but even for people who work on the same project that goes through Go version bumps this project should eliminate a lot of toil. It also has access to old versions of Go, unlike `brew`, which only supports installing the recent ones. Sometimes one has to work on legacy software and get a fix in before committing to Go version upgrade.
 
