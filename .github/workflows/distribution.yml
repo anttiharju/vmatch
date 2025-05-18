@@ -22,6 +22,7 @@ jobs:
       matrix:
         os:
           - macos-15
+          - macos-14
     runs-on: ${{ matrix.os }}
     steps:
       - name: Set up Homebrew
@@ -31,17 +32,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # required by values.bash through render.bash
-      - name: Setup Go
-        uses: actions/setup-go@v5
-        with:
-          go-version-file: "go.mod"
-
       - name: Create a local tap
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          ./dist/brew/render.bash --tap
+          ./dist/brew/render.bash --local-tap
           git add --all
           git commit -m "Render formula to build ${{ runner.os }} bottle"
           brew tap anttiharju/vmatch file://${{ github.workspace }}
@@ -80,6 +75,12 @@ jobs:
           repository: anttiharju/homebrew-tap
           token: ${{ steps.generate-token.outputs.token }}
           path: homebrew-tap
+      - name: Download bottles
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          gh release download "$TAG" --pattern 'vmatch--*.bottle.*.tar.gz'
       - name: Render formula template
         uses: anttiharju/actions/render-template@v0
         with:

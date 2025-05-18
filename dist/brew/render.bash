@@ -35,9 +35,9 @@ set +a
 # Template
 envsubst < "$template_file" > vmatch.rb
 
-tap_mode=false
-[[ " $* " =~ " --tap " ]] && tap_mode=true
-if [[ "$tap_mode" == true ]]; then
+local_tap=false
+[[ " $* " =~ " --local-tap " ]] && local_tap=true
+if [[ "$local_tap" == true ]]; then
     dir=../../Formula
     mkdir -p "$dir"
     cp vmatch.rb "$dir"
