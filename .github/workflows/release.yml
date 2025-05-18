@@ -50,11 +50,12 @@ jobs:
         run: |
           cp LICENSE tmp
           cp docs/README.md tmp
+          cd tmp
           mv linux-amd64 bin
-          tar -czf vmatch-linux-amd64.tar.gz -C tmp LICENSE README.md bin
+          tar -czf vmatch-linux-amd64.tar.gz LICENSE README.md bin
           rm -rf bin
           mv linux-arm64 bin
-          tar -czf vmatch-linux-arm64.tar.gz -C tmp LICENSE README.md bin
+          tar -czf vmatch-linux-arm64.tar.gz LICENSE README.md bin
       - name: Upload archives to release
         env:
           GH_TOKEN: ${{ github.token }}
