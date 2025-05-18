@@ -51,7 +51,9 @@ jobs:
           brew install --build-bottle vmatch
           brew bottle vmatch
 
-      - name: Upload bottle
+      - name: Upload bottle to GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           find . -maxdepth 1 -name 'vmatch--*.bottle.*.tar.gz' -exec gh release upload build95 {} \;
 
@@ -63,8 +65,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Generate commit token
-        uses: actions/create-github-app-token@v1
         id: generate-token
+        uses: actions/create-github-app-token@v1
         with:
           app-id: ${{ secrets.ANTTIHARJU_BOT_ID }}
           private-key: ${{ secrets.ANTTIHARJU_BOT_PRIVATE_KEY }}

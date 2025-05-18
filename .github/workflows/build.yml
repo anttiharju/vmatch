@@ -20,9 +20,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Release vmatch
-        uses: anttiharju/actions/release@v0
+      - name: Create a GitHub release
         id: release
+        uses: anttiharju/actions/release@v0
     outputs:
       tag: ${{ steps.release.outputs.tag }}
 
