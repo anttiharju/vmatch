@@ -20,7 +20,7 @@ pre-commit:
     - name: EditorConfig-Checker
       run: editorconfig-checker {staged_files}
 
-    - name: Go build
+    - name: Go compiles
       glob: "{dist/wrap/*,internal/*,go.mod,main.go}"
       run: go build
 
