@@ -4,8 +4,8 @@ on:
   workflow_call:
     outputs:
       release:
-        description: "Whether to trigger github-release job"
-        value: ${{ jobs.validate.outputs.binary_changed == 'true' || jobs.validate.outputs.homebrew_formula_changed == 'true' }}
+        description: "Whether to trigger release workflows"
+        value: ${{ jobs.validate.outputs.binary_changed == 'true' || jobs.validate.outputs.brew_dist_changed == 'true' }}
       documentation:
         description: "Whether to trigger documentation workflow"
         value: ${{ jobs.validate.outputs.documentation_changed == 'true' }}
@@ -66,5 +66,5 @@ jobs:
         uses: anttiharju/actions/shellcheck@v0
     outputs:
       binary_changed: ${{ steps.changed.outputs.binary }}
+      brew_dist_changed: ${{ steps.changed.outputs.brew_dist }}
       documentation_changed: ${{ steps.changed.outputs.documentation }}
-      homebrew_formula_changed: ${{ steps.changed.outputs.homebrew_formula }}

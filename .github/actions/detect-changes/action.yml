@@ -22,10 +22,10 @@ runs:
       with:
         wildcard: golangci-lint
         changes: ${{ inputs.changes }}
-    - id: homebrew_formula
+    - id: brew_dist
       uses: anttiharju/actions/compare-changes@v0
       with:
-        wildcard: homebrew-formula
+        wildcard: brew_dist
         changes: ${{ inputs.changes }}
     - id: documentation
       uses: anttiharju/actions/compare-changes@v0
@@ -52,9 +52,9 @@ outputs:
   go_code:
     description: "Whether Go code has changed"
     value: ${{ steps.go_code.outputs.changed }}
-  homebrew_formula:
-    description: "Whether Homebrew formula has changed"
-    value: ${{ steps.homebrew_formula.outputs.changed }}
+  brew_dist:
+    description: "Whether Brew distribution has changed"
+    value: ${{ steps.brew_dist.outputs.changed }}
   documentation:
     description: "Whether documentation has changed"
     value: ${{ steps.documentation.outputs.changed }}
