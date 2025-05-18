@@ -23,11 +23,13 @@ jobs:
         os:
           - macos-14
           - macos-15
+          - ubuntu-24.04
+          - ubuntu-24.04-arm
     runs-on: ${{ matrix.os }}
     steps:
       - name: Set up Homebrew
         id: set-up-homebrew
-        uses: Homebrew/actions/setup-homebrew@master
+        uses: Homebrew/actions/setup-homebrew@1bad5a8c1bb08ac392c63b4587f3231cf80bb1a4
 
       - name: Checkout
         uses: actions/checkout@v4
