@@ -18,9 +18,9 @@ class Vmatch < Formula
   bottle do
     root_url 'https://github.com/anttiharju/vmatch/releases/download/build102'
     rebuild 1
-    sha256 cellar: :any, arm64_sonoma: 'a9a8bf4915c020acf579f96f59d0ebf1fc27742e8979ada188d4352d9969f44a'
-    sha256 cellar: :any, arm64_sequoia: '81c4aa1255440c92f5233dbcbc9d9b8b60585090128754b13b2ebc91229dd5e7'
     sha256 cellar: :any, x86_64_linux: '75a681ef45406a10fe475c3eb8eb85548a5732b69d8260e6d6a3aa650607a5f7'
+    sha256 cellar: :any, arm64_sequoia: '81c4aa1255440c92f5233dbcbc9d9b8b60585090128754b13b2ebc91229dd5e7'
+    sha256 cellar: :any, arm64_sonoma: 'a9a8bf4915c020acf579f96f59d0ebf1fc27742e8979ada188d4352d9969f44a'
   end
 
   def install
