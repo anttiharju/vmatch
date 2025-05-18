@@ -44,23 +44,23 @@ runs:
         changes: ${{ inputs.changes }}
 outputs:
   github_actions_workflows:
-    description: "Whether Actionlint have changed"
+    description: "Whether GitHub Actions workflows have changed"
     value: ${{ steps.github_actions_workflows.outputs.changed }}
   binary:
-    description: "Whether Go Build have changed"
+    description: "Whether the binary has changed"
     value: ${{ steps.binary.outputs.changed }}
   go_code:
-    description: "Whether Golangci Lint have changed"
+    description: "Whether Go code has changed"
     value: ${{ steps.go_code.outputs.changed }}
   homebrew_formula:
-    description: "Whether Homebrew Formula have changed"
+    description: "Whether Homebrew formula has changed"
     value: ${{ steps.homebrew_formula.outputs.changed }}
   documentation:
-    description: "Whether Mkdocs have changed"
+    description: "Whether documentation has changed"
     value: ${{ steps.documentation.outputs.changed }}
   md_and_yml:
-    description: "Whether Prettier have changed"
+    description: "Whether Markdown or YAML has changed"
     value: ${{ steps.md_and_yml.outputs.changed }}
   scripts:
-    description: "Whether Shellcheck have changed"
+    description: "Whether scripts have changed"
     value: ${{ steps.scripts.outputs.changed }}
