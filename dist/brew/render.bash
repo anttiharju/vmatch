@@ -33,14 +33,14 @@ source "$cache_file"
 set +a
 
 # Template
-envsubst < "$template_file" > .formula.rb
+envsubst < "$template_file" > vmatch.rb
 
 tap_mode=false
 [[ " $* " =~ " --tap " ]] && tap_mode=true
 if [[ "$tap_mode" == true ]]; then
     mkdir -p ../../Formula
-    mv .formula.rb ../../Formula/vmatch.rb
+    mv vmatch.rb ../../Formula/vmatch.rb
 fi
 
 # Easier diffing
-cp "$template_file" .formula.tpl.rb
+cp "$template_file" vmatch.tpl.rb
