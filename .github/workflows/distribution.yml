@@ -41,7 +41,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          ./dist/brew/render.bash --tap
+          ./dist/brew/render.bash --local-tap
           git add --all
           git commit -m "Render formula to build ${{ runner.os }} bottle"
           brew tap anttiharju/vmatch file://${{ github.workspace }}
