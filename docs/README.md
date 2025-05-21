@@ -44,7 +44,7 @@ vmatch golangci-lint (any args you would give to golangci-lint)
 
 ### Brew
 
-`macOS 14 or above with Apple Silicon` `x86_64 Linux`
+`macOS 14+ arm64` `Linux amd64`
 
 ```sh
 brew install anttiharju/tap/vmatch
@@ -54,6 +54,20 @@ This distribution channel is recommended because it simplifies access to updates
 
 ```sh
 brew update && brew upgrade vmatch
+```
+
+### Pre-built binaries
+
+`Linux amd64`
+
+```sh
+curl -L https://github.com/anttiharju/vmatch/releases/latest/download/vmatch-linux-amd64.tar.gz | sudo tar -xz --strip-components=1 -C /usr/local/bin
+```
+
+`Linux arm64`
+
+```sh
+curl -L https://github.com/anttiharju/vmatch/releases/latest/download/vmatch-linux-arm64.tar.gz | sudo tar -xz --strip-components=1 -C /usr/local/bin
 ```
 
 ### Manual
