@@ -1,3 +1,3 @@
 module github.com/anttiharju/vmatch
 
-go 1.23.5
+go 1.24.3
