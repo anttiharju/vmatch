@@ -27,8 +27,6 @@ func Scripts() int {
 	lintExists := exists(lintPath)
 
 	if goExists && lintExists {
-		fmt.Println("All scripts already exist, nothing to do.")
-
 		return 0
 	}
 
@@ -77,8 +75,6 @@ func createScript(name, sourcePath, destPath string) error {
 	if err := os.WriteFile(destPath, content, 0o755); err != nil {
 		return fmt.Errorf("failed to write script %s: %w", name, err)
 	}
-
-	fmt.Printf("Created: %s\n", destPath)
 
 	return nil
 }
