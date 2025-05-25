@@ -1,6 +1,9 @@
 name: Plan
 on:
   pull_request:
+    types: [opened, synchronize, reopened, labeled]
+  # defaults: opened, synchronize, reopened
+  # https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#pull_request
   workflow_call:
     outputs:
       release:
@@ -24,6 +27,10 @@ jobs:
         uses: ./.github/actions/detect-changes
         with:
           changes: ${{ steps.changes.outputs.array }}
+
+      - if: always() && (steps.changed.outputs.binary == 'true' || steps.changed.outputs.brew_dist == 'true')
+        name: Require semantic version label
+        uses: anttiharju/actions/require-semver-label@v0
 
       - if: always()
         name: action-validator
