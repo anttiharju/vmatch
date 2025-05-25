@@ -33,17 +33,17 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag }} # 'vmatch version' depends on the tag existing at compile time
 
       - name: Create a local tap
         env:
-          TAG: ${{ inputs.tag }} # 'vmatch version' depends on the tag existing at compile time
           GH_TOKEN: ${{ github.token }}
           GIT_AUTHOR_NAME: ${{ github.actor }}
           GIT_AUTHOR_EMAIL: "${{ github.actor }}@users.noreply.github.com"
           GIT_COMMITTER_NAME: "anttiharju[bot]"
           GIT_COMMITTER_EMAIL: "anttiharju[bot]@users.noreply.github.com"
         run: |
-          git tag "$TAG"
           ./dist/brew/render.bash --local-tap --skip-bottles
           git add --all
           git commit -m "Render formula to build ${{ runner.os }} bottle"
