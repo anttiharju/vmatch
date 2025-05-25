@@ -6,7 +6,6 @@ import (
 	"os"
 	"os/exec"
 	"regexp"
-	"slices"
 	"strings"
 
 	"github.com/anttiharju/vmatch/internal/exitcode"
@@ -57,19 +56,14 @@ func (w *WrappedLinter) Run(_ context.Context, args []string) int {
 		w.install()
 	}
 
-	if !slices.Contains(args, "--color") {
-		if os.Getenv("VMATCH_GOLANGCI_LINT_COLORS") == "true" {
-			args = append(args, "--color", "always")
-		} else {
-			args = append(args, "--color", "never")
-		}
-	}
-
-	//nolint:gosec // I don't think a wrapper can avoid G204.
+	//nolint:gosec // I do not _think_ a wrapper can avoid this
 	linter := exec.Command(w.getGolangCILintPath(), args...)
 
-	linterOutput, _ := linter.CombinedOutput()
-	fmt.Print(string(linterOutput))
+	linter.Stdin = os.Stdin
+	linter.Stdout = os.Stdout
+	linter.Stderr = os.Stderr
+
+	_ = linter.Run()
 
 	return linter.ProcessState.ExitCode()
 }
