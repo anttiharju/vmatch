@@ -13,20 +13,21 @@ func firstArgIs(arg string, args []string) bool {
 }
 
 func Wrapper(ctx context.Context, args []string) int {
-	inject.Scripts()
+	exitCode := inject.Scripts()
+	if exitCode != 0 {
+		return exitCode
+	}
 
 	if firstArgIs("go", args) {
 		wrappedLanguage := language.Wrap("go")
-		exitCode := wrappedLanguage.Run(ctx, args[1:])
 
-		return exitCode
+		return wrappedLanguage.Run(ctx, args[1:])
 	}
 
 	if firstArgIs("golangci-lint", args) {
 		wrappedLinter := linter.Wrap("golangci-lint")
-		exitCode := wrappedLinter.Run(ctx, args[1:])
 
-		return exitCode
+		return wrappedLinter.Run(ctx, args[1:])
 	}
 
 	return 1
