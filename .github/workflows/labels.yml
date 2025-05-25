@@ -2,7 +2,8 @@ name: Labels
 
 on:
   pull_request:
-    types: [labeled]
+    # opened, synchronize, and reopened are the defaults per https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#pull_request
+    types: [opened, synchronize, reopened, labeled]
 
 jobs:
   check:
