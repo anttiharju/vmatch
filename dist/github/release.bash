@@ -7,6 +7,10 @@ version="$1"
 os="$2"
 arch="$3"
 
+echo "$version"
+echo "$os"
+echo "$arch"
+
 rm -rf "tmp/$os-$arch"
 go build -ldflags "-s -w -buildid=github-$version" -o "tmp/$os-$arch/release/bin/vmatch"
 
