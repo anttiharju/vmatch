@@ -3,7 +3,7 @@ on:
     branches:
       - wildcard
     paths:
-      - "dist/wrap/**/*"
+      - "dist/scripts/**/*"
       - "internal/**/*"
       - "go.mod"
       - "main.go"
