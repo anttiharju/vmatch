@@ -34,7 +34,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-tags: true # 'vmatch version' depends on the tag existing at compile time
+          fetch-tags: true
 
       - name: Create a local tap
         env:
@@ -48,6 +48,12 @@ jobs:
           git add --all
           git commit -m "Render formula to build ${{ runner.os }} bottle"
           brew tap anttiharju/vmatch file://${{ github.workspace }}
+
+          # Fix remote for Go BuildInfo
+          cd "$(brew --prefix)/Library/Taps/anttiharju/homebrew-vmatch"
+          git remote -v
+          git remote set-url origin "https://github.com/$GITHUB_REPOSITORY"
+          git remote -v
 
       - name: Build bottle
         run: |
