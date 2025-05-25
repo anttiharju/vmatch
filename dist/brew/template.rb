@@ -27,6 +27,6 @@ class ${class_name} < Formula
   end
 
   test do
-    system 'true'
+    system 'vmatch', 'doctor'
   end
 end
