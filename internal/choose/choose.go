@@ -3,6 +3,7 @@ package choose
 import (
 	"context"
 
+	"github.com/anttiharju/vmatch/internal/doctor"
 	"github.com/anttiharju/vmatch/internal/inject"
 	"github.com/anttiharju/vmatch/internal/language"
 	"github.com/anttiharju/vmatch/internal/linter"
@@ -33,6 +34,10 @@ func Wrapper(ctx context.Context, args []string) int {
 
 	if firstArgIs("version", args) {
 		return version.Print()
+	}
+
+	if firstArgIs("doctor", args) {
+		return doctor.Diagnose()
 	}
 
 	return 1
