@@ -27,6 +27,11 @@ runs:
       with:
         wildcard: brew-dist
         changes: ${{ inputs.changes }}
+    - id: gh_dist
+      uses: anttiharju/actions/compare-changes@v0
+      with:
+        wildcard: release
+        changes: ${{ inputs.changes }}
     - id: documentation
       uses: anttiharju/actions/compare-changes@v0
       with:
@@ -55,6 +60,9 @@ outputs:
   brew_dist:
     description: "Whether Brew distribution has changed"
     value: ${{ steps.brew_dist.outputs.changed }}
+  gh_dist:
+    description: "Whether GitHub distribution has changed"
+    value: ${{ steps.gh_dist.outputs.changed }}
   documentation:
     description: "Whether documentation has changed"
     value: ${{ steps.documentation.outputs.changed }}

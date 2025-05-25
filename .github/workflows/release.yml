@@ -44,14 +44,14 @@ jobs:
           GOARCH: amd64
           version: ${{ steps.release.outputs.tag }}
         run: |
-          ./dist/github/release.sh "$version" "$GOOS" "$GOARCH"
+          ./dist/github/release.bash "$version" "$GOOS" "$GOARCH"
       - name: Create linux-arm64 archive
         env:
           GOOS: linux
           GOARCH: arm64
           version: ${{ steps.release.outputs.tag }}
         run: |
-          ./dist/github/release.sh "$version" "$GOOS" "$GOARCH"
+          ./dist/github/release.bash "$version" "$GOOS" "$GOARCH"
       - name: Upload archives to release
         env:
           GH_TOKEN: ${{ github.token }}

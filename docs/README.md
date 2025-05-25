@@ -40,6 +40,10 @@ or
 vmatch golangci-lint (any args you would give to golangci-lint)
 ```
 
+### VS Code
+
+Visual Studio Code integration relies on the editor being launched from the right directory with `code .`
+
 ## Installation
 
 ### Brew
