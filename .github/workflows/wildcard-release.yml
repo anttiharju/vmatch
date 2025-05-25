@@ -1,0 +1,14 @@
+on:
+  push:
+    branches:
+      - wildcard
+    paths:
+      - "dist/github/**/*"
+
+jobs:
+  wildcard:
+    runs-on: ubuntu-latest
+    if: false
+    steps:
+      - run: |
+          true
