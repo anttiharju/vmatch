@@ -30,7 +30,7 @@ runs:
     - id: gh_dist
       uses: anttiharju/actions/compare-changes@v0
       with:
-        wildcard: gh-dist
+        wildcard: release
         changes: ${{ inputs.changes }}
     - id: documentation
       uses: anttiharju/actions/compare-changes@v0
