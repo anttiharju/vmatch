@@ -42,8 +42,8 @@ jobs:
         uses: anttiharju/actions/editorconfig-checker@v0
 
       - if: always() && (steps.changed.outputs.binary == 'true' || github.event_name == 'push')
-        name: Go compiles
-        uses: anttiharju/actions/go-compiles@v0
+        name: go build
+        uses: anttiharju/actions/go-build@v0
 
       - if: always() && (steps.changed.outputs.go_code == 'true' || github.event_name == 'push')
         name: golangci-lint
