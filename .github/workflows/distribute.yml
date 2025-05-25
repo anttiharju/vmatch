@@ -34,7 +34,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.tag }} # 'vmatch version' depends on the tag existing at compile time
+          fetch-tags: true # 'vmatch version' depends on the tag existing at compile time
 
       - name: Create a local tap
         env:
