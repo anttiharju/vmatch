@@ -71,8 +71,11 @@ func (w *WrappedLanguage) Run(ctx context.Context, args []string) int {
 	//nolint:gosec // I don't think a wrapper can avoid G204.
 	language := exec.Command(w.getGoPath(), args...)
 
-	languageOutput, _ := language.CombinedOutput()
-	fmt.Print(string(languageOutput))
+	language.Stdin = os.Stdin
+	language.Stdout = os.Stdout
+	language.Stderr = os.Stderr
+
+	_ = language.Run()
 
 	return language.ProcessState.ExitCode()
 }
