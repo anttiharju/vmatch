@@ -43,7 +43,7 @@ jobs:
           GIT_COMMITTER_NAME: "anttiharju[bot]"
           GIT_COMMITTER_EMAIL: "anttiharju[bot]@users.noreply.github.com"
         run: |
-          git tag "$tag"
+          git tag "$TAG"
           ./dist/brew/render.bash --local-tap --skip-bottles
           git add --all
           git commit -m "Render formula to build ${{ runner.os }} bottle"
