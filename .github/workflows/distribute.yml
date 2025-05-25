@@ -33,11 +33,10 @@ jobs:
 
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-tags: true
 
       - name: Create a local tap
         env:
+          TAG: ${{ inputs.tag }}
           GH_TOKEN: ${{ github.token }}
           GIT_AUTHOR_NAME: ${{ github.actor }}
           GIT_AUTHOR_EMAIL: "${{ github.actor }}@users.noreply.github.com"
@@ -54,6 +53,9 @@ jobs:
           git remote -v
           git remote set-url origin "https://github.com/$GITHUB_REPOSITORY"
           git remote -v
+
+          # Create the missing tag
+          git tag "$TAG"
 
       - name: Build bottle
         run: |
