@@ -57,7 +57,7 @@ func (w *WrappedLinter) Run(_ context.Context, args []string) int {
 		w.install()
 	}
 
-	if !slices.Contains(args, "--color") {
+	if os.Getenv("TERMINAL") == "true" && !slices.Contains(args, "--color") {
 		args = append(args, "--color", "always")
 	}
 
