@@ -1,0 +1,13 @@
+name: Labels
+
+on:
+  pull_request:
+    types: [labeled]
+
+jobs:
+  check:
+    name: Check
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Require semantic version label
+        uses: anttiharju/actions/require-semver@v0
