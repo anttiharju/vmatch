@@ -57,6 +57,7 @@ jobs:
       # https://github.com/Homebrew/brew/issues/19970
       - name: Rename bottles (historical quirk)
         run: |
+          ls vmatch-*
           find . -maxdepth 1 -name 'vmatch--*.bottle.*.tar.gz' -exec sh -c 'mv "$1" "$(echo $1 | sed s/vmatch--/vmatch-/)"' sh {} \;
 
       - name: Upload bottle to GitHub release
@@ -64,6 +65,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ inputs.tag }}
         run: |
+          ls vmatch-*
           find . -maxdepth 1 -name 'vmatch-*.bottle.*.tar.gz' -exec gh release upload "$TAG" {} \;
 
   update-homebrew-tap:
