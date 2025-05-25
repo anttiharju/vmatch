@@ -1,4 +1,4 @@
-package finder
+package find
 
 import (
 	"fmt"
@@ -10,7 +10,7 @@ type parser func(content []byte) (string, error)
 
 type validator func(version string) (string, error)
 
-func GetVersion(filename string, parse parser, validate validator) (string, error) {
+func Version(filename string, parse parser, validate validator) (string, error) {
 	location, err := locateFile(filename)
 	if err != nil {
 		return "", fmt.Errorf("cannot find version file '%s': %w", filename, err)

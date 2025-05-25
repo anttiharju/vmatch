@@ -43,3 +43,6 @@ dist/brew/vmatch.template.rb
 
 # Brew bottles
 *.tar.gz
+
+# Packaging happens under this directory
+tmp
