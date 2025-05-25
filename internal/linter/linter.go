@@ -57,8 +57,12 @@ func (w *WrappedLinter) Run(_ context.Context, args []string) int {
 		w.install()
 	}
 
-	if os.Getenv("TERMINAL") == "true" && !slices.Contains(args, "--color") {
-		args = append(args, "--color", "always")
+	if !slices.Contains(args, "--color") {
+		if os.Getenv("VMATCH_GOLANGCI_LINT_COLORS") == "true" {
+			args = append(args, "--color", "always")
+		} else {
+			args = append(args, "--color", "never")
+		}
 	}
 
 	//nolint:gosec // I don't think a wrapper can avoid G204.

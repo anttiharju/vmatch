@@ -4,4 +4,4 @@ if [ -t 1 ]; then
   colors=true
 fi
 
-TERMINAL=$colors /Users/antti/anttiharju/vmatch/vmatch golangci-lint "$@"
+VMATCH_GOLANGCI_LINT_COLORS=$colors vmatch golangci-lint "$@"
