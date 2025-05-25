@@ -50,7 +50,7 @@ jobs:
           brew tap anttiharju/vmatch file://${{ github.workspace }}
 
           # Fix remote for Go BuildInfo
-          cd "$(brew --prefix)/Library/Taps/anttiharju/homebrew-vmatch"
+          cd "$(brew --repository anttiharju/vmatch)"
           git remote -v
           git remote set-url origin "https://github.com/$GITHUB_REPOSITORY"
           git remote -v
