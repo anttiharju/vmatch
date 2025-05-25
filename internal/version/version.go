@@ -6,13 +6,13 @@ import (
 )
 
 func Print() int {
-	if bi, ok := debug.ReadBuildInfo(); ok {
-		version := bi.Main.Version[1:] // remove "v" prefix
-		goVersion := bi.GoVersion
+	if buildInfo, ok := debug.ReadBuildInfo(); ok {
+		version := buildInfo.Main.Version[1:] // remove "v" prefix
+		goVersion := buildInfo.GoVersion
 
 		var revision, buildTime string
 
-		for _, setting := range bi.Settings {
+		for _, setting := range buildInfo.Settings {
 			switch setting.Key {
 			case "vcs.revision":
 				if len(setting.Value) >= 8 {
