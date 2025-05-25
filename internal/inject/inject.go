@@ -11,6 +11,7 @@ import (
 //go:embed go.sh golangci-lint.sh
 var scripts embed.FS
 
+//nolint:cyclop // this is fairly simple and I don't think it needs to be refactored for now
 func Scripts() int {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
@@ -22,11 +23,13 @@ func Scripts() int {
 	binDir := filepath.Join(homeDir, ".vmatch", "bin")
 	goPath := filepath.Join(binDir, "go")
 	lintPath := filepath.Join(binDir, "golangci-lint")
+	lintV2Path := filepath.Join(binDir, "golangci-lint-v2")
 
 	goExists := exists(goPath)
 	lintExists := exists(lintPath)
+	lintV2Exists := exists(lintV2Path)
 
-	if goExists && lintExists {
+	if goExists && lintExists && lintV2Exists {
 		return 0
 	}
 
@@ -49,6 +52,16 @@ func Scripts() int {
 
 	if !lintExists {
 		if err := createScript("golangci-lint", "golangci-lint.sh", lintPath); err != nil {
+			fmt.Fprintf(os.Stderr, "%v\n", err)
+
+			return 1
+		}
+	}
+
+	// Strictly speaking, this should not exist if version is not v2 but I would expect issues to be fairly minor
+	// Because the alternative of deleting a recreating v2 target based on the version introduces friction.
+	if !lintV2Exists {
+		if err := createScript("golangci-lint-v2", "golangci-lint.sh", lintV2Path); err != nil {
 			fmt.Fprintf(os.Stderr, "%v\n", err)
 
 			return 1
