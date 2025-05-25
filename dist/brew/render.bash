@@ -23,7 +23,7 @@ quick_mode=false
 if [[ " $* " =~ " --skip-bottles " ]]; then
     SKIP_BOTTLES=true
 else
-    version="${TAG#build}"
+    version="${TAG#v}"
     if [[ -n $(ls ../../vmatch-"$version".*.tar.gz 2>/dev/null) ]]; then
         echo "Relying on cached bottles"
     else
