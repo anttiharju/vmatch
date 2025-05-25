@@ -56,7 +56,7 @@ func (w *WrappedLinter) Run(_ context.Context, args []string) int {
 		w.install()
 	}
 
-	//nolint:gosec // I do not _think_ a wrapper can avoid this
+	//nolint:gosec // I don't think a wrapper can avoid G204.
 	linter := exec.Command(w.getGolangCILintPath(), args...)
 
 	linter.Stdin = os.Stdin
