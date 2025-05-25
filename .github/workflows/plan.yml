@@ -29,8 +29,14 @@ jobs:
           changes: ${{ steps.changes.outputs.array }}
 
       - if: always() && (steps.changed.outputs.binary == 'true' || steps.changed.outputs.brew_dist == 'true')
+        id: semver
         name: Require semantic version label
         uses: anttiharju/actions/require-semver-label@v0
+
+      - if: always()
+        name: Echo release type
+        run: |
+          echo "Release type: ${{ steps.semver.outputs.bump }}"
 
       - if: always()
         name: action-validator
