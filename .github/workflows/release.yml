@@ -1,6 +1,10 @@
 name: Release
 on:
   workflow_call:
+    inputs:
+      type:
+        required: true
+        type: string
     outputs:
       tag:
         description: "Whether to trigger release workflows"
@@ -19,6 +23,8 @@ jobs:
       - name: Create GitHub release
         id: release
         uses: anttiharju/actions/release@v0
+        with:
+          type: ${{ inputs.type }}
       - name: Setup cache
         id: cache
         run: |
