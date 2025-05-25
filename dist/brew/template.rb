@@ -21,7 +21,7 @@ class ${class_name} < Formula
     bin_path = buildpath / 'src/${repository}'
     bin_path.install Dir['*']
     cd bin_path do
-      system 'go', 'build', '-ldflags', '-s -w -buildid=brew-${version}'
+      system 'go', 'build', '-ldflags', '-s -w -buildid=brew-${version}', '-trimpath'
       bin.install '${app_name}'
     end
   end

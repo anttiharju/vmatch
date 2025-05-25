@@ -12,7 +12,7 @@ echo "$os"
 echo "$arch"
 
 rm -rf "tmp/$os-$arch"
-go build -ldflags "-s -w -buildid=github-$version" -o "tmp/$os-$arch/release/bin/vmatch"
+go build -ldflags "-s -w -buildid=github-$version" -trimpath -o "tmp/$os-$arch/release/bin/vmatch"
 
 cp LICENSE "tmp/$os-$arch"
 cp -r docs/* "tmp/$os-$arch"

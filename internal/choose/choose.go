@@ -6,6 +6,7 @@ import (
 	"github.com/anttiharju/vmatch/internal/inject"
 	"github.com/anttiharju/vmatch/internal/language"
 	"github.com/anttiharju/vmatch/internal/linter"
+	"github.com/anttiharju/vmatch/internal/version"
 )
 
 func firstArgIs(arg string, args []string) bool {
@@ -28,6 +29,10 @@ func Wrapper(ctx context.Context, args []string) int {
 		wrappedLinter := linter.Wrap("golangci-lint")
 
 		return wrappedLinter.Run(ctx, args[1:])
+	}
+
+	if firstArgIs("version", args) {
+		return version.Print()
 	}
 
 	return 1
