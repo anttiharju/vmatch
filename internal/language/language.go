@@ -11,7 +11,7 @@ import (
 	"strings"
 
 	"github.com/anttiharju/vmatch/internal/exitcode"
-	"github.com/anttiharju/vmatch/internal/finder"
+	"github.com/anttiharju/vmatch/internal/find"
 	"github.com/anttiharju/vmatch/internal/install"
 	"github.com/anttiharju/vmatch/internal/wrapper"
 )
@@ -48,7 +48,7 @@ func validateVersion(version string) (string, error) {
 func Wrap(name string) *WrappedLanguage {
 	baseWrapper := wrapper.BaseWrapper{Name: name}
 
-	desiredVersion, err := finder.GetVersion("go.mod", languageParser, validateVersion)
+	desiredVersion, err := find.GetVersion("go.mod", languageParser, validateVersion)
 	if err != nil {
 		baseWrapper.ExitWithPrintln(exitcode.VersionReadFileIssue, err.Error())
 	}
