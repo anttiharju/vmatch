@@ -48,7 +48,7 @@ func validateVersion(version string) (string, error) {
 func Wrap(name string) *WrappedLanguage {
 	baseWrapper := wrapper.BaseWrapper{Name: name}
 
-	desiredVersion, err := find.GetVersion("go.mod", languageParser, validateVersion)
+	desiredVersion, err := find.Version("go.mod", languageParser, validateVersion)
 	if err != nil {
 		baseWrapper.ExitWithPrintln(exitcode.VersionReadFileIssue, err.Error())
 	}

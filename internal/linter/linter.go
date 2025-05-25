@@ -37,7 +37,7 @@ func validateVersion(version string) (string, error) {
 func Wrap(name string) *WrappedLinter {
 	baseWrapper := wrapper.BaseWrapper{Name: name}
 
-	desiredVersion, err := find.GetVersion(".golangci-version", linterParser, validateVersion)
+	desiredVersion, err := find.Version(".golangci-version", linterParser, validateVersion)
 	if err != nil {
 		baseWrapper.ExitWithPrintln(exitcode.VersionReadFileIssue, err.Error())
 	}
