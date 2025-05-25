@@ -12,6 +12,9 @@ on:
       update_docs:
         description: "Whether to update the documentation website"
         value: ${{ jobs.validate.outputs.documentation_changed == 'true' }}
+      release_type:
+        description: "The type of release to perform; major, minor, patch, or none"
+        value: ${{ jobs.validate.outputs.release_type }}
 
 jobs:
   validate:
@@ -32,11 +35,6 @@ jobs:
         id: semver
         name: Require semantic version label
         uses: anttiharju/actions/require-semver-label@v0
-
-      - if: always()
-        name: Echo release type
-        run: |
-          echo "Release type: ${{ steps.semver.outputs.bump }}"
 
       - if: always()
         name: action-validator
@@ -81,3 +79,4 @@ jobs:
       binary_changed: ${{ steps.changed.outputs.binary }}
       brew_dist_changed: ${{ steps.changed.outputs.brew_dist }}
       documentation_changed: ${{ steps.changed.outputs.documentation }}
+      release_type: ${{ steps.semver.outputs.bump }}
