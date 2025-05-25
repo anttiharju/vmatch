@@ -32,32 +32,21 @@ jobs:
         with:
           go-version-file: "go.mod"
           cache: ${{ steps.cache.outputs.enabled }}
-      - name: Build Linux amd64
+      - name: Create linux-amd64 archive
         env:
           GOOS: linux
           GOARCH: amd64
           version: ${{ steps.release.outputs.tag }}
         run: |
-          go build -ldflags "-s -w -buildid=github-$version" -o "tmp/$GOOS-$GOARCH/vmatch"
-      - name: Build Linux arm64
+          ./dist/github/release.sh "$version" "$GOOS" "$GOARCH"
+      - name: Create linux-arm64 archive
         env:
           GOOS: linux
           GOARCH: arm64
           version: ${{ steps.release.outputs.tag }}
         run: |
-          go build -ldflags "-s -w -buildid=github-$version" -o "tmp/$GOOS-$GOARCH/vmatch"
-      - name: Create archives
-        run: |
-          cp LICENSE tmp
-          cp docs/README.md tmp
-          cd tmp
-          mv linux-amd64 bin
-          tar -czf vmatch-linux-amd64.tar.gz LICENSE README.md bin
-          rm -rf bin
-          mv linux-arm64 bin
-          tar -czf vmatch-linux-arm64.tar.gz LICENSE README.md bin
+          ./dist/github/release.sh "$version" "$GOOS" "$GOARCH"
       - name: Upload archives to release
-        working-directory: tmp
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ steps.release.outputs.tag }}
