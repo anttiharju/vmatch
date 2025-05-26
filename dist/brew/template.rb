@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# testing
 class ${class_name} < Formula
   desc '${description}'
   homepage '${homepage}'
