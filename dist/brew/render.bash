@@ -25,10 +25,8 @@ if [[ "$quick_mode" == true ]] && [[ -f "$cache_file" ]]; then
     cat "$cache_file"
 else
     echo "Generating fresh values"
-    rm -rf ../../vmatch-*64.tar.gz
     gh release download "$TAG" --pattern 'vmatch-*64.tar.gz'
     mv vmatch-*64.tar.gz ../../
-
     source values.bash | tee "$cache_file"
 fi
 
