@@ -12,15 +12,10 @@ echo "$os"
 echo "$arch"
 
 rm -rf "tmp/$os-$arch"
-go build -ldflags "-s -w -buildid=github-$version" -trimpath -o "tmp/$os-$arch/release/bin/vmatch"
+go build -ldflags "-s -w -buildid=github-$version" -trimpath -o "tmp/$os-$arch/vmatch"
 
 cp LICENSE "tmp/$os-$arch"
-cp -r docs/* "tmp/$os-$arch"
+cp docs/README.md "tmp/$os-$arch"
+
 cd "tmp/$os-$arch"
-
-docs=()
-while IFS= read -r -d '' file; do
-  docs+=("$file")
-done < <(git ls-files -z --others '*.md')
-
-tar -czf "$repo_root/vmatch-$os-$arch.tar.gz" LICENSE release/bin "${docs[@]}"
+tar -czf "$repo_root/vmatch-$os-$arch.tar.gz" LICENSE README.md vmatch
