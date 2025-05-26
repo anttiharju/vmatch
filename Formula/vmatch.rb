@@ -8,7 +8,8 @@ class Vmatch < Formula
 
   on_macos do
     if Hardware::CPU.intel?
-      url "https://github.com/anttiharju/vmatch/releases/download/v0.1.7/vmatch-darwin-amd64.tar.gz"
+      url 'https://github.com/anttiharju/vmatch/releases/download/v0.1.7/vmatch-darwin-amd64.tar.gz'
+      sha256 ''
 
       def install
         bin.install "vmatch"
@@ -16,7 +17,7 @@ class Vmatch < Formula
     end
     if Hardware::CPU.arm?
       url "https://github.com/anttiharju/vmatch/releases/download/v0.1.7/vmatch-darwin-arm64.tar.gz"
-      sha256 "498bfaa5ceb05cacc3e3301155d50fa08c9e5102237411e31ff0890a8dcbbab4"
+      sha256 ''
 
       def install
         bin.install "vmatch"
@@ -28,6 +29,7 @@ class Vmatch < Formula
     if Hardware::CPU.intel?
       if Hardware::CPU.is_64_bit?
         url "https://github.com/anttiharju/vmatch/releases/download/v0.1.7/vmatch-linux-amd64.tar.gz"
+        sha256 ''
 
         def install
           bin.install "vmatch"
@@ -37,6 +39,7 @@ class Vmatch < Formula
     if Hardware::CPU.arm?
       if Hardware::CPU.is_64_bit?
         url "https://github.com/anttiharju/vmatch/releases/download/v0.1.7/vmatch-linux-arm64.tar.gz"
+        sha256 ''
 
         def install
           bin.install "vmatch"

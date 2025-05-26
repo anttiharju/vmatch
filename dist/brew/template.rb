@@ -8,7 +8,7 @@ class ${class_name} < Formula
 
   on_macos do
     if Hardware::CPU.intel?
-      url '${darwin_amd64}'
+      url 'https://github.com/anttiharju/vmatch/releases/download/v${version}/vmatch-darwin-amd64.tar.gz'
       sha256 '${darwin_amd64_sha256}'
 
       def install
@@ -16,7 +16,7 @@ class ${class_name} < Formula
       end
     end
     if Hardware::CPU.arm?
-      url '${darwin_arm64}'
+      url "https://github.com/anttiharju/vmatch/releases/download/v${version}/vmatch-darwin-arm64.tar.gz"
       sha256 '${darwin_arm64_sha256}'
 
       def install
@@ -28,7 +28,7 @@ class ${class_name} < Formula
   on_linux do
     if Hardware::CPU.intel?
       if Hardware::CPU.is_64_bit?
-        url '${linux_amd64}'
+        url "https://github.com/anttiharju/vmatch/releases/download/v${version}/vmatch-linux-amd64.tar.gz"
         sha256 '${linux_amd64_sha256}'
 
         def install
@@ -38,7 +38,7 @@ class ${class_name} < Formula
     end
     if Hardware::CPU.arm?
       if Hardware::CPU.is_64_bit?
-        url '${linux_arm64}'
+        url "https://github.com/anttiharju/vmatch/releases/download/v${version}/vmatch-linux-arm64.tar.gz"
         sha256 '${linux_arm64_sha256}'
 
         def install
