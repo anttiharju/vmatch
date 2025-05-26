@@ -3,7 +3,7 @@
 class Vmatch < Formula
   desc 'Go & golangci-lint version automation'
   homepage 'https://anttiharju.dev/vmatch'
-  version "0.1.7"
+  version '0.1.7'
   license 'GPL-3.0-only'
 
   on_macos do
