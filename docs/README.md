@@ -48,7 +48,7 @@ Visual Studio Code integration relies on the editor being launched from the righ
 
 ### Brew
 
-`macOS 14+ arm64` `Linux amd64`
+`macOS arm64` `Linux amd64` `Linux arm64` `macOS amd64`
 
 ```sh
 brew install anttiharju/tap/vmatch
@@ -62,6 +62,12 @@ brew update && brew upgrade vmatch
 
 ### Pre-built binaries
 
+`macOS arm64`
+
+```sh
+curl -LsSf https://github.com/anttiharju/vmatch/releases/latest/download/vmatch-darwin-arm64.tar.gz | sudo tar -xz --strip-components=0 vmatch -C /usr/local/bin && vmatch doctor
+```
+
 `Linux amd64`
 
 ```sh
@@ -72,6 +78,12 @@ curl -LsSf https://github.com/anttiharju/vmatch/releases/latest/download/vmatch-
 
 ```sh
 curl -LsSf https://github.com/anttiharju/vmatch/releases/latest/download/vmatch-linux-arm64.tar.gz | sudo tar -xz --strip-components=0 vmatch -C /usr/local/bin && vmatch doctor
+```
+
+`macOS amd64`
+
+```sh
+curl -LsSf https://github.com/anttiharju/vmatch/releases/latest/download/vmatch-darwin-amd64.tar.gz | sudo tar -xz --strip-components=0 vmatch -C /usr/local/bin && vmatch doctor
 ```
 
 ### Manual

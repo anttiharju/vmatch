@@ -19,29 +19,19 @@ cache_file=values.cache
 quick_mode=false
 [[ " $* " =~ " --quick " ]] && quick_mode=true
 
-# Way to render formula with bottles locally
-if [[ " $* " =~ " --skip-bottles " ]]; then
-    SKIP_BOTTLES=true
-else
-    version="${TAG#v}"
-    if [[ -n $(ls ../../vmatch-"$version".*.tar.gz 2>/dev/null) ]]; then
-        echo "Relying on cached bottles"
-    else
-        rm -rf ../../vmatch-*.bottle.*.tar.gz
-        echo "Downloading fresh $TAG bottles"
-        gh release download "$TAG" --pattern 'vmatch-*.bottle.*.tar.gz'
-        mv vmatch-*.bottle.*.tar.gz ../../
-    fi
-fi
-
 set -a
 if [[ "$quick_mode" == true ]] && [[ -f "$cache_file" ]]; then
     echo "Using cached values from $cache_file"
     cat "$cache_file"
 else
     echo "Generating fresh values"
+    rm -rf ../../vmatch-*64.tar.gz
+    gh release download "$TAG" --pattern 'vmatch-*64.tar.gz'
+    mv vmatch-*64.tar.gz ../../
+
     source values.bash | tee "$cache_file"
 fi
+
 # Cache file is gitignored and we cannot guarantee its existence
 # shellcheck disable=SC1090
 source "$cache_file"

@@ -1,33 +1,54 @@
 # frozen_string_literal: true
 
-# testing
-# Homebrew formula for vmatch - a tool that automates
-# matching golangci-lint and Go versions to your project.
-#
-# This formula installs the vmatch binary and its dependencies.
 class ${class_name} < Formula
   desc '${description}'
   homepage '${homepage}'
-
-  url '${url}'
-  sha256 '${sha256}'
-  head 'https://${repository}'
+  version '${version}'
   license 'GPL-3.0-only'
 
-  depends_on 'go@${go_version}' => :build${bottle}
+  on_macos do
+    if Hardware::CPU.intel?
+      url 'https://github.com/anttiharju/vmatch/releases/download/v${version}/vmatch-darwin-amd64.tar.gz'
+      sha256 '${darwin_amd64_sha256}'
 
-  def install
-    ENV['GOPATH'] = buildpath
+      def install
+        bin.install "vmatch"
+      end
+    end
+    if Hardware::CPU.arm?
+      url "https://github.com/anttiharju/vmatch/releases/download/v${version}/vmatch-darwin-arm64.tar.gz"
+      sha256 '${darwin_arm64_sha256}'
 
-    bin_path = buildpath / 'src/${repository}'
-    bin_path.install Dir['*']
-    cd bin_path do
-      system 'go', 'build', '-ldflags', '-s -w -buildid=brew-${version}', '-trimpath'
-      bin.install '${app_name}'
+      def install
+        bin.install "vmatch"
+      end
+    end
+  end
+
+  on_linux do
+    if Hardware::CPU.intel?
+      if Hardware::CPU.is_64_bit?
+        url "https://github.com/anttiharju/vmatch/releases/download/v${version}/vmatch-linux-amd64.tar.gz"
+        sha256 '${linux_amd64_sha256}'
+
+        def install
+          bin.install "vmatch"
+        end
+      end
+    end
+    if Hardware::CPU.arm?
+      if Hardware::CPU.is_64_bit?
+        url "https://github.com/anttiharju/vmatch/releases/download/v${version}/vmatch-linux-arm64.tar.gz"
+        sha256 '${linux_arm64_sha256}'
+
+        def install
+          bin.install "vmatch"
+        end
+      end
     end
   end
 
   test do
-    system 'vmatch', 'doctor'
+    system "#{bin}/vmatch doctor"
   end
 end
