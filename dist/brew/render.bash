@@ -27,7 +27,6 @@ else
     echo "Generating fresh values"
     gh release download "$TAG" --pattern 'vmatch-*64.tar.gz'
     mv vmatch-*64.tar.gz ../../
-
     source values.bash | tee "$cache_file"
 fi
 
