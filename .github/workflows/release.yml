@@ -38,9 +38,23 @@ jobs:
         with:
           go-version-file: "go.mod"
           cache: ${{ steps.cache.outputs.enabled }}
+      - name: Create darwin-arm64 archive
+        env:
+          GOOS: darwin
+          GOARCH: arm64
+          version: ${{ steps.release.outputs.tag }}
+        run: |
+          ./dist/github/release.bash "$version" "$GOOS" "$GOARCH"
       - name: Create linux-amd64 archive
         env:
           GOOS: linux
+          GOARCH: amd64
+          version: ${{ steps.release.outputs.tag }}
+        run: |
+          ./dist/github/release.bash "$version" "$GOOS" "$GOARCH"
+      - name: Create darwin-amd64 archive
+        env:
+          GOOS: darwin
           GOARCH: amd64
           version: ${{ steps.release.outputs.tag }}
         run: |

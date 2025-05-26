@@ -65,13 +65,13 @@ brew update && brew upgrade vmatch
 `Linux amd64`
 
 ```sh
-curl -LsSf https://github.com/anttiharju/vmatch/releases/latest/download/vmatch-linux-amd64.tar.gz | sudo tar -xz --strip-components=2 -C /usr/local/bin && vmatch doctor
+curl -LsSf https://github.com/anttiharju/vmatch/releases/latest/download/vmatch-linux-amd64.tar.gz | sudo tar -xz --strip-components=0 vmatch -C /usr/local/bin && vmatch doctor
 ```
 
 `Linux arm64`
 
 ```sh
-curl -LsSf https://github.com/anttiharju/vmatch/releases/latest/download/vmatch-linux-arm64.tar.gz | sudo tar -xz --strip-components=2 -C /usr/local/bin && vmatch doctor
+curl -LsSf https://github.com/anttiharju/vmatch/releases/latest/download/vmatch-linux-arm64.tar.gz | sudo tar -xz --strip-components=0 vmatch -C /usr/local/bin && vmatch doctor
 ```
 
 ### Manual

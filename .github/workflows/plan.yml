@@ -16,10 +16,6 @@ on:
         description: "The type of release to perform; major, minor, patch, or none"
         value: ${{ jobs.validate.outputs.release_type }}
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
-
 jobs:
   validate:
     name: Validate
