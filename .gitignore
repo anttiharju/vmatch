@@ -41,7 +41,7 @@ dist/brew/values.cache
 dist/brew/vmatch.rb
 dist/brew/vmatch.template.rb
 
-# Brew bottles
+# Binary archives
 *.tar.gz
 
 # Packaging happens under this directory

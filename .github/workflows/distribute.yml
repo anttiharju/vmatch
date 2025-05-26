@@ -36,7 +36,7 @@ jobs:
           repository: anttiharju/homebrew-tap
           token: ${{ steps.generate-token.outputs.token }}
           path: homebrew-tap
-      - name: Download bottles
+      - name: Download binary archives
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ inputs.tag }}
