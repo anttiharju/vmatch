@@ -42,6 +42,7 @@ jobs:
           TAG: ${{ inputs.tag }}
         run: |
           gh release download "$TAG" --pattern 'vmatch-*64.tar.gz'
+          ls -- *.tar.gz
       - name: Render formula template
         uses: anttiharju/actions/render-template@v0
         with:
