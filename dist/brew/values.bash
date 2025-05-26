@@ -17,3 +17,7 @@ capture class_name "$(awk 'BEGIN{print toupper(substr("'"$repo_name"'",1,1)) sub
 capture description "$(gh repo view --json description --jq .description)"
 capture homepage "$(gh api "repos/$GITHUB_REPOSITORY" --jq .homepage)"
 capture version "${TAG#v}"
+capture darwin_amd64_sha256 "1"
+capture darwin_arm64_sha256 "2"
+capture linux_amd64_sha256 "3"
+capture linux_arm64_sha256 "4"
