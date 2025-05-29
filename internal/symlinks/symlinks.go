@@ -2,6 +2,7 @@ package symlinks
 
 import (
 	"fmt"
+	"go/build"
 	"os"
 )
 
@@ -13,6 +14,9 @@ func Maintain() int {
 
 	binDir := homeDir + string(os.PathSeparator) + "bin"
 	fmt.Printf("Creating symlinks in %s...\n", binDir)
+
+	goPath := build.Default.GOPATH
+	fmt.Printf("GOPATH: %s\n", goPath)
 
 	return 0
 }
