@@ -80,5 +80,5 @@ jobs:
     outputs:
       binary_changed: ${{ steps.changed.outputs.binary }}
       dist_changed: ${{ steps.changed.outputs.dist_brew || steps.changed.outputs.dist_github }}
-      documentation_changed: ${{ steps.changed.outputs.documentation }}
       release_type: ${{ steps.semver.outputs.bump }}
+      documentation_changed: ${{ steps.changed.outputs.documentation }}
