@@ -1,0 +1,149 @@
+package symlinks
+
+import (
+	"fmt"
+	"go/build"
+	"os"
+	"path/filepath"
+	"strings"
+
+	"github.com/anttiharju/vmatch/internal/scripts"
+)
+
+func Sync() {
+	if err := sync(); err != nil {
+		fmt.Printf("vmatch: error during GOPATH/bin symlink sync: %v\n", err)
+	}
+}
+
+func sync() error {
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		return fmt.Errorf("getting user home directory: %w", err)
+	}
+
+	vmatchDir, err := ensureVmatchDirExists(homeDir)
+	if err != nil {
+		return fmt.Errorf("ensuring vmatch directory exists: %w", err)
+	}
+
+	goBinDir, err := getGoBinDir()
+	if err != nil {
+		return fmt.Errorf("getting Go bin directory: %w", err)
+	}
+
+	scriptNames := buildScriptNamesMap()
+
+	binaries, err := collectRelevantBinaries(goBinDir, scriptNames)
+	if err != nil {
+		return fmt.Errorf("collecting relevant binaries: %w", err)
+	}
+
+	if err := cleanVmatchBinDirectory(vmatchDir, scriptNames); err != nil {
+		return fmt.Errorf("cleaning vmatch bin directory: %w", err)
+	}
+
+	if err := createSymlinksForBinaries(goBinDir, vmatchDir, binaries); err != nil {
+		return fmt.Errorf("creating symlinks for binaries: %w", err)
+	}
+
+	return nil
+}
+
+func ensureVmatchDirExists(homeDir string) (string, error) {
+	vmatchDir := filepath.Join(homeDir, ".vmatch", "bin")
+
+	err := os.MkdirAll(vmatchDir, 0o755)
+	if err != nil {
+		return "", fmt.Errorf("creating directory %s: %w", vmatchDir, err)
+	}
+
+	return vmatchDir, nil
+}
+
+func getGoBinDir() (string, error) {
+	goPath := build.Default.GOPATH
+	goBinDir := filepath.Join(goPath, "bin")
+
+	if _, err := os.Stat(goBinDir); os.IsNotExist(err) {
+		return "", fmt.Errorf("directory %s does not exist", goBinDir)
+	}
+
+	return goBinDir, nil
+}
+
+func buildScriptNamesMap() map[string]bool {
+	scriptNames := make(map[string]bool)
+	for _, script := range scripts.Scripts() {
+		scriptNames[string(script)] = true
+	}
+
+	return scriptNames
+}
+
+func collectRelevantBinaries(goBinDir string, scriptNames map[string]bool) ([]string, error) {
+	entries, err := os.ReadDir(goBinDir)
+	if err != nil {
+		return nil, fmt.Errorf("reading directory %s: %w", goBinDir, err)
+	}
+
+	binaries := make([]string, 0, len(entries))
+
+	for _, entry := range entries {
+		if shouldIncludeBinary(entry.Name(), scriptNames) {
+			binaries = append(binaries, entry.Name())
+		}
+	}
+
+	return binaries, nil
+}
+
+func shouldIncludeBinary(name string, scriptNames map[string]bool) bool {
+	// Skip hidden files (files starting with a dot)
+	if strings.HasPrefix(name, ".") {
+		return false
+	}
+
+	// Skip files that match script names
+	if scriptNames[name] {
+		return false
+	}
+
+	return true
+}
+
+func cleanVmatchBinDirectory(vmatchDir string, scriptNames map[string]bool) error {
+	entries, err := os.ReadDir(vmatchDir)
+	if err != nil {
+		return fmt.Errorf("reading directory %s: %w", vmatchDir, err)
+	}
+
+	for _, entry := range entries {
+		// Skip if it's a script we want to keep
+		if scriptNames[entry.Name()] {
+			continue
+		}
+
+		// Remove other files
+		filePath := filepath.Join(vmatchDir, entry.Name())
+		if err := os.Remove(filePath); err != nil {
+			return fmt.Errorf("removing file %s: %w", filePath, err)
+		}
+	}
+
+	return nil
+}
+
+func createSymlinksForBinaries(goBinDir, vmatchDir string, binaries []string) error {
+	for _, binary := range binaries {
+		sourcePath := filepath.Join(goBinDir, binary)
+		targetPath := filepath.Join(vmatchDir, binary)
+
+		// Create new symlink
+		if err := os.Symlink(sourcePath, targetPath); err != nil {
+			return fmt.Errorf("creating symlink for %s: %w", binary, err)
+		}
+	}
+
+	return nil
+}

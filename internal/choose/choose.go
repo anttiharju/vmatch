@@ -4,9 +4,10 @@ import (
 	"context"
 
 	"github.com/anttiharju/vmatch/internal/doctor"
-	"github.com/anttiharju/vmatch/internal/inject"
 	"github.com/anttiharju/vmatch/internal/language"
 	"github.com/anttiharju/vmatch/internal/linter"
+	"github.com/anttiharju/vmatch/internal/scripts"
+	"github.com/anttiharju/vmatch/internal/symlinks"
 	"github.com/anttiharju/vmatch/pkg/version"
 )
 
@@ -15,19 +16,23 @@ func firstArgIs(arg string, args []string) bool {
 }
 
 func Wrapper(ctx context.Context, args []string) int {
-	exitCode := inject.Scripts()
+	exitCode := scripts.Inject()
 	if exitCode != 0 {
 		return exitCode
 	}
 
-	if firstArgIs("go", args) {
-		wrappedLanguage := language.Wrap("go")
+	defer func() {
+		symlinks.Sync()
+	}()
+
+	if firstArgIs(string(scripts.Golang), args) {
+		wrappedLanguage := language.Wrap(scripts.Golang)
 
 		return wrappedLanguage.Run(ctx, args[1:])
 	}
 
-	if firstArgIs("golangci-lint", args) {
-		wrappedLinter := linter.Wrap("golangci-lint")
+	if firstArgIs(string(scripts.GolangCILint), args) {
+		wrappedLinter := linter.Wrap(scripts.GolangCILint)
 
 		return wrappedLinter.Run(ctx, args[1:])
 	}
