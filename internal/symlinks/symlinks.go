@@ -21,7 +21,6 @@ func Maintain() int {
 
 	// Create ~/.vmatch/bin if it doesn't exist
 	vmatchDir := filepath.Join(homeDir, ".vmatch", "bin")
-	fmt.Printf("Ensuring vmatch directory exists: %s...\n", vmatchDir)
 
 	err = os.MkdirAll(vmatchDir, 0o755)
 	if err != nil {
@@ -33,7 +32,6 @@ func Maintain() int {
 	// Get GOPATH/bin
 	goPath := build.Default.GOPATH
 	goBinDir := filepath.Join(goPath, "bin")
-	fmt.Printf("GOPATH bin directory: %s\n", goBinDir)
 
 	// Check if bin directory exists
 	if _, err := os.Stat(goBinDir); os.IsNotExist(err) {
@@ -95,13 +93,8 @@ func Maintain() int {
 		err := os.Remove(filePath)
 		if err != nil {
 			fmt.Printf("Error removing file %s: %v\n", filePath, err)
-		} else {
-			fmt.Printf("Removed: %s\n", filePath)
 		}
 	}
-
-	// Create symlinks for binaries from GOPATH/bin to ~/.vmatch/bin
-	fmt.Printf("Creating symlinks in %s...\n", vmatchDir)
 
 	for _, binary := range binaries {
 		sourcePath := filepath.Join(goBinDir, binary)
@@ -114,8 +107,6 @@ func Maintain() int {
 		err := os.Symlink(sourcePath, targetPath)
 		if err != nil {
 			fmt.Printf("Error creating symlink for %s: %v\n", binary, err)
-		} else {
-			fmt.Printf("Created symlink: %s -> %s\n", targetPath, sourcePath)
 		}
 	}
 
