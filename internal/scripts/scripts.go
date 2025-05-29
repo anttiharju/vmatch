@@ -8,6 +8,13 @@ import (
 	"path/filepath"
 )
 
+type Script string
+
+const (
+	Go           Script = "go.sh"
+	GolangCILint Script = "golangci-lint.sh"
+)
+
 //go:embed go.sh golangci-lint.sh
 var scripts embed.FS
 
