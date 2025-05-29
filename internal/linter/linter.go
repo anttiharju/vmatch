@@ -73,7 +73,7 @@ func (w *WrappedLinter) install() {
 	//nolint:lll // Install command example from https://golangci-lint.run/welcome/install/#binaries
 	// curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.59.1
 	// todo: pin to a sha instead of HEAD, but automate updates
-	curl := "curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh"
+	curl := "curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/cc3567e3127d8530afb69be1b7bd20ba9ebcc7c1/install.sh"
 	pipe := " | "
 	sh := "sh -s -- -b "
 	command := curl + pipe + sh + w.InstallPath + " v" + w.DesiredVersion
