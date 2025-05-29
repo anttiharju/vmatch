@@ -33,8 +33,8 @@ jobs:
       tag: ${{ needs.release.outputs.tag }}
     secrets: inherit
 
-  update-docs:
-    name: Update docs
+  documentation:
+    name: Documentation
     needs:
       - plan
       - release
@@ -43,5 +43,5 @@ jobs:
       needs.plan.outputs.update_docs == 'true'
     permissions:
       contents: write
-    uses: ./.github/workflows/update-docs.yml
+    uses: ./.github/workflows/documentation.yml
     secrets: inherit
