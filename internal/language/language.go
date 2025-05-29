@@ -11,8 +11,8 @@ import (
 	"strings"
 
 	"github.com/anttiharju/vmatch/internal/exitcode"
-	"github.com/anttiharju/vmatch/internal/find"
 	"github.com/anttiharju/vmatch/internal/install"
+	"github.com/anttiharju/vmatch/pkg/find"
 	"github.com/anttiharju/vmatch/pkg/wrapper"
 )
 
