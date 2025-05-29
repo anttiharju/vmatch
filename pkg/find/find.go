@@ -3,7 +3,8 @@ package find
 import (
 	"fmt"
 	"os"
-	"path/filepath"
+
+	"github.com/anttiharju/vmatch/pkg/locate"
 )
 
 type parser func(content []byte) (string, error)
@@ -11,7 +12,7 @@ type parser func(content []byte) (string, error)
 type validator func(version string) (string, error)
 
 func Version(filename string, parse parser, validate validator) (string, error) {
-	location, err := locateFile(filename)
+	location, err := locate.File(filename)
 	if err != nil {
 		return "", fmt.Errorf("cannot find version file '%s': %w", filename, err)
 	}
@@ -27,27 +28,4 @@ func Version(filename string, parse parser, validate validator) (string, error) 
 	}
 
 	return validate(version)
-}
-
-func locateFile(filename string) (string, error) {
-	workDir, err := os.Getwd()
-	if err != nil {
-		return "", fmt.Errorf("cannot get current working directory: %w", err)
-	}
-
-	for {
-		filePath := filepath.Join(workDir, filename)
-		if _, err := os.Stat(filePath); err == nil {
-			return filePath, nil
-		}
-
-		parentDir := filepath.Dir(workDir)
-		if parentDir == workDir {
-			break
-		}
-
-		workDir = parentDir
-	}
-
-	return "", fmt.Errorf("cannot find version file '%s'", filename)
 }
