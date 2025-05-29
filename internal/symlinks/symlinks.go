@@ -6,6 +6,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/anttiharju/vmatch/internal/scripts"
 )
 
 func Maintain() int {
@@ -22,7 +24,7 @@ func Maintain() int {
 
 	// Path to GOPATH/bin directory
 	goBinDir := filepath.Join(goPath, "bin")
-	fmt.Printf("Listing files in %s (excluding hidden files):\n", goBinDir)
+	fmt.Printf("Listing files in %s (excluding hidden files and scripts):\n", goBinDir)
 
 	// Check if bin directory exists
 	if _, err := os.Stat(goBinDir); os.IsNotExist(err) {
@@ -39,10 +41,23 @@ func Maintain() int {
 		return 1
 	}
 
-	// Print each entry in the bin directory (excluding hidden files)
+	// Get the list of scripts to filter out
+	scriptsList := scripts.Scripts()
+
+	scriptNames := make(map[string]bool)
+	for _, script := range scriptsList {
+		scriptNames[string(script)] = true
+	}
+
+	// Print each entry in the bin directory (excluding hidden files and scripts)
 	for _, entry := range entries {
 		// Skip hidden files (files starting with a dot)
 		if strings.HasPrefix(entry.Name(), ".") {
+			continue
+		}
+
+		// Skip files that match script names
+		if scriptNames[entry.Name()] {
 			continue
 		}
 
