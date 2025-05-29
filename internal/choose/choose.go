@@ -22,7 +22,7 @@ func Wrapper(ctx context.Context, args []string) int {
 	}
 
 	defer func() {
-		symlinks.Maintain()
+		symlinks.Sync()
 	}()
 
 	if firstArgIs(string(scripts.Golang), args) {

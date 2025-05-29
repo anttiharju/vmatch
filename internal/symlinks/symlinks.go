@@ -11,7 +11,7 @@ import (
 )
 
 //nolint:cyclop,funlen
-func Maintain() int {
+func Sync() int {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		fmt.Printf("Error getting user home directory: %v\n", err)
