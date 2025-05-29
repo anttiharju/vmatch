@@ -7,7 +7,7 @@ import (
 	"github.com/anttiharju/vmatch/internal/inject"
 	"github.com/anttiharju/vmatch/internal/language"
 	"github.com/anttiharju/vmatch/internal/linter"
-	"github.com/anttiharju/vmatch/internal/version"
+	"github.com/anttiharju/vmatch/pkg/version"
 )
 
 func firstArgIs(arg string, args []string) bool {
