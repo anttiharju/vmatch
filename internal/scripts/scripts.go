@@ -16,6 +16,10 @@ const (
 	GolangCILintV2 Script = "golangci-lint-v2"
 )
 
+func Scripts() []Script {
+	return []Script{Golang, GolangCILint, GolangCILintV2}
+}
+
 func (s Script) File() string {
 	switch s {
 	case Golang:
@@ -50,7 +54,8 @@ func Inject() int {
 		}
 	}
 
-	for _, script := range []Script{Golang, GolangCILint, GolangCILintV2} {
+	scripts := Scripts()
+	for _, script := range scripts {
 		if err := createScript(binDir, script); err != nil {
 			fmt.Fprintf(os.Stderr, "Error: failed to create script %s: %v\n", script, err)
 
