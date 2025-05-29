@@ -21,10 +21,9 @@ func Wrapper(ctx context.Context, args []string) int {
 		return exitCode
 	}
 
-	exitCode = symlinks.Maintain()
-	if exitCode != 0 {
-		return exitCode
-	}
+	defer func() {
+		symlinks.Maintain()
+	}()
 
 	if firstArgIs(string(scripts.Golang), args) {
 		wrappedLanguage := language.Wrap(scripts.Golang)
