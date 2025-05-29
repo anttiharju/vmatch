@@ -8,12 +8,12 @@ on:
     outputs:
       release:
         description: "Whether to trigger release workflows"
-        value: ${{ jobs.validate.outputs.binary_changed == 'true' || jobs.validate.outputs.brew_dist_changed == 'true' || jobs.validate.outputs.gh_dist_changed == 'true' }}
+        value: ${{ jobs.validate.outputs.release_type != '' || (jobs.validate.outputs.binary_changed == 'true' || jobs.validate.outputs.brew_dist_changed == 'true' || jobs.validate.outputs.gh_dist_changed == 'true') }}
       update_docs:
         description: "Whether to update the documentation website"
         value: ${{ jobs.validate.outputs.documentation_changed == 'true' }}
       release_type:
-        description: "The type of release to perform; major, minor, patch, or none"
+        description: "The type of release to perform; major, minor, patch, or empty"
         value: ${{ jobs.validate.outputs.release_type }}
 
 jobs:
@@ -31,10 +31,12 @@ jobs:
         with:
           changes: ${{ steps.changes.outputs.array }}
 
-      - if: always() && (steps.changed.outputs.binary == 'true' || steps.changed.outputs.brew_dist == 'true' || steps.changed.outputs.gh_dist == 'true')
+      - if: always()
         id: semver
         name: Require semantic version label
         uses: anttiharju/actions/require-semver-label@v0
+        with:
+          enforce: ${{ steps.changed.outputs.binary == 'true' || steps.changed.outputs.brew_dist == 'true' || steps.changed.outputs.gh_dist == 'true' }}
 
       - if: always()
         name: action-validator
