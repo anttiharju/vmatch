@@ -9,7 +9,6 @@ import (
 	"strings"
 
 	"github.com/anttiharju/vmatch/internal/exitcode"
-	"github.com/anttiharju/vmatch/pkg/find"
 	"github.com/anttiharju/vmatch/pkg/wrapper"
 )
 
@@ -36,12 +35,7 @@ func validateVersion(version string) (string, error) {
 func Wrap(name string) *WrappedLinter {
 	baseWrapper := wrapper.BaseWrapper{Name: name}
 
-	desiredVersion, err := find.Version(".golangci-version", linterParser, validateVersion)
-	if err != nil {
-		baseWrapper.ExitWithPrintln(exitcode.VersionReadFileIssue, err.Error())
-	}
-
-	err = baseWrapper.GenerateInstallPath(desiredVersion)
+	err := baseWrapper.GenerateInstallPath(".golangci-version", linterParser, validateVersion)
 	if err != nil {
 		baseWrapper.ExitWithPrintln(exitcode.InstallPathIssue, err.Error())
 	}
