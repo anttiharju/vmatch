@@ -28,10 +28,16 @@ func (s Script) File() string {
 	}
 }
 
-//go:embed go.sh golangci-lint.sh
-var scripts embed.FS
+func exists(path string) bool {
+	_, err := os.Stat(path)
 
-//nolint:cyclop // this is fairly simple and I don't think it needs to be refactored for now
+	return err == nil
+}
+
+func path(binDir string, s Script) string {
+	return filepath.Join(binDir, string(s))
+}
+
 func Inject() int {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
@@ -41,20 +47,8 @@ func Inject() int {
 	}
 
 	binDir := filepath.Join(homeDir, ".vmatch", "bin")
-	goPath := filepath.Join(binDir, string(Go))
-	lintPath := filepath.Join(binDir, string(GolangCILint))
-	lintV2Path := filepath.Join(binDir, string(GolangCILintV2))
 
-	goExists := exists(goPath)
-	lintExists := exists(lintPath)
-	lintV2Exists := exists(lintV2Path)
-
-	if goExists && lintExists && lintV2Exists {
-		return 0
-	}
-
-	dirExists := exists(binDir)
-	if !dirExists {
+	if !exists(binDir) {
 		if err := os.MkdirAll(binDir, 0o755); err != nil {
 			fmt.Fprintf(os.Stderr, "Error: failed to create directory %s: %v\n", binDir, err)
 
@@ -62,25 +56,9 @@ func Inject() int {
 		}
 	}
 
-	if !goExists {
-		if err := createScript(string(Go), Go.File(), goPath); err != nil {
-			fmt.Fprintf(os.Stderr, "%v\n", err)
-
-			return 1
-		}
-	}
-
-	if !lintExists {
-		if err := createScript(string(GolangCILint), GolangCILint.File(), lintPath); err != nil {
-			fmt.Fprintf(os.Stderr, "%v\n", err)
-
-			return 1
-		}
-	}
-
-	if !lintV2Exists {
-		if err := createScript(string(GolangCILintV2), GolangCILintV2.File(), lintV2Path); err != nil {
-			fmt.Fprintf(os.Stderr, "%v\n", err)
+	for _, script := range []Script{Go, GolangCILint, GolangCILintV2} {
+		if err := createScript(binDir, script); err != nil {
+			fmt.Fprintf(os.Stderr, "Error: failed to create script %s: %v\n", script, err)
 
 			return 1
 		}
@@ -89,14 +67,18 @@ func Inject() int {
 	return 0
 }
 
-func exists(path string) bool {
-	_, err := os.Stat(path)
+//go:embed go.sh golangci-lint.sh
+var scripts embed.FS
 
-	return err == nil
-}
+func createScript(binDir string, script Script) error {
+	name := string(script)
+	sourcePath := script.File()
+	destPath := path(binDir, script)
 
-// createScript writes an embedded script to the destination path
-func createScript(name, sourcePath, destPath string) error {
+	if exists(destPath) {
+		return nil
+	}
+
 	content, err := fs.ReadFile(scripts, sourcePath)
 	if err != nil {
 		return fmt.Errorf("failed to read embedded script %s: %w", name, err)
