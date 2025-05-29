@@ -33,8 +33,8 @@ func exists(path string) bool {
 	return err == nil
 }
 
-func path(binDir string, s Script) string {
-	return filepath.Join(binDir, string(s))
+func path(binDir string, script Script) string {
+	return filepath.Join(binDir, string(script))
 }
 
 func Inject() int {
