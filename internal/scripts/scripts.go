@@ -11,9 +11,22 @@ import (
 type Script string
 
 const (
-	Go           Script = "go.sh"
-	GolangCILint Script = "golangci-lint.sh"
+	//nolint:varnamelen
+	Go             Script = "go"
+	GolangCILint   Script = "golangci-lint"
+	GolangCILintV2 Script = "golangci-lint-v2"
 )
+
+func (s Script) File() string {
+	switch s {
+	case Go:
+		return "go.sh"
+	case GolangCILint, GolangCILintV2:
+		return "golangci-lint.sh"
+	default:
+		return ""
+	}
+}
 
 //go:embed go.sh golangci-lint.sh
 var scripts embed.FS
@@ -28,9 +41,9 @@ func Inject() int {
 	}
 
 	binDir := filepath.Join(homeDir, ".vmatch", "bin")
-	goPath := filepath.Join(binDir, "go")
-	lintPath := filepath.Join(binDir, "golangci-lint")
-	lintV2Path := filepath.Join(binDir, "golangci-lint-v2")
+	goPath := filepath.Join(binDir, string(Go))
+	lintPath := filepath.Join(binDir, string(GolangCILint))
+	lintV2Path := filepath.Join(binDir, string(GolangCILintV2))
 
 	goExists := exists(goPath)
 	lintExists := exists(lintPath)
@@ -50,7 +63,7 @@ func Inject() int {
 	}
 
 	if !goExists {
-		if err := createScript("go", "go.sh", goPath); err != nil {
+		if err := createScript(string(Go), Go.File(), goPath); err != nil {
 			fmt.Fprintf(os.Stderr, "%v\n", err)
 
 			return 1
@@ -58,17 +71,15 @@ func Inject() int {
 	}
 
 	if !lintExists {
-		if err := createScript("golangci-lint", "golangci-lint.sh", lintPath); err != nil {
+		if err := createScript(string(GolangCILint), GolangCILint.File(), lintPath); err != nil {
 			fmt.Fprintf(os.Stderr, "%v\n", err)
 
 			return 1
 		}
 	}
 
-	// Strictly speaking, this should not exist if version is not v2 but I would expect issues to be fairly minor
-	// Because the alternative of deleting a recreating v2 target based on the version introduces friction.
 	if !lintV2Exists {
-		if err := createScript("golangci-lint-v2", "golangci-lint.sh", lintV2Path); err != nil {
+		if err := createScript(string(GolangCILintV2), GolangCILintV2.File(), lintV2Path); err != nil {
 			fmt.Fprintf(os.Stderr, "%v\n", err)
 
 			return 1

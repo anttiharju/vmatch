@@ -26,14 +26,14 @@ func Wrapper(ctx context.Context, args []string) int {
 		return exitCode
 	}
 
-	if firstArgIs("go", args) {
-		wrappedLanguage := language.Wrap("go")
+	if firstArgIs(string(scripts.Go), args) {
+		wrappedLanguage := language.Wrap(scripts.Go)
 
 		return wrappedLanguage.Run(ctx, args[1:])
 	}
 
-	if firstArgIs("golangci-lint", args) {
-		wrappedLinter := linter.Wrap("golangci-lint")
+	if firstArgIs(string(scripts.GolangCILint), args) {
+		wrappedLinter := linter.Wrap(scripts.GolangCILint)
 
 		return wrappedLinter.Run(ctx, args[1:])
 	}
