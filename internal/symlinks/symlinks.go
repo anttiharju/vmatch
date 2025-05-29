@@ -12,7 +12,7 @@ import (
 
 func Sync() {
 	if err := sync(); err != nil {
-		fmt.Printf("Error during sync: %v\n", err)
+		fmt.Printf("vmatch: error during GOPATH/bin symlink sync: %v\n", err)
 	}
 }
 
