@@ -40,7 +40,7 @@ jobs:
       - release
     if: |
       always() && !failure() && !cancelled() &&
-      needs.plan.outputs.update_docs == 'true'
+      needs.plan.outputs.documentation == 'true'
     permissions:
       contents: write
     uses: ./.github/workflows/documentation.yml
