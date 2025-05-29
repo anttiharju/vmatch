@@ -8,12 +8,12 @@ on:
     outputs:
       release:
         description: "Whether to trigger release workflows"
-        value: ${{ jobs.validate.outputs.release_type != '' || (jobs.validate.outputs.binary_changed == 'true' || jobs.validate.outputs.brew_dist_changed == 'true' || jobs.validate.outputs.gh_dist_changed == 'true') }}
+        value: ${{ jobs.validate.outputs.release_type != 'false' || (jobs.validate.outputs.binary_changed == 'true' || jobs.validate.outputs.brew_dist_changed == 'true' || jobs.validate.outputs.gh_dist_changed == 'true') }}
       update_docs:
         description: "Whether to update the documentation website"
         value: ${{ jobs.validate.outputs.documentation_changed == 'true' }}
       release_type:
-        description: "The type of release to perform; major, minor, patch, or empty"
+        description: "The type of release to perform; major, minor, patch, or false"
         value: ${{ jobs.validate.outputs.release_type }}
 
 jobs:
