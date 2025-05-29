@@ -24,26 +24,28 @@ func sync() error {
 
 	vmatchDir, err := ensureVmatchDirExists(homeDir)
 	if err != nil {
-		return err
+		return fmt.Errorf("ensuring vmatch directory exists: %w", err)
 	}
 
 	goBinDir, err := getGoBinDir()
 	if err != nil {
-		return err
+		return fmt.Errorf("getting Go bin directory: %w", err)
 	}
 
 	scriptNames := buildScriptNamesMap()
 
 	binaries, err := collectRelevantBinaries(goBinDir, scriptNames)
 	if err != nil {
-		return err
+		return fmt.Errorf("collecting relevant binaries: %w", err)
 	}
 
 	if err := cleanVmatchBinDirectory(vmatchDir, scriptNames); err != nil {
-		return err
+		return fmt.Errorf("cleaning vmatch bin directory: %w", err)
 	}
 
-	createSymlinksForBinaries(goBinDir, vmatchDir, binaries)
+	if err := createSymlinksForBinaries(goBinDir, vmatchDir, binaries); err != nil {
+		return fmt.Errorf("creating symlinks for binaries: %w", err)
+	}
 
 	return nil
 }
@@ -125,24 +127,28 @@ func cleanVmatchBinDirectory(vmatchDir string, scriptNames map[string]bool) erro
 		// Remove other files
 		filePath := filepath.Join(vmatchDir, entry.Name())
 		if err := os.Remove(filePath); err != nil {
-			fmt.Printf("Error removing file %s: %v\n", filePath, err)
+			return fmt.Errorf("removing file %s: %w", filePath, err)
 		}
 	}
 
 	return nil
 }
 
-func createSymlinksForBinaries(goBinDir, vmatchDir string, binaries []string) {
+func createSymlinksForBinaries(goBinDir, vmatchDir string, binaries []string) error {
 	for _, binary := range binaries {
 		sourcePath := filepath.Join(goBinDir, binary)
 		targetPath := filepath.Join(vmatchDir, binary)
 
 		// Remove existing symlink if it exists
-		_ = os.Remove(targetPath)
+		if err := os.Remove(targetPath); err != nil && !os.IsNotExist(err) {
+			return fmt.Errorf("removing existing symlink for %s: %w", binary, err)
+		}
 
 		// Create new symlink
 		if err := os.Symlink(sourcePath, targetPath); err != nil {
-			fmt.Printf("Error creating symlink for %s: %v\n", binary, err)
+			return fmt.Errorf("creating symlink for %s: %w", binary, err)
 		}
 	}
+
+	return nil
 }
