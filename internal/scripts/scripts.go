@@ -46,7 +46,6 @@ func Inject() int {
 	}
 
 	binDir := filepath.Join(homeDir, ".vmatch", "bin")
-
 	if !exists(binDir) {
 		if err := os.MkdirAll(binDir, 0o755); err != nil {
 			fmt.Fprintf(os.Stderr, "Error: failed to create directory %s: %v\n", binDir, err)
