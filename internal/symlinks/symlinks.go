@@ -16,68 +16,107 @@ func Sync() {
 	}
 }
 
-//nolint:cyclop,funlen
 func sync() error {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		return fmt.Errorf("getting user home directory: %w", err)
 	}
 
-	// Create ~/.vmatch/bin if it doesn't exist
-	vmatchDir := filepath.Join(homeDir, ".vmatch", "bin")
-
-	err = os.MkdirAll(vmatchDir, 0o755)
+	vmatchDir, err := ensureVmatchDirExists(homeDir)
 	if err != nil {
-		return fmt.Errorf("creating directory %s: %w", vmatchDir, err)
+		return err
 	}
 
-	// Get GOPATH/bin
+	goBinDir, err := getGoBinDir()
+	if err != nil {
+		return err
+	}
+
+	scriptNames := buildScriptNamesMap()
+
+	binaries, err := collectRelevantBinaries(goBinDir, scriptNames)
+	if err != nil {
+		return err
+	}
+
+	if err := cleanVmatchBinDirectory(vmatchDir, scriptNames); err != nil {
+		return err
+	}
+
+	createSymlinksForBinaries(goBinDir, vmatchDir, binaries)
+
+	return nil
+}
+
+func ensureVmatchDirExists(homeDir string) (string, error) {
+	vmatchDir := filepath.Join(homeDir, ".vmatch", "bin")
+
+	err := os.MkdirAll(vmatchDir, 0o755)
+	if err != nil {
+		return "", fmt.Errorf("creating directory %s: %w", vmatchDir, err)
+	}
+
+	return vmatchDir, nil
+}
+
+func getGoBinDir() (string, error) {
 	goPath := build.Default.GOPATH
 	goBinDir := filepath.Join(goPath, "bin")
 
-	// Check if bin directory exists
 	if _, err := os.Stat(goBinDir); os.IsNotExist(err) {
-		return fmt.Errorf("directory %s does not exist", goBinDir)
+		return "", fmt.Errorf("directory %s does not exist", goBinDir)
 	}
 
-	// Read all entries in the GOPATH/bin directory
-	entries, err := os.ReadDir(goBinDir)
-	if err != nil {
-		return fmt.Errorf("reading directory %s: %w", goBinDir, err)
-	}
+	return goBinDir, nil
+}
 
-	// Get the list of scripts to filter out
-	scriptsList := scripts.Scripts()
-
+func buildScriptNamesMap() map[string]bool {
 	scriptNames := make(map[string]bool)
-	for _, script := range scriptsList {
+	for _, script := range scripts.Scripts() {
 		scriptNames[string(script)] = true
 	}
 
-	// Collect relevant binaries
+	return scriptNames
+}
+
+func collectRelevantBinaries(goBinDir string, scriptNames map[string]bool) ([]string, error) {
+	entries, err := os.ReadDir(goBinDir)
+	if err != nil {
+		return nil, fmt.Errorf("reading directory %s: %w", goBinDir, err)
+	}
+
 	binaries := make([]string, 0, len(entries))
 
 	for _, entry := range entries {
-		// Skip hidden files (files starting with a dot)
-		if strings.HasPrefix(entry.Name(), ".") {
-			continue
+		if shouldIncludeBinary(entry.Name(), scriptNames) {
+			binaries = append(binaries, entry.Name())
 		}
-
-		// Skip files that match script names
-		if scriptNames[entry.Name()] {
-			continue
-		}
-
-		binaries = append(binaries, entry.Name())
 	}
 
-	// Clean up ~/.vmatch/bin - remove files that aren't in scripts.Scripts()
-	vmatchEntries, err := os.ReadDir(vmatchDir)
+	return binaries, nil
+}
+
+func shouldIncludeBinary(name string, scriptNames map[string]bool) bool {
+	// Skip hidden files (files starting with a dot)
+	if strings.HasPrefix(name, ".") {
+		return false
+	}
+
+	// Skip files that match script names
+	if scriptNames[name] {
+		return false
+	}
+
+	return true
+}
+
+func cleanVmatchBinDirectory(vmatchDir string, scriptNames map[string]bool) error {
+	entries, err := os.ReadDir(vmatchDir)
 	if err != nil {
 		return fmt.Errorf("reading directory %s: %w", vmatchDir, err)
 	}
 
-	for _, entry := range vmatchEntries {
+	for _, entry := range entries {
 		// Skip if it's a script we want to keep
 		if scriptNames[entry.Name()] {
 			continue
@@ -85,13 +124,15 @@ func sync() error {
 
 		// Remove other files
 		filePath := filepath.Join(vmatchDir, entry.Name())
-
-		err := os.Remove(filePath)
-		if err != nil {
+		if err := os.Remove(filePath); err != nil {
 			fmt.Printf("Error removing file %s: %v\n", filePath, err)
 		}
 	}
 
+	return nil
+}
+
+func createSymlinksForBinaries(goBinDir, vmatchDir string, binaries []string) {
 	for _, binary := range binaries {
 		sourcePath := filepath.Join(goBinDir, binary)
 		targetPath := filepath.Join(vmatchDir, binary)
@@ -100,11 +141,8 @@ func sync() error {
 		_ = os.Remove(targetPath)
 
 		// Create new symlink
-		err := os.Symlink(sourcePath, targetPath)
-		if err != nil {
+		if err := os.Symlink(sourcePath, targetPath); err != nil {
 			fmt.Printf("Error creating symlink for %s: %v\n", binary, err)
 		}
 	}
-
-	return nil
 }
