@@ -10,13 +10,17 @@ import (
 	"github.com/anttiharju/vmatch/internal/scripts"
 )
 
+func Sync() {
+	if err := sync(); err != nil {
+		fmt.Printf("Error during sync: %v\n", err)
+	}
+}
+
 //nolint:cyclop,funlen
-func Sync() int {
+func sync() error {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
-		fmt.Printf("Error getting user home directory: %v\n", err)
-
-		return 1
+		return fmt.Errorf("getting user home directory: %w", err)
 	}
 
 	// Create ~/.vmatch/bin if it doesn't exist
@@ -24,9 +28,7 @@ func Sync() int {
 
 	err = os.MkdirAll(vmatchDir, 0o755)
 	if err != nil {
-		fmt.Printf("Error creating directory %s: %v\n", vmatchDir, err)
-
-		return 1
+		return fmt.Errorf("creating directory %s: %w", vmatchDir, err)
 	}
 
 	// Get GOPATH/bin
@@ -35,17 +37,13 @@ func Sync() int {
 
 	// Check if bin directory exists
 	if _, err := os.Stat(goBinDir); os.IsNotExist(err) {
-		fmt.Printf("Directory %s does not exist\n", goBinDir)
-
-		return 1
+		return fmt.Errorf("directory %s does not exist", goBinDir)
 	}
 
 	// Read all entries in the GOPATH/bin directory
 	entries, err := os.ReadDir(goBinDir)
 	if err != nil {
-		fmt.Printf("Error reading directory %s: %v\n", goBinDir, err)
-
-		return 1
+		return fmt.Errorf("reading directory %s: %w", goBinDir, err)
 	}
 
 	// Get the list of scripts to filter out
@@ -76,9 +74,7 @@ func Sync() int {
 	// Clean up ~/.vmatch/bin - remove files that aren't in scripts.Scripts()
 	vmatchEntries, err := os.ReadDir(vmatchDir)
 	if err != nil {
-		fmt.Printf("Error reading directory %s: %v\n", vmatchDir, err)
-
-		return 1
+		return fmt.Errorf("reading directory %s: %w", vmatchDir, err)
 	}
 
 	for _, entry := range vmatchEntries {
@@ -110,5 +106,5 @@ func Sync() int {
 		}
 	}
 
-	return 0
+	return nil
 }
