@@ -5,6 +5,7 @@ import (
 	"go/build"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 func Maintain() int {
@@ -21,7 +22,7 @@ func Maintain() int {
 
 	// Path to GOPATH/bin directory
 	goBinDir := filepath.Join(goPath, "bin")
-	fmt.Printf("Listing files in %s:\n", goBinDir)
+	fmt.Printf("Listing files in %s (excluding hidden files):\n", goBinDir)
 
 	// Check if bin directory exists
 	if _, err := os.Stat(goBinDir); os.IsNotExist(err) {
@@ -38,8 +39,13 @@ func Maintain() int {
 		return 1
 	}
 
-	// Print each entry in the bin directory
+	// Print each entry in the bin directory (excluding hidden files)
 	for _, entry := range entries {
+		// Skip hidden files (files starting with a dot)
+		if strings.HasPrefix(entry.Name(), ".") {
+			continue
+		}
+
 		filePath := filepath.Join(goBinDir, entry.Name())
 
 		info, err := entry.Info()
