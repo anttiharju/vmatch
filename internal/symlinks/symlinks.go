@@ -16,6 +16,9 @@ func Maintain() int {
 		return 1
 	}
 
+	vmatchDir := filepath.Join(homeDir, ".vmatch", "bin")
+	fmt.Printf("Ensuring vmatch directory exists: %s...\n", vmatchDir)
+
 	binDir := homeDir + string(os.PathSeparator) + "bin"
 	fmt.Printf("Creating symlinks in %s...\n", binDir)
 
