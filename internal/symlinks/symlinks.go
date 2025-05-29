@@ -139,11 +139,6 @@ func createSymlinksForBinaries(goBinDir, vmatchDir string, binaries []string) er
 		sourcePath := filepath.Join(goBinDir, binary)
 		targetPath := filepath.Join(vmatchDir, binary)
 
-		// Remove existing symlink if it exists
-		if err := os.Remove(targetPath); err != nil && !os.IsNotExist(err) {
-			return fmt.Errorf("removing existing symlink for %s: %w", binary, err)
-		}
-
 		// Create new symlink
 		if err := os.Symlink(sourcePath, targetPath); err != nil {
 			return fmt.Errorf("creating symlink for %s: %w", binary, err)
