@@ -13,7 +13,7 @@ on:
         description: "Whether to update the documentation website"
         value: ${{ jobs.validate.outputs.documentation_changed == 'true' }}
       release_type:
-        description: "The type of release to perform; major, minor, patch, or empty"
+        description: "The type of release to perform; major, minor, patch, or false"
         value: ${{ jobs.validate.outputs.release_type }}
 
 jobs:
