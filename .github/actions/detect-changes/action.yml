@@ -25,12 +25,12 @@ runs:
     - id: brew_dist
       uses: anttiharju/actions/compare-changes@v0
       with:
-        wildcard: brew-dist
+        wildcard: dist-brew
         changes: ${{ inputs.changes }}
     - id: gh_dist
       uses: anttiharju/actions/compare-changes@v0
       with:
-        wildcard: release
+        wildcard: dist-github
         changes: ${{ inputs.changes }}
     - id: documentation
       uses: anttiharju/actions/compare-changes@v0
