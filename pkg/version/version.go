@@ -3,11 +3,12 @@ package version
 import (
 	"fmt"
 	"runtime/debug"
+	"strings"
 )
 
 func Print() int {
 	if buildInfo, ok := debug.ReadBuildInfo(); ok {
-		version := buildInfo.Main.Version[1:] // remove "v" prefix
+		version := strings.TrimPrefix(buildInfo.Main.Version, "v")
 		goVersion := buildInfo.GoVersion
 
 		var revision, buildTime string
