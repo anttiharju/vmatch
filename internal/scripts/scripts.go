@@ -33,10 +33,6 @@ func exists(path string) bool {
 	return err == nil
 }
 
-func path(binDir string, script Script) string {
-	return filepath.Join(binDir, string(script))
-}
-
 func Inject() int {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
@@ -71,7 +67,7 @@ var scripts embed.FS
 func createScript(binDir string, script Script) error {
 	name := string(script)
 	sourcePath := script.File()
-	destPath := path(binDir, script)
+	destPath := filepath.Join(binDir, string(script))
 
 	if exists(destPath) {
 		return nil
