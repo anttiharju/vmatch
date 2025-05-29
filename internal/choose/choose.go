@@ -4,9 +4,9 @@ import (
 	"context"
 
 	"github.com/anttiharju/vmatch/internal/doctor"
-	"github.com/anttiharju/vmatch/internal/inject"
 	"github.com/anttiharju/vmatch/internal/language"
 	"github.com/anttiharju/vmatch/internal/linter"
+	"github.com/anttiharju/vmatch/internal/scripts"
 	"github.com/anttiharju/vmatch/internal/symlinks"
 	"github.com/anttiharju/vmatch/pkg/version"
 )
@@ -16,7 +16,7 @@ func firstArgIs(arg string, args []string) bool {
 }
 
 func Wrapper(ctx context.Context, args []string) int {
-	exitCode := inject.Scripts()
+	exitCode := scripts.Inject()
 	if exitCode != 0 {
 		return exitCode
 	}

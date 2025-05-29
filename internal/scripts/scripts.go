@@ -1,4 +1,4 @@
-package inject
+package scripts
 
 import (
 	"embed"
@@ -12,7 +12,7 @@ import (
 var scripts embed.FS
 
 //nolint:cyclop // this is fairly simple and I don't think it needs to be refactored for now
-func Scripts() int {
+func Inject() int {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error: failed to get home directory: %v\n", err)
