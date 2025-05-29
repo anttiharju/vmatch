@@ -7,6 +7,7 @@ import (
 	"github.com/anttiharju/vmatch/internal/inject"
 	"github.com/anttiharju/vmatch/internal/language"
 	"github.com/anttiharju/vmatch/internal/linter"
+	"github.com/anttiharju/vmatch/internal/symlinks"
 	"github.com/anttiharju/vmatch/pkg/version"
 )
 
@@ -16,6 +17,11 @@ func firstArgIs(arg string, args []string) bool {
 
 func Wrapper(ctx context.Context, args []string) int {
 	exitCode := inject.Scripts()
+	if exitCode != 0 {
+		return exitCode
+	}
+
+	exitCode = symlinks.Maintain()
 	if exitCode != 0 {
 		return exitCode
 	}
