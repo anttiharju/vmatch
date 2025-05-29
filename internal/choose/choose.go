@@ -26,8 +26,8 @@ func Wrapper(ctx context.Context, args []string) int {
 		return exitCode
 	}
 
-	if firstArgIs(string(scripts.Go), args) {
-		wrappedLanguage := language.Wrap(scripts.Go)
+	if firstArgIs(string(scripts.Golang), args) {
+		wrappedLanguage := language.Wrap(scripts.Golang)
 
 		return wrappedLanguage.Run(ctx, args[1:])
 	}

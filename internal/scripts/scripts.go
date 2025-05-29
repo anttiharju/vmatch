@@ -11,15 +11,14 @@ import (
 type Script string
 
 const (
-	//nolint:varnamelen
-	Go             Script = "go"
+	Golang         Script = "go"
 	GolangCILint   Script = "golangci-lint"
 	GolangCILintV2 Script = "golangci-lint-v2"
 )
 
 func (s Script) File() string {
 	switch s {
-	case Go:
+	case Golang:
 		return "go.sh"
 	case GolangCILint, GolangCILintV2:
 		return "golangci-lint.sh"
@@ -56,7 +55,7 @@ func Inject() int {
 		}
 	}
 
-	for _, script := range []Script{Go, GolangCILint, GolangCILintV2} {
+	for _, script := range []Script{Golang, GolangCILint, GolangCILintV2} {
 		if err := createScript(binDir, script); err != nil {
 			fmt.Fprintf(os.Stderr, "Error: failed to create script %s: %v\n", script, err)
 
