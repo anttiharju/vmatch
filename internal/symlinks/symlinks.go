@@ -46,29 +46,8 @@ func Maintain() int {
 			continue
 		}
 
-		filePath := filepath.Join(goBinDir, entry.Name())
-
-		info, err := entry.Info()
-		if err != nil {
-			fmt.Printf("%s (error getting info: %v)\n", entry.Name(), err)
-
-			continue
-		}
-
-		// Show if it's a symlink, directory or regular file
-		fileType := "regular file"
-		if entry.IsDir() {
-			fileType = "directory"
-		} else if info.Mode()&os.ModeSymlink != 0 {
-			fileType = "symlink"
-			// If it's a symlink, try to read the target
-			target, err := os.Readlink(filePath)
-			if err == nil {
-				fileType = "symlink -> " + target
-			}
-		}
-
-		fmt.Printf("%s (%s, %d bytes)\n", entry.Name(), fileType, info.Size())
+		// Only print the file name
+		fmt.Println(entry.Name())
 	}
 
 	return 0
