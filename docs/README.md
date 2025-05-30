@@ -2,21 +2,15 @@
 
 [![Build](https://github.com/anttiharju/vmatch/actions/workflows/build.yml/badge.svg)](https://github.com/anttiharju/vmatch/actions/workflows/build.yml)
 
-**NB! The project is currently in alpha**; things might not be fully functional just yet. Steady progress is being made. Things are taking a little bit longer because automating things that would make maintenance cumbersome will take some time. The idea is to commit to maintaining this project.
+## FAQ
 
-## The promise
+**Q:** What about https://go.dev/blog/toolchain?
 
-With vmatch you or your coworkers will never have to think about what version of `golangci-lint`\* or `Go` you need to have installed when working on a given Go project. This is especially useful if you move around repositories as a DevOps engineer a lot, but even for people who work on the same project that goes through Go version bumps this project should eliminate a lot of toil. It also has access to old versions of Go, unlike `brew`, which only supports installing the recent ones. Sometimes one has to work on legacy software and get a fix in before committing to Go version upgrade.
+**A:** It is about forward-compatibility, `vmatch` installs the Go version specified in your project.
 
-> \* as long as the repository has the desired `golangci-lint` version in a `.golangci-version` file. The format looks like this:
->
-> ```
-> 2.1.6
-> ```
->
-> A `.golangci-version` file (or a single source of truth in general) is something one should do anyway so that people don't miss versions to bump during upgrades.
->
-> For Go, no setup should be necessary as `go.mod` is used as the source of truth.
+**Q:** What about `go run` (post Go 1.24, where its calls are cached)?
+
+**A:** It is probably the easy thing to introduce to your team and is a fine addition to Go.
 
 ## Why
 
