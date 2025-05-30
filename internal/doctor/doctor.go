@@ -5,6 +5,8 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+
+	"github.com/anttiharju/vmatch/internal/scripts"
 )
 
 func Diagnose() int {
@@ -17,9 +19,8 @@ func Diagnose() int {
 
 	binDir := filepath.Join(homeDir, ".vmatch", "bin")
 	expectedPaths := map[string]string{
-		"go":               filepath.Join(binDir, "go"),
-		"golangci-lint":    filepath.Join(binDir, "golangci-lint"),
-		"golangci-lint-v2": filepath.Join(binDir, "golangci-lint-v2"),
+		string(scripts.Golang):       filepath.Join(binDir, string(scripts.Golang)),
+		string(scripts.GolangCILint): filepath.Join(binDir, string(scripts.GolangCILint)),
 	}
 
 	healthy := true

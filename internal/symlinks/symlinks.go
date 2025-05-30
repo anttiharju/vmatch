@@ -32,6 +32,11 @@ func sync() error {
 		return fmt.Errorf("getting Go bin directory: %w", err)
 	}
 
+	// If Go bin directory doesn't exist, exit quietly
+	if goBinDir == "" {
+		return nil
+	}
+
 	scriptNames := buildScriptNamesMap()
 
 	binaries, err := collectRelevantBinaries(goBinDir, scriptNames)
@@ -66,7 +71,9 @@ func getGoBinDir() (string, error) {
 	goBinDir := filepath.Join(goPath, "bin")
 
 	if _, err := os.Stat(goBinDir); os.IsNotExist(err) {
-		return "", fmt.Errorf("directory %s does not exist", goBinDir)
+		return "", nil // Return empty string and no error if directory doesn't exist
+	} else if err != nil {
+		return "", fmt.Errorf("checking Go bin directory: %w", err)
 	}
 
 	return goBinDir, nil
