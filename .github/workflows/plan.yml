@@ -58,6 +58,12 @@ jobs:
         name: go build
         uses: anttiharju/actions/go-build@v0
 
+      - if: always() && (steps.changed.outputs.binary == 'true' || github.event_name == 'push')
+        name: go test
+        shell: sh
+        run: |
+          go test ./...
+
       - if: always() && (steps.changed.outputs.go_code == 'true' || github.event_name == 'push')
         name: golangci-lint
         uses: anttiharju/actions/golangci-lint@v0
