@@ -12,7 +12,8 @@ echo "$os"
 echo "$arch"
 
 rm -rf "tmp/$os-$arch"
-go build -ldflags "-s -w -buildid=github-$version" -trimpath -o "tmp/$os-$arch/vmatch"
+# Disable CGO to ensure static linking
+CGO_ENABLED=0 go build -ldflags "-s -w -buildid=github-$version" -trimpath -o "tmp/$os-$arch/vmatch"
 
 cp LICENSE "tmp/$os-$arch"
 cp -r docs/* "tmp/$os-$arch"
