@@ -46,6 +46,10 @@ Follow guidance at https://golangci-lint.run/welcome/integrations/#visual-studio
   },
 ```
 
+### Renovate
+
+I _think_ you configure Renovate to maintain the `.golangci-version` file for you, see https://www.jvt.me/posts/2022/12/15/renovate-golangci-lint/ for an example.
+
 ### VS Code
 
 Visual Studio Code integration relies on the editor being launched from the right directory with `code .`
