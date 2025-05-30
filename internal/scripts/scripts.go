@@ -11,20 +11,19 @@ import (
 type Script string
 
 const (
-	Golang         Script = "go"
-	GolangCILint   Script = "golangci-lint"
-	GolangCILintV2 Script = "golangci-lint-v2"
+	Golang       Script = "go"
+	GolangCILint Script = "golangci-lint"
 )
 
 func Scripts() []Script {
-	return []Script{Golang, GolangCILint, GolangCILintV2}
+	return []Script{Golang, GolangCILint}
 }
 
 func (s Script) File() string {
 	switch s {
 	case Golang:
 		return "go.sh"
-	case GolangCILint, GolangCILintV2:
+	case GolangCILint:
 		return "golangci-lint.sh"
 	default:
 		return ""
