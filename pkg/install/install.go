@@ -10,13 +10,9 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"time"
 )
 
 func FromURL(ctx context.Context, version, url, installPath string) error {
-	ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
-	defer cancel()
-
 	// Ensure install directory exists
 	err := os.MkdirAll(installPath, 0o755)
 	if err != nil {
