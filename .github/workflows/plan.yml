@@ -23,7 +23,7 @@ jobs:
     steps:
       - name: Find changes
         id: changes
-        uses: anttiharju/actions/find-changes@v0
+        uses: anttiharju/actions/find-changes@v1
 
       - name: Detect changes
         id: changed
@@ -34,29 +34,29 @@ jobs:
       - if: always()
         id: semver
         name: Require semantic version label
-        uses: anttiharju/actions/require-semver-label@v0
+        uses: anttiharju/actions/require-semver-label@v1
         with:
           enforce: ${{ steps.changed.outputs.binary == 'true' || steps.changed.outputs.dist_brew == 'true' || steps.changed.outputs.dist_github == 'true' }}
 
       - if: always()
         name: action-validator
-        uses: anttiharju/actions/action-validator@v0
+        uses: anttiharju/actions/action-validator@v1
 
       - if: always() && (steps.changed.outputs.github_actions_workflows == 'true' || github.event_name == 'push')
         name: actionlint
-        uses: anttiharju/actions/actionlint@v0
+        uses: anttiharju/actions/actionlint@v1
 
       - if: always()
         name: check-relative-markdown-links
-        uses: anttiharju/actions/check-relative-markdown-links@v0
+        uses: anttiharju/actions/check-relative-markdown-links@v1
 
       - if: always()
         name: EditorConfig-Checker
-        uses: anttiharju/actions/editorconfig-checker@v0
+        uses: anttiharju/actions/editorconfig-checker@v1
 
       - if: always() && (steps.changed.outputs.binary == 'true' || github.event_name == 'push')
         name: go build
-        uses: anttiharju/actions/go-build@v0
+        uses: anttiharju/actions/go-build@v1
 
       - if: always() && (steps.changed.outputs.binary == 'true' || github.event_name == 'push')
         name: go test
@@ -66,23 +66,23 @@ jobs:
 
       - if: always() && (steps.changed.outputs.go_code == 'true' || github.event_name == 'push')
         name: golangci-lint
-        uses: anttiharju/actions/golangci-lint@v0
+        uses: anttiharju/actions/golangci-lint@v1
 
       - if: always() && (steps.changed.outputs.documentation == 'true' || github.event_name == 'push')
         name: MkDocs
-        uses: anttiharju/actions/mkdocs-build-strict@v0
+        uses: anttiharju/actions/mkdocs-build-strict@v1
 
       - if: always()
         name: no-yaml
-        uses: anttiharju/actions/no-yaml@v0
+        uses: anttiharju/actions/no-yaml@v1
 
       - if: always() && (steps.changed.outputs.md_and_yml == 'true' || github.event_name == 'push')
         name: Prettier
-        uses: anttiharju/actions/prettier@v0
+        uses: anttiharju/actions/prettier@v1
 
       - if: always() && (steps.changed.outputs.scripts == 'true' || github.event_name == 'push')
         name: ShellCheck
-        uses: anttiharju/actions/shellcheck@v0
+        uses: anttiharju/actions/shellcheck@v1
     outputs:
       binary_changed: ${{ steps.changed.outputs.binary }}
       dist_changed: ${{ steps.changed.outputs.dist_brew || steps.changed.outputs.dist_github }}

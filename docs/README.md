@@ -98,7 +98,7 @@ If you find bugs, issue reports are very much appreciated and PRs are welcome. I
 During the project a lot of supporting infrastructure was set up:
 
 - https://github.com/anttiharju/homebrew-tap/tree/fe24baf82fb570b6ec74694750080789742750e7 (whopping 174 commits, corresponding roughly to the same number of releases!)
-- https://github.com/anttiharju/actions/tree/f4387532864d9c584c733698296b07a7d9ec18e3 (whopping 20 composite actions!)
+- https://github.com/anttiharju/actions/tree/v1 (whopping 20 composite actions!)
 - https://github.com/anttiharju/check-relative-markdown-links/tree/f79dc07684109baed16d10dd8ff2ade9bb94ce22 (a bash prototype for a tool that's more generally applicable and therefore useful than `vmatch`)
 - https://github.com/anttiharju/editorconfig/tree/9fa1679fcb6d55ed841a2ad36d142afd2d7cf30f (a centrally managed editorconfig distributed via GitHub Actions to my repositories!)
 

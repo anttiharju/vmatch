@@ -8,42 +8,42 @@ runs:
   using: "composite"
   steps:
     - id: github_actions_workflows
-      uses: anttiharju/actions/compare-changes@v0
+      uses: anttiharju/actions/compare-changes@v1
       with:
         wildcard: actionlint
         changes: ${{ inputs.changes }}
     - id: binary
-      uses: anttiharju/actions/compare-changes@v0
+      uses: anttiharju/actions/compare-changes@v1
       with:
         wildcard: go-binary
         changes: ${{ inputs.changes }}
     - id: go_code
-      uses: anttiharju/actions/compare-changes@v0
+      uses: anttiharju/actions/compare-changes@v1
       with:
         wildcard: golangci-lint
         changes: ${{ inputs.changes }}
     - id: dist_brew
-      uses: anttiharju/actions/compare-changes@v0
+      uses: anttiharju/actions/compare-changes@v1
       with:
         wildcard: dist-brew
         changes: ${{ inputs.changes }}
     - id: dist_github
-      uses: anttiharju/actions/compare-changes@v0
+      uses: anttiharju/actions/compare-changes@v1
       with:
         wildcard: dist-github
         changes: ${{ inputs.changes }}
     - id: documentation
-      uses: anttiharju/actions/compare-changes@v0
+      uses: anttiharju/actions/compare-changes@v1
       with:
         wildcard: mkdocs
         changes: ${{ inputs.changes }}
     - id: md_and_yml
-      uses: anttiharju/actions/compare-changes@v0
+      uses: anttiharju/actions/compare-changes@v1
       with:
         wildcard: prettier
         changes: ${{ inputs.changes }}
     - id: scripts
-      uses: anttiharju/actions/compare-changes@v0
+      uses: anttiharju/actions/compare-changes@v1
       with:
         wildcard: shellcheck
         changes: ${{ inputs.changes }}
