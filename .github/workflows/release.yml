@@ -17,6 +17,9 @@ jobs:
   github:
     name: GitHub
     runs-on: ubuntu-24.04
+    env:
+      # Disable CGO to ensure that the binaries are statically linked.
+      CGO_ENABLED: 0
     steps:
       - name: Checkout
         uses: actions/checkout@v4
