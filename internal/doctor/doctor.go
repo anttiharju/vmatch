@@ -8,7 +8,6 @@ import (
 )
 
 func Diagnose() int {
-	// Get user home directory
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		fmt.Printf("❌ Error getting home directory: %v\n", err)
@@ -16,7 +15,6 @@ func Diagnose() int {
 		return 1
 	}
 
-	// Define expected paths
 	binDir := filepath.Join(homeDir, ".vmatch", "bin")
 	expectedPaths := map[string]string{
 		"go":               filepath.Join(binDir, "go"),
@@ -24,8 +22,14 @@ func Diagnose() int {
 		"golangci-lint-v2": filepath.Join(binDir, "golangci-lint-v2"),
 	}
 
-	// Check each tool
 	healthy := true
+
+	_, vmatchErr := exec.LookPath("vmatch")
+	if vmatchErr != nil {
+		fmt.Println("❌ vmatch: Not found in PATH")
+
+		healthy = false
+	}
 
 	for tool, expectedPath := range expectedPaths {
 		actualPath, err := exec.LookPath(tool)
@@ -37,7 +41,6 @@ func Diagnose() int {
 			continue
 		}
 
-		// Normalize paths (resolve symlinks if necessary)
 		actualPath, err = filepath.EvalSymlinks(actualPath)
 		if err != nil {
 			fmt.Printf("❌ %s: Error resolving path: %v\n", tool, err)
@@ -54,21 +57,23 @@ func Diagnose() int {
 		}
 	}
 
-	if !healthy {
-		//nolint:lll
-		fmt.Printf("\n⚠️  vmatch is not installed correctly! Add '%s' to PATH with one of the following commands:\n\n", binDir)
-		fmt.Printf("zsh 🍎\n")
-		fmt.Printf(" echo 'export PATH=\"%s:$PATH\"' >> ~/.bashrc && source ~/.zshrc\n\n", binDir)
+	inform(binDir, healthy)
+
+	return 0
+}
+
+func inform(binDir string, healthy bool) {
+	if healthy {
+		fmt.Println("✅ vmatch installation is healthy.")
+	} else {
+		fmt.Printf("\n⚠️  vmatch is not installed correctly!")
+		fmt.Printf("\n    Add '%s' to PATH with one of the following commands:\n\n", binDir)
+		fmt.Printf("zsh  🍎\n")
+		fmt.Printf(" echo 'export PATH=\"%s:$PATH\"' >> ~/.zshrc && source ~/.zshrc\n\n", binDir)
 		fmt.Printf("bash 🐧\n")
 		fmt.Printf(" echo 'export PATH=\"%s:$PATH\"' >> ~/.bashrc && source ~/.bashrc\n\n", binDir)
 		fmt.Printf("fish 🐟\n")
 		fmt.Printf(" fish_add_path %s\n\n", binDir)
 		fmt.Printf("And run 'vmatch doctor' again to verify your setup.\n")
-
-		return 0 // We don't want to fail the command, just inform the user
 	}
-
-	fmt.Println("✅ vmatch installation is healthy.")
-
-	return 0
 }
