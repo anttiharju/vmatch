@@ -4,10 +4,8 @@
 vmatch doctor
 ```
 
-## Usage
+Tells you whether your installation is healthy, upon success you should see:
 
-TBD
-
-## Options
-
-TBD
+```sh
+✅ vmatch installation is healthy.
+```
