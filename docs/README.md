@@ -22,13 +22,17 @@ Collaborators using different versions of `golangci-lint` may get different outp
 brew install anttiharju/tap/vmatch
 ```
 
-and afterwards run
+and afterwards for further instructions run
 
 ```sh
 vmatch doctor
 ```
 
-for further instructions. Mainly, you should have `~/.vmatch/bin` in your PATH.
+Mainly, you should have `~/.vmatch/bin` in your PATH.
+
+### Note on expectations
+
+When the specified Go version is downloaded for the first time, it may take a while.
 
 ## Integrations
 
