@@ -14,7 +14,7 @@
 
 ## Why
 
-Collaborators using different versions of `golangci-lint` may get different output, leading to confusion and wasted time in code reviews. Ideally, a team would agree to use `vmatch` as their `go` and `golangci-lint` manager. That way, they would always have the right version installed.
+Collaborators using different versions of `golangci-lint` may get different output, leading to confusion and wasted time in code reviews. Ideally, a team would agree to use `vmatch` as their source for `go` and `golangci-lint`. That way, they would always have the right version installed.
 
 ## Installation
 
