@@ -1,13 +1,7 @@
 # go
 
 ```sh
-vmatch go
+vmatch go # followed by any args you would give to go
 ```
 
-## Usage
-
-TBD
-
-## Options
-
-TBD
+This command is not meant to be used, but rather, you would have `~/.vmatch/bin/go` in your path as the `go` program.

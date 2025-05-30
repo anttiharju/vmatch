@@ -15,7 +15,7 @@ runs:
     - id: binary
       uses: anttiharju/actions/compare-changes@v0
       with:
-        wildcard: go-build
+        wildcard: go-binary
         changes: ${{ inputs.changes }}
     - id: go_code
       uses: anttiharju/actions/compare-changes@v0

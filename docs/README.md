@@ -2,47 +2,43 @@
 
 [![Build](https://github.com/anttiharju/vmatch/actions/workflows/build.yml/badge.svg)](https://github.com/anttiharju/vmatch/actions/workflows/build.yml)
 
-**NB! The project is currently in alpha**; things might not be fully functional just yet. Steady progress is being made. Things are taking a little bit longer because automating things that would make maintenance cumbersome will take some time. The idea is to commit to maintaining this project.
+## FAQ
 
-## The promise
+**Q:** What about https://go.dev/blog/toolchain?
 
-With vmatch you or your coworkers will never have to think about what version of `golangci-lint`\* or `Go` you need to have installed when working on a given Go project. This is especially useful if you move around repositories as a DevOps engineer a lot, but even for people who work on the same project that goes through Go version bumps this project should eliminate a lot of toil. It also has access to old versions of Go, unlike `brew`, which only supports installing the recent ones. Sometimes one has to work on legacy software and get a fix in before committing to Go version upgrade.
+**A:** It is about forward-compatibility, `vmatch` installs the Go version specified in your project.
 
-> \* as long as the repository has the desired `golangci-lint` version in a `.golangci-version` file. The format looks like this:
->
-> ```
-> 2.1.6
-> ```
->
-> A `.golangci-version` file (or a single source of truth in general) is something one should do anyway so that people don't miss versions to bump during upgrades.
->
-> For Go, no setup should be necessary as `go.mod` is used as the source of truth.
+**Q:** What about `go run` (Go 1.24 and after `go run` calls are cached)?
+
+**A:** It is probably the easy thing to introduce to your team and is a fine addition to Go.
 
 ## Why
 
-I saw mismatching linter versions causing confusion in a team so I thought to automate it. Different versions of `golangci-lint` may give different warnings. Even the same version of `golangci-lint` may give different warnings if the version of `Go` used is different.
+Collaborators using different versions of `golangci-lint` may get different output, leading to confusion and wasted time in code reviews. Ideally, a team would agree to use `vmatch` as their `go` and `golangci-lint` manager. That way, they would always have the right version installed.
 
-vmatch also works when switching between branches that have a different version of Go. This makes it easier to play with a changeset with the intended version of Go, and even if the branch does not get merged just yet, you can still keep working on the current version of Go without having to tinker with your local setup.
-
-Tool version management is something that can be automated; therefore it should be automated.
-
-## Usage
-
-The target state is that the `go` that you call is actually a shell script that wraps vmatch with right settings, the project hasn't gotten quite there yet so in the meanwhile use
+## Installation
 
 ```sh
-vmatch go (any args you would give to go)
+brew install anttiharju/tap/vmatch
 ```
 
-or
+and afterwards run
 
 ```sh
-vmatch golangci-lint (any args you would give to golangci-lint)
+vmatch doctor
 ```
+
+for further instructions. Mainly, you should have `~/.vmatch/bin` in your PATH.
 
 ## Integrations
 
 ### VS Code
+
+#### go
+
+Open your project via `code .` or similar from your shell where `vmatch doctor` reports the installation as healthy to ensure a vmatch-managed version of Go is available.
+
+#### golangci-lint
 
 Follow guidance at https://golangci-lint.run/welcome/integrations/#visual-studio-code but specify the full path of your ~/.vmatch/bin/golangci-lint as an alternate lint tool, like this:
 
@@ -52,75 +48,58 @@ Follow guidance at https://golangci-lint.run/welcome/integrations/#visual-studio
   },
 ```
 
-### VS Code
+### Renovate
 
-Visual Studio Code integration relies on the editor being launched from the right directory with `code .`
-
-## Installation
-
-### Brew
-
-`macOS arm64` `Linux amd64` `Linux arm64` `macOS amd64`
-
-```sh
-brew install anttiharju/tap/vmatch
-```
-
-This distribution channel is recommended because it simplifies access to updates. Update with
-
-```sh
-brew update && brew upgrade vmatch
-```
-
-### Pre-built binaries
-
-`macOS arm64`
-
-```sh
-curl -LsSf https://github.com/anttiharju/vmatch/releases/latest/download/vmatch-darwin-arm64.tar.gz | sudo tar -xz --strip-components=0 vmatch -C /usr/local/bin && vmatch doctor
-```
-
-`Linux amd64`
-
-```sh
-curl -LsSf https://github.com/anttiharju/vmatch/releases/latest/download/vmatch-linux-amd64.tar.gz | sudo tar -xz --strip-components=0 vmatch -C /usr/local/bin && vmatch doctor
-```
-
-`Linux arm64`
-
-```sh
-curl -LsSf https://github.com/anttiharju/vmatch/releases/latest/download/vmatch-linux-arm64.tar.gz | sudo tar -xz --strip-components=0 vmatch -C /usr/local/bin && vmatch doctor
-```
-
-`macOS amd64`
-
-```sh
-curl -LsSf https://github.com/anttiharju/vmatch/releases/latest/download/vmatch-darwin-amd64.tar.gz | sudo tar -xz --strip-components=0 vmatch -C /usr/local/bin && vmatch doctor
-```
-
-### Manual
-
-`most unix-like operating systems`
-
-Clone the git repository and run `go build` on a version of Go that supports the one specified in `go.mod`. No support will be provided for this installation method.
+I _think_ you configure Renovate to maintain the `.golangci-version` file for you, see https://www.jvt.me/posts/2022/12/15/renovate-golangci-lint/ for an example.
 
 ## How
 
-It traverses filesystem upwards until it finds the file `.golangci-version`. A good place to have the version file is your git repo root.
+`vmatch` traverses the filesystem upwards until it finds the file `.golangci-version` and `go.mod`. These files should be in the same directory, but it is not enforced.
 
-It installs the right golangci-lint version using the [Binaries](https://golangci-lint.run/welcome/install/#binaries) install method. Binaries are stored under your `$HOME` like this:
+Go versions are downloaded from Google servers and stored under `~/.vmatch`, like this:
 
-```
+```tree
 .vmatch
+├── bin
+│   ├── go
+│   ├── golangci-lint
+│   └── gopls -> /Users/antti/go/bin/gopls
+├── go
+│   ├── v1.21.0
+│   ├── v1.23.0
+│   ├── v1.23.5
+│   ├── v1.24.2
+│   └── v1.24.3
 └── golangci-lint
+    ├── v1.63.4
     └── v2.1.6
-        └── golangci-lint
+
+11 directories, 3 files
 ```
 
-Go binaries are stored in a similar fashion.
+Contents of `~/.vmatch/bin` are symlinked from `$(go env GOPATH)/bin`, expect for `go` or `golangci-lint`, because those are shell scripts that wrap `vmatch`.
+
+If your `go.mod` does not specify the full version, for example `1.24` instead of `1.24.3`, `vmatch` defaults to `1.24.0` for simplicity.
 
 ## Stargazers over time
 
 [![Stargazers over time](https://starchart.cc/anttiharju/vmatch.svg?variant=adaptive)](https://starchart.cc/anttiharju/vmatch)
 
-Starring the project helps to get it eventually distributed via homebrew/core :)
+## Retrospective on the project
+
+While developing `vmatch`, I learned a lot about Go, `brew`, GitHub Actions, Git pre-commit hooks, and developer tooling. There's a surprising amount of detail that has to be accommodated in many places.
+
+I think this project could be pushed a lot further, especially in terms of where it is distributed, and adding new features like always being on the latest patch of `Go`. Unfortunately life is too short, and the project is at a state where it is very usable for my personal use.
+
+Long-term, `Nix` (see https://nixos.org), would likely be the generic solution for managing your development environment. Rolling it out to an entire time might have a relatively high barrier, even with projects like `Flox` (see https://flox.dev), so `vmatch` attempts to be a low-barrier-of-entry solution.
+
+If you find bugs, issue reports are very much appreciated and PRs are welcome. If you plan to push the project a lot further (for example managing `node` in a similar fashion), I'd recommend you to maintain a fork, say, `vmatch-node`.
+
+During the project a lot of supporting infrastructure was set up:
+
+- https://github.com/anttiharju/homebrew-tap/tree/fe24baf82fb570b6ec74694750080789742750e7 (whopping 174 commits, corresponding roughly to the same number of releases!)
+- https://github.com/anttiharju/actions/tree/f4387532864d9c584c733698296b07a7d9ec18e3 (whopping 20 composite actions!)
+- https://github.com/anttiharju/check-relative-markdown-links/tree/f79dc07684109baed16d10dd8ff2ade9bb94ce22 (a bash prototype for a tool that's more generally applicable and therefore useful than `vmatch`)
+- https://github.com/anttiharju/editorconfig/tree/9fa1679fcb6d55ed841a2ad36d142afd2d7cf30f (a centrally managed editorconfig distributed via GitHub Actions to my repositories!)
+
+all of which make it easier for me to build new tools, on-demand, with minimal effort spent on trivial things like tooling automation. With [Go rewrite of `check-relative-markdown-links`](https://github.com/anttiharju/check-relative-markdown-links/issues/5) being the first!

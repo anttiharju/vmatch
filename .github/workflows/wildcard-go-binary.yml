@@ -3,6 +3,7 @@ on:
     branches:
       - wildcard
     paths:
+      - "pkg/**/*"
       - "internal/**/*"
       - "go.mod"
       - "main.go"
