@@ -68,7 +68,7 @@ func inform(binDir string, healthy bool) {
 	} else {
 		fmt.Printf("\n⚠️  vmatch is not installed correctly!")
 		fmt.Printf("\n    Add '%s' to PATH with one of the following commands:\n\n", binDir)
-		fmt.Printf("zsh 🍎\n")
+		fmt.Printf("zsh  🍎\n")
 		fmt.Printf(" echo 'export PATH=\"%s:$PATH\"' >> ~/.zshrc && source ~/.zshrc\n\n", binDir)
 		fmt.Printf("bash 🐧\n")
 		fmt.Printf(" echo 'export PATH=\"%s:$PATH\"' >> ~/.bashrc && source ~/.bashrc\n\n", binDir)
