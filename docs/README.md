@@ -30,6 +30,12 @@ vmatch doctor
 
 Mainly, you should have `~/.vmatch/bin` in your PATH.
 
+## Updating
+
+```sh
+brew update && brew upgrade vmatch
+```
+
 ### Note on expectations
 
 When the specified Go version is downloaded for the first time, it may take a while.
