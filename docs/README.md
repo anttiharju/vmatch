@@ -12,7 +12,7 @@
 
 **Q:** What about [https://go.dev/blog/toolchain](https://go.dev/blog/toolchain)?
 
-**A:** It is about forward-compatibility, `vmatch` installs the Go version specified in your project.
+**A:** It is about forward-compatibility, `vmatch` installs the Go version specified in your project. I've found Go's promises of backward-compatibility to be squishy in practice, `brew install go` has not been sufficient for some project setups.
 
 **Q:** What about `go run` (Go 1.24 and after `go run` calls are cached)?
 
