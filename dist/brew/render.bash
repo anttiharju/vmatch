@@ -8,12 +8,13 @@ if [[ ! -f "$template_file" ]]; then
   exit 1
 fi
 
-# Mock GitHub Actions env
-GITHUB_REPOSITORY=anttiharju/vmatch
-
-# Set paths for tag caching
 repo_root="$(git rev-parse --show-toplevel)"
 repo_name="$(basename "$repo_root")"
+
+# Mock GitHub Actions env
+GITHUB_REPOSITORY="anttiharju/$repo_name"
+
+# Set paths for tag caching
 tag_cache_file="$repo_root/tag"
 
 # Get the latest version tag from the local git repository

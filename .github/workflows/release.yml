@@ -71,6 +71,6 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ steps.release.outputs.tag }}
         run: |
-          find . -maxdepth 1 -name 'vmatch-*-*.tar.gz' -exec gh release upload "$TAG" {} \;
+          find . -maxdepth 1 -name '${{ github.event.repository.name }}-*-*.tar.gz' -exec gh release upload "$TAG" {} \;
     outputs:
       tag: ${{ steps.release.outputs.tag }}

@@ -37,7 +37,17 @@ pre-commit:
       glob: "{docs/*,mkdocs.yml}"
       run: mkdocs build --strict
 
-    - name: No .yaml
+    - name: Keep generic
+      run: |
+        repo_name="$(basename "$(pwd)")"
+        forbidden=$(git grep -l "$repo_name" -- ':!internal/' ':!docs/' ':!go.mod' ':!main.go' ':!mkdocs.yml' || true)
+        if [ -n "$forbidden" ]; then
+          echo "ERROR: Found references to '$repo_name' outside of internal/ or docs/ directories:"
+          echo "$forbidden"
+          exit 1
+        fi
+
+    - name: Keep .yml
       glob: "*.yaml"
       run: echo "You are trying to commit .yaml files. Please use .yml instead for the following files:" && echo {staged_files} && exit 1
 
