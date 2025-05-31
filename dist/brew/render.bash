@@ -16,8 +16,8 @@ repo_root="$(git rev-parse --show-toplevel)"
 tag_cache_file="$repo_root/tag"
 
 # Get the latest version tag from the local git repository
-latest_tag="$(git tag --sort=-v:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+' | head -n1)"
-if [[ -z "$latest_tag" ]]; then
+TAG="$(git tag --sort=-v:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+' | head -n1)"
+if [[ -z "$TAG" ]]; then
   echo "No version tags found matching pattern v*.*.*"
   exit 1
 fi
@@ -39,15 +39,15 @@ else
   echo "Generating fresh values"
 
   # Only download binaries if the tag has changed or cache doesn't exist
-  if [[ "$cached_tag" != "$latest_tag" ]]; then
-    echo "New release detected: $latest_tag (was: ${cached_tag:-none})"
-    gh release download "$latest_tag" --pattern 'vmatch-*64.tar.gz'
+  if [[ "$cached_tag" != "$TAG" ]]; then
+    echo "New release detected: $TAG (was: ${cached_tag:-none})"
+    gh release download "$TAG" --pattern 'vmatch-*64.tar.gz'
     mv vmatch-*64.tar.gz "$repo_root/"
 
     # Cache the latest tag
-    echo "$latest_tag" > "$tag_cache_file"
+    echo "$TAG" > "$tag_cache_file"
   else
-    echo "Using cached binaries for tag: $latest_tag"
+    echo "Using cached binaries for tag: $TAG"
   fi
 
   source values.bash | tee "$cache_file"
