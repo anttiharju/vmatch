@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func Print() int {
+func Print(appName string) int {
 	if buildInfo, ok := debug.ReadBuildInfo(); ok {
 		version := strings.TrimPrefix(buildInfo.Main.Version, "v")
 		goVersion := buildInfo.GoVersion
@@ -24,7 +24,7 @@ func Print() int {
 			}
 		}
 
-		fmt.Printf("vmatch has version %s built with %s from %s on %s\n", version, goVersion, revision, buildTime)
+		fmt.Printf("%s has version %s built with %s from %s on %s\n", appName, version, goVersion, revision, buildTime)
 	}
 
 	return 0

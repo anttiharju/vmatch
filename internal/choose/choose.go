@@ -38,7 +38,7 @@ func Wrapper(ctx context.Context, args []string) int {
 	}
 
 	if firstArgIs("version", args) {
-		return version.Print()
+		return version.Print("vmatch")
 	}
 
 	if firstArgIs("doctor", args) {
