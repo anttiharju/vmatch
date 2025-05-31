@@ -24,8 +24,10 @@ go.work.sum
 # Env file
 .env
 
-# Binary
-vmatch
+# Ignore files at repo root without extension, except LICENSE
+/[!.]*
+!/LICENSE
+!/*/
 
 # Docs build output
 site
