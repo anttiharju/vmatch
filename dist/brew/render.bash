@@ -11,10 +11,16 @@ fi
 # Mock GitHub Actions env
 GITHUB_REPOSITORY=anttiharju/vmatch
 
-# Mock what would normally be provided by release job so we can run this locally
-TAG="$(basename "$(gh api "repos/$GITHUB_REPOSITORY/releases/latest" --jq .tarball_url)")"
+# Set paths for tag caching
+repo_root="$(git rev-parse --show-toplevel)"
+tag_cache_file="$repo_root/tag"
 
-# Cache logic for faster iteration
+# Check if we need to download binaries by comparing cached tag with latest release tag
+cached_tag=""
+[[ -f "$tag_cache_file" ]] && cached_tag="$(cat "$tag_cache_file")"
+latest_tag="$(basename "$(gh api "repos/$GITHUB_REPOSITORY/releases/latest" --jq .tarball_url)")"
+
+# Cache logic for faster template iteration
 cache_file=values.cache
 quick_mode=false
 [[ " $* " =~ " --quick " ]] && quick_mode=true
@@ -25,8 +31,19 @@ if [[ "$quick_mode" == true ]] && [[ -f "$cache_file" ]]; then
     cat "$cache_file"
 else
     echo "Generating fresh values"
-    gh release download "$TAG" --pattern 'vmatch-*64.tar.gz'
-    mv vmatch-*64.tar.gz ../../
+
+    # Only download binaries if the tag has changed or cache doesn't exist
+    if [[ "$cached_tag" != "$latest_tag" ]]; then
+        echo "New release detected: $latest_tag (was: ${cached_tag:-none})"
+        gh release download "$latest_tag" --pattern 'vmatch-*64.tar.gz'
+        mv vmatch-*64.tar.gz "$repo_root/"
+
+        # Cache the latest tag
+        echo "$latest_tag" > "$tag_cache_file"
+    else
+        echo "Using cached binaries for tag: $latest_tag"
+    fi
+
     source values.bash | tee "$cache_file"
 fi
 
