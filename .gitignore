@@ -40,8 +40,8 @@ homebrew-tap
 
 # Brew dist local render
 dist/brew/values.cache
-dist/brew/vmatch.rb
-dist/brew/vmatch.template.rb
+dist/brew/*.rb
+!dist/brew/template.rb
 
 # Binary archives
 *.tar.gz
