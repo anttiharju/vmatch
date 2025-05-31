@@ -13,6 +13,7 @@ GITHUB_REPOSITORY=anttiharju/vmatch
 
 # Set paths for tag caching
 repo_root="$(git rev-parse --show-toplevel)"
+repo_name="$(basename "$repo_root")"
 tag_cache_file="$repo_root/tag"
 
 # Get the latest version tag from the local git repository
@@ -41,8 +42,8 @@ else
   # Only download binaries if the tag has changed or cache doesn't exist
   if [[ "$cached_tag" != "$TAG" ]]; then
     echo "New release detected: $TAG (was: ${cached_tag:-none})"
-    gh release download "$TAG" --pattern 'vmatch-*64.tar.gz'
-    mv vmatch-*64.tar.gz "$repo_root/"
+    gh release download "$TAG" --pattern "$repo_name-*64.tar.gz"
+    find . -name "$repo_name-*64.tar.gz" -exec mv {} "$repo_root/" \;
 
     # Cache the latest tag
     echo "$TAG" > "$tag_cache_file"
@@ -59,15 +60,15 @@ source "$cache_file"
 set +a
 
 # Template
-envsubst < "$template_file" > vmatch.rb
+envsubst < "$template_file" > "$repo_name.rb"
 
 local_tap=false
 [[ " $* " =~ " --local-tap " ]] && local_tap=true
 if [[ "$local_tap" == true ]]; then
-  dir=../../Formula
+  dir="$repo_root/Formula"
   mkdir -p "$dir"
-  cp vmatch.rb "$dir"
+  cp "$repo_name.rb" "$dir"
 fi
 
 # Easier visual diffing
-cp "$template_file" vmatch.template.rb
+cp "$template_file" "$repo_name.template.rb"
