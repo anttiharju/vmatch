@@ -2,6 +2,12 @@
 
 [![Build](https://github.com/anttiharju/vmatch/actions/workflows/build.yml/badge.svg)](https://github.com/anttiharju/vmatch/actions/workflows/build.yml)
 
+`vmatch` is a **fully** automated version manager for Go and golangci-lint:
+
+- developer using vmatch never has to manually update their environment to match their project.
+- versions specified in `go.mod` and `.golangci-version` are downloaded and used automatically, on-demand.
+- this allows projects to 'rust'; a project with `vmatch`-supported structure will keep working as it was when last touched. No more "can't install the right version of Go with brew".
+
 ## FAQ
 
 **Q:** What about https://go.dev/blog/toolchain?
