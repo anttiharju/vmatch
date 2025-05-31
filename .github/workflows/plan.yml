@@ -79,6 +79,8 @@ jobs:
       - if: always() && (steps.changed.outputs.md_and_yml == 'true' || github.event_name != 'pull_request')
         name: Prettier
         uses: anttiharju/actions/prettier@v1
+        with:
+          patterns: "{*.yml,*.md}"
 
       - if: always() && (steps.changed.outputs.scripts == 'true' || github.event_name != 'pull_request')
         name: ShellCheck
