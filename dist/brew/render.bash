@@ -15,10 +15,16 @@ GITHUB_REPOSITORY=anttiharju/vmatch
 repo_root="$(git rev-parse --show-toplevel)"
 tag_cache_file="$repo_root/tag"
 
+# Get the latest version tag from the local git repository
+latest_tag="$(git tag --sort=-v:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+' | head -n1)"
+if [[ -z "$latest_tag" ]]; then
+    echo "No version tags found matching pattern v*.*.*"
+    exit 1
+fi
+
 # Check if we need to download binaries by comparing cached tag with latest release tag
 cached_tag=""
 [[ -f "$tag_cache_file" ]] && cached_tag="$(cat "$tag_cache_file")"
-latest_tag="$(basename "$(gh api "repos/$GITHUB_REPOSITORY/releases/latest" --jq .tarball_url)")"
 
 # Cache logic for faster template iteration
 cache_file=values.cache
