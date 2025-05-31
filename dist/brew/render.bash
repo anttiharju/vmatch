@@ -32,14 +32,15 @@ if [[ "$quick_mode" == true ]] && [[ -f "$cache_file" ]]; then
 else
   echo "Generating fresh values"
 
-  # Only download binaries if the tag has changed or cache doesn't exist
-  if [[ "$cached_tag" != "$TAG" ]]; then
-    echo "New release detected: $TAG (was: ${cached_tag:-none})"
+  if [[ "$cached_tag" != "$TAG" ]] || [[ -z "$TAG" ]]; then
+    echo "New release detected: ${TAG:-empty} (was: ${cached_tag:-none})"
     gh release download --pattern "$repo_name-*64.tar.gz"
     find . -name "$repo_name-*64.tar.gz" -exec mv {} "$repo_root/" \;
 
-    # Cache the latest tag
-    echo "$TAG" > "$tag_cache_file"
+    # Cache the latest tag only if it's not empty
+    if [[ -n "$TAG" ]]; then
+      echo "$TAG" > "$tag_cache_file"
+    fi
   else
     echo "Using cached binaries for tag: $TAG"
   fi
