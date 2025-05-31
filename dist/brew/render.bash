@@ -61,15 +61,15 @@ source "$cache_file"
 set +a
 
 # Template
-envsubst < "$template_file" > "$repo_name.rb"
+envsubst < "$template_file" > ".$repo_name.rb"
 
 local_tap=false
 [[ " $* " =~ " --local-tap " ]] && local_tap=true
 if [[ "$local_tap" == true ]]; then
   dir="$repo_root/Formula"
   mkdir -p "$dir"
-  cp "$repo_name.rb" "$dir"
+  cp ".$repo_name.rb" "$dir"
 fi
 
 # Easier visual diffing
-cp "$template_file" "$repo_name.template.rb"
+cp "$template_file" ".$repo_name.template.rb"
