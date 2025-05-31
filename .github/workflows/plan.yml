@@ -73,8 +73,8 @@ jobs:
         uses: anttiharju/actions/mkdocs-build-strict@v1
 
       - if: always()
-        name: no-yaml
-        uses: anttiharju/actions/no-yaml@v1
+        name: keep-yml
+        uses: anttiharju/actions/keep-yml@v1
 
       - if: always() && (steps.changed.outputs.md_and_yml == 'true' || github.event_name != 'pull_request')
         name: Prettier
