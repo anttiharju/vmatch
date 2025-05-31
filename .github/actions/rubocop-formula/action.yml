@@ -6,6 +6,8 @@ runs:
   steps:
     - name: Render out final formula
       shell: sh
+      env:
+        GH_TOKEN: ${{ github.token }}
       run: |
         ./dist/brew/render.bash
     - uses: anttiharju/actions/rubocop-file@v1
