@@ -42,10 +42,6 @@ Mainly, you should have `~/.vmatch/bin` in your PATH.
 brew update && brew upgrade vmatch
 ```
 
-### Note on expectations
-
-When the specified Go version is downloaded for the first time, it may take a while.
-
 ## Integrations
 
 ### VS Code
@@ -96,6 +92,12 @@ Go versions are downloaded from Google servers and stored under `~/.vmatch`, lik
 Contents of `~/.vmatch/bin` are symlinked from `$(go env GOPATH)/bin`, expect for `go` or `golangci-lint`, because those are shell scripts that wrap `vmatch`.
 
 If your `go.mod` does not specify the full version, for example `1.24` instead of `1.24.3`, `vmatch` defaults to `1.24.0` for simplicity, surprisingly, sometimes there is a Go 1.minor and sometimes a Go 1.minor.0 version released. [https://dl.google.com/go/go1.20.darwin-amd64.pkg](https://dl.google.com/go/go1.20.darwin-amd64.pkg) and [https://dl.google.com/go/go1.21.0.darwin-amd64.pkg](https://dl.google.com/go/go1.21.0.darwin-amd64.pkg) are examples.
+
+## Usage
+
+After you have completed the installation, you can simply use `go` and `golangci-lint` as usual, as long as there's a `.golangci-version` or `go.mod` file available in current directory or above.
+
+Note that when a version is downloaded for the first time, your commands may appear to hang. The time it takes depends on your internet speed and computer.
 
 ## Stargazers over time
 
