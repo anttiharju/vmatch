@@ -10,7 +10,7 @@ import (
 
 	"github.com/anttiharju/vmatch/internal/exitcode"
 	"github.com/anttiharju/vmatch/internal/scripts"
-	"github.com/anttiharju/vmatch/pkg/wrapper"
+	"github.com/anttiharju/vmatch/internal/wrapper"
 )
 
 type WrappedLinter struct {

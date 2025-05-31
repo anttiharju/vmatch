@@ -41,7 +41,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ inputs.tag }}
         run: |
-          gh release download "$TAG" --pattern 'vmatch-*64.tar.gz'
+          gh release download "$TAG" --pattern '${{ github.event.repository.name }}-*64.tar.gz'
           ls -- *.tar.gz
       - name: Render formula template
         uses: anttiharju/actions/render-template@v1
@@ -54,7 +54,7 @@ jobs:
         with:
           committer: "anttiharju[bot]"
           message: |
-            Update vmatch formula to ${{ inputs.tag }}
+            Update ${{ github.event.repository.name }} formula to ${{ inputs.tag }}
 
-            https://github.com/anttiharju/vmatch/blob/${{ github.sha }}/.github/workflows/distribute.yml
+            https://github.com/${{ github.repository }}/blob/${{ github.sha }}/.github/workflows/distribute.yml
           working-directory: homebrew-tap

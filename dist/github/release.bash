@@ -12,8 +12,9 @@ echo "$os"
 echo "$arch"
 
 rm -rf "tmp/$os-$arch"
+repo_name="$(basename "$(pwd)")"
 # Disable CGO to ensure static linking
-CGO_ENABLED=0 go build -ldflags "-s -w -buildid=github-$version" -trimpath -o "tmp/$os-$arch/vmatch"
+CGO_ENABLED=0 go build -ldflags "-s -w -buildid=github-$version" -trimpath -o "tmp/$os-$arch/$repo_name"
 
 cp LICENSE "tmp/$os-$arch"
 cp -r docs/* "tmp/$os-$arch"
@@ -24,4 +25,4 @@ while IFS= read -r -d '' file; do
   docs+=("$file")
 done < <(git ls-files -z --others '*.md')
 
-tar -czf "$repo_root/vmatch-$os-$arch.tar.gz" LICENSE "${docs[@]}" vmatch
+tar -czf "$repo_root/$repo_name-$os-$arch.tar.gz" LICENSE "${docs[@]}" "$repo_name"

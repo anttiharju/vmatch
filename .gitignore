@@ -24,8 +24,11 @@ go.work.sum
 # Env file
 .env
 
-# Binary
-vmatch
+# Ignore files at repo root without extension, except LICENSE
+/[!.]*
+!/LICENSE
+!/*/
+!/*.*
 
 # Docs build output
 site
@@ -38,8 +41,8 @@ homebrew-tap
 
 # Brew dist local render
 dist/brew/values.cache
-dist/brew/vmatch.rb
-dist/brew/vmatch.template.rb
+dist/brew/*.rb
+!dist/brew/template.rb
 
 # Binary archives
 *.tar.gz

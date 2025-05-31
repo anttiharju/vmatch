@@ -42,7 +42,7 @@ jobs:
         name: action-validator
         uses: anttiharju/actions/action-validator@v1
 
-      - if: always() && (steps.changed.outputs.github_actions_workflows == 'true' || github.event_name == 'push')
+      - if: always() && (steps.changed.outputs.github_actions_workflows == 'true' || github.event_name != 'pull_request')
         name: actionlint
         uses: anttiharju/actions/actionlint@v1
 
@@ -54,33 +54,35 @@ jobs:
         name: EditorConfig-Checker
         uses: anttiharju/actions/editorconfig-checker@v1
 
-      - if: always() && (steps.changed.outputs.binary == 'true' || github.event_name == 'push')
+      - if: always() && (steps.changed.outputs.binary == 'true' || github.event_name != 'pull_request')
         name: go build
         uses: anttiharju/actions/go-build@v1
 
-      - if: always() && (steps.changed.outputs.binary == 'true' || github.event_name == 'push')
+      - if: always() && (steps.changed.outputs.binary == 'true' || github.event_name != 'pull_request')
         name: go test
         shell: sh
         run: |
           go test ./...
 
-      - if: always() && (steps.changed.outputs.go_code == 'true' || github.event_name == 'push')
+      - if: always() && (steps.changed.outputs.go_code == 'true' || github.event_name != 'pull_request')
         name: golangci-lint
         uses: anttiharju/actions/golangci-lint@v1
 
-      - if: always() && (steps.changed.outputs.documentation == 'true' || github.event_name == 'push')
+      - if: always() && (steps.changed.outputs.documentation == 'true' || github.event_name != 'pull_request')
         name: MkDocs
         uses: anttiharju/actions/mkdocs-build-strict@v1
 
       - if: always()
-        name: no-yaml
-        uses: anttiharju/actions/no-yaml@v1
+        name: keep-yml
+        uses: anttiharju/actions/keep-yml@v1
 
-      - if: always() && (steps.changed.outputs.md_and_yml == 'true' || github.event_name == 'push')
+      - if: always() && (steps.changed.outputs.md_and_yml == 'true' || github.event_name != 'pull_request')
         name: Prettier
         uses: anttiharju/actions/prettier@v1
+        with:
+          patterns: "{*.yml,*.md}"
 
-      - if: always() && (steps.changed.outputs.scripts == 'true' || github.event_name == 'push')
+      - if: always() && (steps.changed.outputs.scripts == 'true' || github.event_name != 'pull_request')
         name: ShellCheck
         uses: anttiharju/actions/shellcheck@v1
     outputs:
