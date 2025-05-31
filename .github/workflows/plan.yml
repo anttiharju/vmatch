@@ -86,6 +86,10 @@ jobs:
         with:
           patterns: "{*.yml,*.md}"
 
+      - if: always() && (steps.changed.outputs.dist_brew == 'true' || github.event_name != 'pull_request')
+        name: Rubocop formula
+        uses: ./.github/actions/rubocop-formula
+
       - if: always() && (steps.changed.outputs.scripts == 'true' || github.event_name != 'pull_request')
         name: ShellCheck
         uses: anttiharju/actions/shellcheck@v1
