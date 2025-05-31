@@ -1,4 +1,4 @@
-# golangci-lint
+# version
 
 ```sh
 vmatch version
