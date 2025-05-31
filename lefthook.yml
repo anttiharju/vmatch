@@ -46,6 +46,10 @@ pre-commit:
       run: prettier --write {staged_files}
       stage_fixed: true
 
+    - name: Rubocop
+      glob: "{*.rb}"
+      run: ./dist/brew/render.bash --quick && find dist/brew -name "*.rb" -type f -not -name "*template*" -exec rubocop {} \;
+
     - name: ShellCheck
       glob: "*{.sh,.bash}"
       run: git ls-files -z '*.sh' '*.bash' | xargs -0 shellcheck --color=always --source-path=SCRIPTDIR
