@@ -13,18 +13,10 @@ repo_name="$(basename "$repo_root")"
 
 # Mock GitHub Actions env
 GITHUB_REPOSITORY="anttiharju/$repo_name"
-
-# Set paths for tag caching
-tag_cache_file="$repo_root/tag"
-
-# Get the latest version tag from the local git repository
-TAG="$(git tag --sort=-v:refname | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+' | head -n1)"
-if [[ -z "$TAG" ]]; then
-  echo "No version tags found matching pattern v*.*.*"
-  exit 1
-fi
+TAG="$(git tag --sort=-creatordate | head -n1)"
 
 # Check if we need to download binaries by comparing cached tag with latest release tag
+tag_cache_file="$repo_root/tag"
 cached_tag=""
 [[ -f "$tag_cache_file" ]] && cached_tag="$(cat "$tag_cache_file")"
 
