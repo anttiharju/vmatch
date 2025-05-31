@@ -35,7 +35,7 @@ else
   # Only download binaries if the tag has changed or cache doesn't exist
   if [[ "$cached_tag" != "$TAG" ]]; then
     echo "New release detected: $TAG (was: ${cached_tag:-none})"
-    gh release download "$TAG" --pattern "$repo_name-*64.tar.gz"
+    gh release download --pattern "$repo_name-*64.tar.gz"
     find . -name "$repo_name-*64.tar.gz" -exec mv {} "$repo_root/" \;
 
     # Cache the latest tag
