@@ -1,0 +1,10 @@
+name: "Keep generic"
+description: "Fail if repo name is hardcoded somewhere its not supposed to."
+
+runs:
+  using: "composite"
+  steps:
+    - name: Keep generic
+      shell: sh
+      run: |
+        "$GITHUB_ACTION_PATH/action.sh"
