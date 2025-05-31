@@ -49,3 +49,6 @@ dist/brew/*.rb
 
 # Packaging happens under this directory
 tmp
+
+# rubocop-file action
+/*.lock
