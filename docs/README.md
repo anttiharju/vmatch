@@ -36,7 +36,7 @@ vmatch doctor
 
 Mainly, you should have `~/.vmatch/bin` in your PATH.
 
-## Updating
+### Updating
 
 ```sh
 brew update && brew upgrade vmatch
