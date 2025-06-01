@@ -1,6 +1,8 @@
 site_name: vmatch
 theme:
   name: material
+  features:
+    - content.code.copy
   palette:
     - media: "(prefers-color-scheme)"
       toggle:

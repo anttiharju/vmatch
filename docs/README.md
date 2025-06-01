@@ -4,9 +4,9 @@
 
 `vmatch` is a **fully** automated version manager for Go and golangci-lint:
 
-- developer using vmatch never has to manually update their environment to match their project.
-- versions specified in `go.mod` and `.golangci-version` are downloaded and used automatically, on-demand.
-- this allows projects to 'rust'; a project with `vmatch`-supported structure will keep working as it was when last touched. No more "can't install the right version of Go with brew".
+1. Developer using vmatch never has to manually update their environment to match their project.
+2. Versions specified in `go.mod` and `.golangci-version` are downloaded and used automatically, on-demand.
+3. This allows projects to 'rust'; a project with `vmatch`-supported structure will keep working as it was when last touched. No more "can't install the right version of Go with brew".
 
 ## FAQ
 
@@ -14,7 +14,7 @@
 
 **A:** It is about forward-compatibility, `vmatch` installs the Go version specified in your project. I've found Go's promises of backward-compatibility to be squishy in practice, `brew install go` has not been sufficient for some project setups.
 
-**Q:** What about `go run` (Go 1.24 and after `go run` calls are cached)?
+**Q:** What about `go run`? (Go 1.24 and after `go run` calls are cached)
 
 **A:** It is probably the easy thing to introduce to your team and is a fine addition to Go.
 
@@ -36,7 +36,7 @@ vmatch doctor
 
 Mainly, you should have `~/.vmatch/bin` in your PATH.
 
-## Updating
+### Updating
 
 ```sh
 brew update && brew upgrade vmatch
@@ -89,9 +89,12 @@ Go versions are downloaded from Google servers and stored under `~/.vmatch`, lik
 11 directories, 3 files
 ```
 
-Contents of `~/.vmatch/bin` are symlinked from `$(go env GOPATH)/bin`, expect for `go` or `golangci-lint`, because those are shell scripts that wrap `vmatch`.
+Contents of `~/.vmatch/bin` are symlinked from `$(go env GOPATH)/bin`, expect for `go` or `golangci-lint`, because those are shell scripts that wrap `vmatch`
 
-If your `go.mod` does not specify the full version, for example `1.24` instead of `1.24.3`, `vmatch` defaults to `1.24.0` for simplicity, surprisingly, sometimes there is a Go 1.minor and sometimes a Go 1.minor.0 version released. [https://dl.google.com/go/go1.20.darwin-amd64.pkg](https://dl.google.com/go/go1.20.darwin-amd64.pkg) and [https://dl.google.com/go/go1.21.0.darwin-amd64.pkg](https://dl.google.com/go/go1.21.0.darwin-amd64.pkg) are examples.
+If your `go.mod` does not specify the full version, for example `1.24` instead of `1.24.3`, `vmatch` defaults to `1.24.0` for simplicity, surprisingly, sometimes there is a Go `1.minor` and sometimes a Go `1.minor.0` version released. See for yourself:
+
+- [https://dl.google.com/go/go1.20.darwin-amd64.pkg](https://dl.google.com/go/go1.20.darwin-amd64.pkg) and
+- [https://dl.google.com/go/go1.21.0.darwin-amd64.pkg](https://dl.google.com/go/go1.21.0.darwin-amd64.pkg)
 
 ## Usage
 
