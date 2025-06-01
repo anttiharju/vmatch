@@ -34,12 +34,17 @@ else
 
   if [[ "$cached_tag" != "$TAG" ]] || [[ -z "$TAG" ]]; then
     echo "New release detected: ${TAG:-empty} (was: ${cached_tag:-none})"
-    gh release download --pattern "$repo_name-*64.tar.gz"
-    find . -name "$repo_name-*64.tar.gz" -exec mv {} "$repo_root/" \;
 
-    # Cache the latest tag only if it's not empty
     if [[ -n "$TAG" ]]; then
+      gh release download --pattern "$repo_name-*64.tar.gz" || {
+        echo "Warning: Could not download release assets for tag $TAG"
+        echo "This might be a new repository without releases yet"
+      }
+      find . -name "$repo_name-*64.tar.gz" -exec mv {} "$repo_root/" \; 2>/dev/null || true
+
       echo "$TAG" > "$tag_cache_file"
+    else
+      echo "No tags found. Skipping release download."
     fi
   else
     echo "Using cached binaries for tag: $TAG"
