@@ -15,17 +15,17 @@ pre-commit:
 
     # https://github.com/anttiharju/relcheck
     - name: relcheck
-      run: relcheck run
+      run: relcheck all
 
     - name: EditorConfig-Checker
       run: editorconfig-checker {staged_files}
 
     - name: go build
-      glob: "{dist/wrap/*,internal/*,pkg/*,go.mod,main.go}"
+      glob: "{dist/wrap/*,internal/*,go.mod,main.go}"
       run: go build
 
     - name: go test
-      glob: "{dist/wrap/*,internal/*,pkg/*,go.mod,main.go}"
+      glob: "{dist/wrap/*,internal/*,go.mod,main.go}"
       run: go test ./...
 
     - name: golangci-lint

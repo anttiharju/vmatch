@@ -27,4 +27,4 @@ jobs:
       - name: Deploy to GitHub Pages
         uses: anttiharju/actions/mkdocs-gh-deploy@v1
         with:
-          committer: "anttiharju[bot]"
+          committer: "${{ github.actor }}[bot]"

@@ -11,8 +11,12 @@ fi
 repo_root="$(git rev-parse --show-toplevel)"
 repo_name="$(basename "$repo_root")"
 
-# Mock GitHub Actions env
-GITHUB_REPOSITORY="anttiharju/$repo_name"
+remote_url="$(git remote get-url origin 2>/dev/null || echo "")"
+if [[ "$remote_url" =~ github.com[:/]([^/]+)/([^/.]+) ]]; then
+  owner="${BASH_REMATCH[1]}"
+  GITHUB_REPOSITORY="$owner/$repo_name"
+fi
+
 TAG="$(git tag --sort=-creatordate | head -n1)"
 
 # Check if we need to download binaries by comparing cached tag with latest release tag
