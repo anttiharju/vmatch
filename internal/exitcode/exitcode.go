@@ -1,7 +1,9 @@
 package exitcode
 
+type Exitcode int
+
 const (
-	Success = iota
+	Success Exitcode = iota
 	Interrupt
 	NoGo
 	GoPathIssue

@@ -5,14 +5,15 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/anttiharju/vmatch/internal/exitcode"
 	"github.com/anttiharju/vmatch/internal/locate"
 )
 
 type wrapperInterface interface {
 	Run(ctx context.Context, args []string) int
-	Exit(code int)
-	ExitWithPrint(code int, msg string)
-	ExitWithPrintln(code int, msg string)
+	Exit(code exitcode.Exitcode)
+	ExitWithPrint(code exitcode.Exitcode, msg string)
+	ExitWithPrintln(code exitcode.Exitcode, msg string)
 	GenerateInstallPath(filename string, parse parser, validate validator) error
 }
 
@@ -28,18 +29,18 @@ type BaseWrapper struct {
 
 // os.Exit() does not respect defer so it's neat to wrap its usage in methods.
 
-func (w *BaseWrapper) Exit(exitCode int) {
-	os.Exit(exitCode)
+func (w *BaseWrapper) Exit(exitCode exitcode.Exitcode) {
+	os.Exit(int(exitCode))
 }
 
-func (w *BaseWrapper) ExitWithPrint(exitCode int, message string) {
+func (w *BaseWrapper) ExitWithPrint(exitCode exitcode.Exitcode, message string) {
 	fmt.Print("vmatch-" + w.Name + ": " + message)
-	os.Exit(exitCode)
+	os.Exit(int(exitCode))
 }
 
-func (w *BaseWrapper) ExitWithPrintln(exitCode int, message string) {
+func (w *BaseWrapper) ExitWithPrintln(exitCode exitcode.Exitcode, message string) {
 	fmt.Println("\n" + "vmatch-" + w.Name + ": " + message)
-	os.Exit(exitCode)
+	os.Exit(int(exitCode))
 }
 
 type parser func(content []byte) (string, error)
