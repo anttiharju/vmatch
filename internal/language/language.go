@@ -11,9 +11,9 @@ import (
 	"strings"
 
 	"github.com/anttiharju/vmatch/internal/exitcode"
+	"github.com/anttiharju/vmatch/internal/install"
 	"github.com/anttiharju/vmatch/internal/scripts"
 	"github.com/anttiharju/vmatch/internal/wrapper"
-	"github.com/anttiharju/vmatch/pkg/install"
 )
 
 type WrappedLanguage struct {

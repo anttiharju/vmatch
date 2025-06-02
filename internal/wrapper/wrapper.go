@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/anttiharju/vmatch/pkg/locate"
+	"github.com/anttiharju/vmatch/internal/locate"
 )
 
 type wrapperInterface interface {
