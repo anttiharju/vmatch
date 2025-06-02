@@ -54,7 +54,7 @@ jobs:
         with:
           committer: "${{ github.actor }}[bot]"
           message: |
-            Update ${{ github.event.repository.name }} formula to ${{ inputs.tag }}
+            Update ${{ github.event.repository.name }} to ${{ inputs.tag }}
 
             https://github.com/${{ github.repository }}/blob/${{ github.sha }}/.github/workflows/distribute.yml
           working-directory: homebrew-tap
