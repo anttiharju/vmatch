@@ -16,4 +16,5 @@ const (
 	CmdWaitIssue
 	UserHomeDirIssue
 	InstallPathIssue
+	VersionError
 )
