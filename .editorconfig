@@ -44,3 +44,8 @@ indent_size = 4
 [*.py]
 indent_style = space
 indent_size = 4
+
+[**/.flox/env.json]
+insert_final_newline = false
+[**/.flox/env/manifest.lock]
+insert_final_newline = false
