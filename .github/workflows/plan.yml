@@ -48,7 +48,7 @@ jobs:
 
       - if: always()
         name: relcheck
-        uses: anttiharju/actions/check-relative-markdown-links@v1
+        uses: anttiharju/actions/relcheck@v1
 
       - if: always()
         name: EditorConfig-Checker
