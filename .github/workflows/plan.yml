@@ -36,7 +36,7 @@ jobs:
         name: Require semantic version label
         uses: anttiharju/actions/require-semver-label@v1
         with:
-          enforce: ${{ steps.changed.outputs.binary == 'true' || steps.changed.outputs.dist_brew == 'true' || steps.changed.outputs.dist_github == 'true' }}
+          enforce: ${{ (steps.changed.outputs.binary == 'true' || steps.changed.outputs.dist_brew == 'true' || steps.changed.outputs.dist_github == 'true') && github.event_name != 'push' }}
 
       - if: always()
         name: action-validator
