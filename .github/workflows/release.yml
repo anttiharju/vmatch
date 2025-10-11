@@ -1,7 +1,7 @@
 name: Release
 permissions:
   contents: write
-  pull-requests: read
+  pull-requests: none
 on:
   workflow_call:
     inputs:

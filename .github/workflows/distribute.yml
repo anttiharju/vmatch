@@ -1,4 +1,7 @@
 name: Distribute
+permissions:
+  contents: write
+  pull-requests: none
 on:
   workflow_call:
     inputs:
@@ -10,9 +13,6 @@ on:
         required: true
       ANTTIHARJU_BOT_PRIVATE_KEY:
         required: true
-
-permissions:
-  contents: write
 
 jobs:
   homebrew-tap:
