@@ -1,4 +1,7 @@
 name: Release
+permissions:
+  contents: write
+  pull-requests: read
 on:
   workflow_call:
     inputs:
@@ -9,9 +12,6 @@ on:
       tag:
         description: "Whether to trigger release workflows"
         value: ${{ jobs.github.outputs.tag }}
-
-permissions:
-  contents: write
 
 jobs:
   github:
