@@ -18,6 +18,10 @@
 
 **A:** It is probably the easy thing to introduce to your team and is a fine addition to Go.
 
+**Q:** What about https://github.com/nix-community/nix-direnv?
+
+**A:** It is better, if you can get the buy-in for Nix.
+
 ## Why
 
 Collaborators using different versions of `golangci-lint` may get different output, leading to confusion and wasted time in code reviews. Ideally, a team would agree to use `vmatch` as their source for `go` and `golangci-lint`. That way, they would always have the right version installed.
