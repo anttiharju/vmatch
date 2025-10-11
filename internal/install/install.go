@@ -190,7 +190,29 @@ func getTargetPath(headerName string, installPath string) (string, bool) {
 		return "", true // Skip if there's no second part (top-level directory itself)
 	}
 
-	return filepath.Join(installPath, parts[1]), false
+	relPath := parts[1]
+	// Disallow absolute archive paths & traversal elements
+	if strings.HasPrefix(relPath, "/") || strings.Contains(relPath, "..") {
+		return "", true
+	}
+
+	joined := filepath.Join(installPath, relPath)
+
+	absInstall, err := filepath.Abs(installPath)
+	if err != nil {
+		return "", true
+	}
+
+	absTarget, err := filepath.Abs(joined)
+	if err != nil {
+		return "", true
+	}
+	// Confirm absTarget is strictly under absInstall
+	if !strings.HasPrefix(absTarget, absInstall+string(os.PathSeparator)) && absTarget != absInstall {
+		return "", true
+	}
+
+	return absTarget, false
 }
 
 func makeDirectory(path string) error {
