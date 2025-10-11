@@ -84,6 +84,8 @@ func Test_getTargetPath(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			path, skip := getTargetPath(tt.headerName, tt.installPath)
 			if path != tt.result {
 				t.Errorf("getTargetPath() path = %v, want %v", path, tt.result)
