@@ -88,6 +88,7 @@ func Test_getTargetPath(t *testing.T) {
 			if got != tt.want {
 				t.Errorf("getTargetPath() path = %v, want %v", got, tt.want)
 			}
+
 			if got2 == tt.valid {
 				t.Errorf("getTargetPath() skip = %v, want %v (expected valid = %v)", got2, !tt.valid, tt.valid)
 			}
