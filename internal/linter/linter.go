@@ -46,13 +46,13 @@ func Wrap(script scripts.Script) *WrappedLinter {
 	}
 }
 
-func (w *WrappedLinter) Run(_ context.Context, args []string) int {
+func (w *WrappedLinter) Run(ctx context.Context, args []string) int {
 	if w.noBinary() {
-		w.install()
+		w.install(ctx)
 	}
 
 	//nolint:gosec // I don't think a wrapper can avoid G204.
-	linter := exec.Command(w.getGolangCILintPath(), args...)
+	linter := exec.CommandContext(ctx, w.getGolangCILintPath(), args...)
 
 	linter.Stdin = os.Stdin
 	linter.Stdout = os.Stdout
@@ -69,7 +69,7 @@ func (w *WrappedLinter) noBinary() bool {
 	return os.IsNotExist(err)
 }
 
-func (w *WrappedLinter) install() {
+func (w *WrappedLinter) install(ctx context.Context) {
 	//nolint:lll // Install command example from https://golangci-lint.run/welcome/install/#binaries
 	// curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.59.1
 	// todo: pin to a sha instead of HEAD, but automate updates
@@ -77,7 +77,7 @@ func (w *WrappedLinter) install() {
 	pipe := " | "
 	sh := "sh -s -- -b "
 	command := curl + pipe + sh + w.InstallPath + " v" + w.DesiredVersion
-	cmd := exec.Command("sh", "-c", command)
+	cmd := exec.CommandContext(ctx, "sh", "-c", command)
 
 	err := cmd.Start()
 	if err != nil {
