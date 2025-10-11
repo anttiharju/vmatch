@@ -9,6 +9,7 @@ on:
       - "**/*.go"
       - ".golangci-version"
       - ".golangci.yml"
+      - "go.mod"
 
 jobs:
   wildcard:
