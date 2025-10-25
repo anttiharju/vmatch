@@ -17,7 +17,7 @@ pre-commit:
     - name: relcheck
       run: relcheck all
 
-    - name: EditorConfig-Checker
+    - name: editorconfig-checker
       run: editorconfig-checker {staged_files}
 
     - name: go build
@@ -37,19 +37,18 @@ pre-commit:
       glob: "*.yaml"
       run: echo "You are trying to commit .yaml files. Please use .yml instead for the following files:" && echo {staged_files} && exit 1
 
-    - name: MkDocs
-      glob: "{docs/*,mkdocs.yml}"
+    - glob: "{docs/*,mkdocs.yml}"
       run: mkdocs build --strict
 
-    - name: Prettier
+    - name: prettier
       glob: "{*.yml,*.md}"
       run: prettier --write {staged_files}
       stage_fixed: true
 
-    - name: Rubocop
+    - name: rubocop
       glob: "{*.rb}"
       run: ./dist/brew/render.bash --quick && find dist/brew -name "*.rb" -type f -not -name "*template*" -exec rubocop {} \;
 
-    - name: ShellCheck
+    - name: shellcheck
       glob: "*{.sh,.bash}"
       run: git ls-files -z '*.sh' '*.bash' | xargs -0 shellcheck --color=always --source-path=SCRIPTDIR
