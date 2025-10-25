@@ -57,3 +57,7 @@ indent_size = 2
 [*.rs]
 indent_style = space
 indent_size = 4
+
+[*.plist]
+indent_style = space
+indent_size = 4
