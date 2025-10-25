@@ -27,11 +27,6 @@
             name = "vmatch";
             src = ./.;
             vendorHash = null;
-
-            installPhase = ''
-              mkdir -p $out/bin
-              install -Dm755 $GOPATH/bin/vmatch $out/bin/vmatch
-            '';
           };
         }
       );
