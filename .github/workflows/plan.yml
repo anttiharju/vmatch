@@ -34,66 +34,66 @@ jobs:
         with:
           changes: ${{ steps.changes.outputs.array }}
 
-      - if: always()
+      - if: always() && !cancelled()
         id: semver
         name: Require semantic version label
         uses: anttiharju/actions/require-semver-label@v1
         with:
           enforce: ${{ (steps.changed.outputs.binary == 'true' || steps.changed.outputs.pkg_brew == 'true' || steps.changed.outputs.pkg_github == 'true') && github.event_name != 'push' }}
 
-      - if: always()
+      - if: always() && !cancelled()
         name: hash-nix
         uses: anttiharju/actions/hash-nix@v0
 
-      - if: always()
+      - if: always() && !cancelled()
         name: action-validator
         uses: anttiharju/actions/action-validator@v1
 
-      - if: always() && (steps.changed.outputs.github_actions_workflows == 'true' || github.event_name != 'pull_request')
+      - if: always() && !cancelled() && (steps.changed.outputs.github_actions_workflows == 'true' || github.event_name != 'pull_request')
         name: actionlint
         uses: anttiharju/actions/actionlint@v1
 
-      - if: always()
+      - if: always() && !cancelled()
         name: relcheck
         uses: anttiharju/actions/relcheck@v1
 
-      - if: always()
+      - if: always() && !cancelled()
         name: EditorConfig-Checker
         uses: anttiharju/actions/editorconfig-checker@v1
 
-      - if: always() && (steps.changed.outputs.binary == 'true' || github.event_name != 'pull_request')
+      - if: always() && !cancelled() && (steps.changed.outputs.binary == 'true' || github.event_name != 'pull_request')
         name: go build
         uses: anttiharju/actions/go-build@v1
 
-      - if: always() && (steps.changed.outputs.binary == 'true' || github.event_name != 'pull_request')
+      - if: always() && !cancelled() && (steps.changed.outputs.binary == 'true' || github.event_name != 'pull_request')
         name: go test
         shell: sh
         run: |
           go test ./...
 
-      - if: always() && (steps.changed.outputs.go_code == 'true' || github.event_name != 'pull_request')
+      - if: always() && !cancelled() && (steps.changed.outputs.go_code == 'true' || github.event_name != 'pull_request')
         name: golangci-lint
         uses: anttiharju/actions/golangci-lint@v1
 
-      - if: always()
+      - if: always() && !cancelled()
         name: Keep .yml
         uses: anttiharju/actions/keep-yml@v1
 
-      - if: always() && (steps.changed.outputs.documentation == 'true' || github.event_name != 'pull_request')
+      - if: always() && !cancelled() && (steps.changed.outputs.documentation == 'true' || github.event_name != 'pull_request')
         name: MkDocs
         uses: anttiharju/actions/mkdocs-build-strict@v1
 
-      - if: always() && (steps.changed.outputs.md_and_yml == 'true' || github.event_name != 'pull_request')
+      - if: always() && !cancelled() && (steps.changed.outputs.md_and_yml == 'true' || github.event_name != 'pull_request')
         name: Prettier
         uses: anttiharju/actions/prettier@v1
         with:
           patterns: "{*.yml,*.md}"
 
-      - if: always() && (steps.changed.outputs.pkg_brew == 'true' || github.event_name != 'pull_request')
+      - if: always() && !cancelled() && (steps.changed.outputs.pkg_brew == 'true' || github.event_name != 'pull_request')
         name: Rubocop formula
         uses: ./.github/actions/rubocop-formula
 
-      - if: always() && (steps.changed.outputs.scripts == 'true' || github.event_name != 'pull_request')
+      - if: always() && !cancelled() && (steps.changed.outputs.scripts == 'true' || github.event_name != 'pull_request')
         name: ShellCheck
         uses: anttiharju/actions/shellcheck@v1
     outputs:
