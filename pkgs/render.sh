@@ -38,5 +38,6 @@ fi
 
 # shellcheck disable=SC1091
 source "values.cache"
-envsubst < "template.$ext" > "$PKG_REPO.$ext"
-cp "template.$ext" "$PKG_REPO.tpl.$ext" # easier to visually diff two gitignored files
+repository="${GITHUB_REPOSITORY##*/}"
+envsubst < "template.$ext" > "$repository.$ext"
+cp "template.$ext" "$repository.tpl.$ext" # easier to visually diff two gitignored files
