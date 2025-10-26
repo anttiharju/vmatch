@@ -39,11 +39,9 @@ site
 # Nested checkout during package workflow
 homebrew-tap
 
-# Brew pkgs local render
-pkgs/brew/values.cache
-pkgs/brew/*.rb
-!pkgs/brew/template.rb
-pkgs/tag
+# render.sh tmp files
+pkgs/*/*.cache
+pkgs/*/.*.*
 
 # Binary archives
 *.tar.gz
