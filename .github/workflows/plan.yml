@@ -44,6 +44,8 @@ jobs:
       - if: always() && !cancelled()
         name: hash-nix
         uses: anttiharju/actions/hash-nix@v0
+        with:
+          rev: 8b56182b913d6c8a6a4936bcc98fd39276ecb30f
 
       - if: always() && !cancelled()
         name: action-validator
