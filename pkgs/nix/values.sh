@@ -13,6 +13,6 @@ capture() {
 
 repo_name="$(basename "$GITHUB_REPOSITORY")"
 capture REPO_NAME "$repo_name"
-capture VERSION "${RENDER_TAG#v}"
+capture VERSION "${TAG#v}"
 capture REPO_OWNER "${GITHUB_REPOSITORY%%/*}"
 # HASH is supplied by CI

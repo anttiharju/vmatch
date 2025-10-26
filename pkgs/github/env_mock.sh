@@ -11,7 +11,7 @@ owner="$(basename "$temp")"
 
 repository="$(basename -s .git "$remote_url")"
 
-tag_sha="$(git rev-list -n 1 "$RENDER_TAG")"
+tag_sha="$(git rev-list -n 1 "$TAG")"
 
 export GITHUB_REPOSITORY="$owner/$repository"
 export GITHUB_SHA="$tag_sha"

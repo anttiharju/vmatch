@@ -15,7 +15,7 @@ case "$pkg" in
 esac
 
 RENDER_CACHE=values.cache
-RENDER_TAG="$(git tag --sort=-creatordate | head -n1)"
+TAG="$(git tag --sort=-creatordate | head -n1)"
 
 source github/env_mock.sh
 
