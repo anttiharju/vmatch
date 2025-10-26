@@ -16,4 +16,4 @@ echo "repo_name=\"$repo_name\""
 
 capture version "${TAG#v}"
 capture repo_owner "${GITHUB_REPOSITORY%%/*}"
-# TODO: nix_sha256
+# hash is handled by CI

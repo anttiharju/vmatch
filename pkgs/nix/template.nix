@@ -8,7 +8,7 @@ buildGoModule {
     owner = "${repo_owner}";
     repo = "${repo_name}";
     rev = "${GITHUB_SHA}";
-    sha256 = "${nix_sha256}";
+    hash = "${hash}";
   };
 
   vendorHash = null;
