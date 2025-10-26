@@ -5,7 +5,7 @@ cd "$(git rev-parse --show-toplevel)"
 version="$1"
 os="$2"
 arch="$3"
-echo "./pkgs/github/release.sh $version $os $arch"
+echo "./pkgs/github/archive.sh $version $os $arch"
 
 rm -rf "tmp/$os-$arch"
 repo_name="$(basename -s .git "$(git remote get-url origin)")"
