@@ -2,6 +2,13 @@
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
+pkg_name="${1:-}"
+if [[ -z "$pkg_name" ]]; then
+  echo "Usage: $0 <pkg_name> [--quick] [--local-tap]"
+  echo "Example: $0 brew"
+  exit 1
+fi
+
 template_file=template.rb
 if [[ ! -f "$template_file" ]]; then
   echo "Formula template is missing: $template_file"
@@ -20,7 +27,7 @@ fi
 TAG="$(git tag --sort=-creatordate | head -n1)"
 
 # Check if we need to download binaries by comparing cached tag with latest release tag
-tag_cache_file="$(realpath ../tag)"
+tag_cache_file="tag"
 cached_tag=""
 [[ -f "$tag_cache_file" ]] && cached_tag="$(cat "$tag_cache_file")"
 
