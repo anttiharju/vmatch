@@ -5,7 +5,11 @@ cd "$(dirname "${BASH_SOURCE[0]}")" # normalize working directory so caller wd d
 # Validate PKG as enum
 pkg="${1:-}"
 case "$pkg" in
-  brew|nix)
+  brew)
+    ext="rb"
+    ;;
+  nix)
+    ext="nix"
     ;;
   *)
     echo "Usage: $0 <PKG> [--quick] [--local-tap]"
@@ -24,20 +28,22 @@ for arg in "$@"; do
   esac
 done
 
+# Setup env
+source github/actions_env_mock.sh
+render_cache="values.cache"
 tag="$(git tag --sort=-creatordate | head -n1)"
 export TAG="$tag" # also supplied by CI
-export RENDER_CACHE="values.cache"
 
-source github/actions_env_mock.sh
-
-# Paths for source are hardcoded to benefit from shellcheck static analysis
-if [[ "$pkg" == "brew" ]]; then
-  source brew/template.sh
-  ext="rb"
-elif [[ "$pkg" == "nix" ]]; then
-  source nix/template.sh
-  ext="nix"
+# Render
+cd "$pkg"
+if [[ -f "$render_cache" && -z "${NO_CACHE:-}" ]]; then
+  cat "$render_cache"
+else
+  # shellcheck disable=SC1091
+  source "values.sh" | tee "$render_cache"
 fi
 
+# shellcheck disable=SC1091
+source "values.cache"
 envsubst < "template.$ext" > "$PKG_REPO.$ext"
-cp "template.$ext" "$PKG_REPO.tpl.$ext" # for easier visual diffing
+cp "template.$ext" "$PKG_REPO.tpl.$ext" # easier to visually diff two gitignored files
