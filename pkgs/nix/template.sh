@@ -12,4 +12,4 @@ fi
 source values.cache
 
 envsubst < "template.nix" > ".final.nix"
-cp template.nix .template.nix
+cp template.nix .template.nix # for easier visual diffing
