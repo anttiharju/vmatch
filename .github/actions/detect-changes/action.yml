@@ -22,15 +22,20 @@ runs:
       with:
         wildcard: golangci-lint
         changes: ${{ inputs.changes }}
-    - id: dist_brew
+    - id: pkg_brew
       uses: anttiharju/actions/compare-changes@v1
       with:
-        wildcard: dist-brew
+        wildcard: pkg-brew
         changes: ${{ inputs.changes }}
-    - id: dist_github
+    - id: pkg_github
       uses: anttiharju/actions/compare-changes@v1
       with:
-        wildcard: dist-github
+        wildcard: pkg-github
+        changes: ${{ inputs.changes }}
+    - id: pkg_nix
+      uses: anttiharju/actions/compare-changes@v1
+      with:
+        wildcard: pkg-nix
         changes: ${{ inputs.changes }}
     - id: documentation
       uses: anttiharju/actions/compare-changes@v1
@@ -57,12 +62,15 @@ outputs:
   go_code:
     description: "Whether Go code has changed"
     value: ${{ steps.go_code.outputs.changed }}
-  dist_brew:
-    description: "Whether Brew distribution has changed"
-    value: ${{ steps.dist_brew.outputs.changed }}
-  dist_github:
-    description: "Whether GitHub distribution has changed"
-    value: ${{ steps.dist_github.outputs.changed }}
+  pkg_brew:
+    description: "Whether Brew package has changed"
+    value: ${{ steps.pkg_brew.outputs.changed }}
+  pkg_github:
+    description: "Whether GitHub package has changed"
+    value: ${{ steps.pkg_github.outputs.changed }}
+  pkg_nix:
+    description: "Whether Nix package has changed"
+    value: ${{ steps.pkg_nix.outputs.changed }}
   documentation:
     description: "Whether documentation has changed"
     value: ${{ steps.documentation.outputs.changed }}

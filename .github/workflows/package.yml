@@ -1,4 +1,4 @@
-name: Distribute
+name: Package
 permissions:
   contents: write
   pull-requests: none
@@ -18,8 +18,6 @@ jobs:
   homebrew-tap:
     name: Homebrew tap
     runs-on: ubuntu-24.04
-    env:
-      TAG: ${{ inputs.tag }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -36,18 +34,14 @@ jobs:
           repository: anttiharju/homebrew-tap
           token: ${{ steps.generate-token.outputs.token }}
           path: homebrew-tap
-      - name: Download binary archives
-        env:
-          GH_TOKEN: ${{ github.token }}
-          TAG: ${{ inputs.tag }}
-        run: |
-          gh release download "$TAG" --pattern '${{ github.event.repository.name }}-*64.tar.gz'
-          ls -- *.tar.gz
       - name: Render formula template
+        env:
+          TAG: ${{ inputs.tag }}
+          GH_TOKEN: ${{ github.token }}
         uses: anttiharju/actions/render-template@v1
         with:
-          template: dist/brew/template.rb
-          values: dist/brew/values.bash
+          template: pkgs/brew/template.rb
+          values: pkgs/brew/values.sh
           output: homebrew-tap/Formula/${{ github.event.repository.name }}.rb
       - name: Commit changes
         uses: anttiharju/actions/commit-changes@v1
@@ -56,5 +50,8 @@ jobs:
           message: |
             Update ${{ github.event.repository.name }} to ${{ inputs.tag }}
 
-            https://github.com/${{ github.repository }}/blob/${{ github.sha }}/.github/workflows/distribute.yml
+            https://github.com/${{ github.repository }}/blob/${{ github.sha }}/.github/workflows/package.yml
           working-directory: homebrew-tap
+#      - uses: cachix/install-nix-action@fd24c48048070c1be9acd18c9d369a83f0fe94d7 # v31
+#        with:
+#          nix_path: nixpkgs=channel:nixos-25.05
