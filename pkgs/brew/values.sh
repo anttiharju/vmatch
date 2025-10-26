@@ -7,8 +7,8 @@ if [[ -z "${GITHUB_REPOSITORY:-}" ]]; then
 fi
 
 capture() {
-  eval "$1=\"$2\""
-  echo "$1=\"$2\""
+  eval "export $1=\"$2\""
+  echo "export $1=\"$2\""
 }
 
 REPO_ROOT="$(git rev-parse --show-toplevel)"
