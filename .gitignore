@@ -41,7 +41,8 @@ homebrew-tap
 
 # render.sh tmp files
 pkgs/*/*.cache
-pkgs/*/.*.*
+pkgs/*/*
+!pkgs/*/template.*
 
 # Binary archives
 *.tar.gz
