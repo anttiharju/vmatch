@@ -7,7 +7,7 @@ cd "$repo_root"
 version="$1"
 os="$2"
 arch="$3"
-echo "./dist/github/release.bash $version $os $arch"
+echo "./dist/github/release.sh $version $os $arch"
 
 rm -rf "tmp/$os-$arch"
 repo_name="$(basename "$(pwd)")"

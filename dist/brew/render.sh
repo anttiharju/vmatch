@@ -54,7 +54,7 @@ else
     echo "Using cached binaries for tag: $TAG"
   fi
 
-  source values.bash | tee "$cache_file"
+  source values.sh | tee "$cache_file"
 fi
 
 # Cache file is gitignored and we cannot guarantee its existence

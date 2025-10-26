@@ -9,7 +9,7 @@ runs:
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
-        ./dist/brew/render.bash
+        ./dist/brew/render.sh
     - uses: anttiharju/actions/rubocop-file@v1
       with:
         file: "dist/brew/.${{ github.event.repository.name }}.rb"

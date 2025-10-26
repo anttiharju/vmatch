@@ -47,8 +47,8 @@ pre-commit:
 
     - name: rubocop
       glob: "{*.rb}"
-      run: ./dist/brew/render.bash --quick && find dist/brew -name "*.rb" -type f -not -name "*template*" -exec rubocop {} \;
+      run: ./dist/brew/render.sh --quick && find dist/brew -name "*.rb" -type f -not -name "*template*" -exec rubocop {} \;
 
     - name: shellcheck
-      glob: "*{.sh,.bash}"
-      run: git ls-files -z '*.sh' '*.bash' | xargs -0 shellcheck --color=always --source-path=SCRIPTDIR
+      glob: "*.sh"
+      run: git ls-files -z '*.sh' | xargs -0 shellcheck --color=always --source-path=SCRIPTDIR
