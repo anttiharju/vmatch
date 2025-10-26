@@ -22,20 +22,20 @@ runs:
       with:
         wildcard: golangci-lint
         changes: ${{ inputs.changes }}
-    - id: pkgs_brew
+    - id: pkg_brew
       uses: anttiharju/actions/compare-changes@v1
       with:
-        wildcard: pkgs-brew
+        wildcard: pkg-brew
         changes: ${{ inputs.changes }}
-    - id: pkgs_github
+    - id: pkg_github
       uses: anttiharju/actions/compare-changes@v1
       with:
-        wildcard: pkgs-github
+        wildcard: pkg-github
         changes: ${{ inputs.changes }}
-    - id: pkgs_nix
+    - id: pkg_nix
       uses: anttiharju/actions/compare-changes@v1
       with:
-        wildcard: pkgs-nix
+        wildcard: pkg-nix
         changes: ${{ inputs.changes }}
     - id: documentation
       uses: anttiharju/actions/compare-changes@v1
@@ -62,15 +62,15 @@ outputs:
   go_code:
     description: "Whether Go code has changed"
     value: ${{ steps.go_code.outputs.changed }}
-  pkgs_brew:
+  pkg_brew:
     description: "Whether Brew package has changed"
-    value: ${{ steps.pkgs_brew.outputs.changed }}
-  pkgs_github:
+    value: ${{ steps.pkg_brew.outputs.changed }}
+  pkg_github:
     description: "Whether GitHub package has changed"
-    value: ${{ steps.pkgs_github.outputs.changed }}
-  pkgs_nix:
+    value: ${{ steps.pkg_github.outputs.changed }}
+  pkg_nix:
     description: "Whether Nix package has changed"
-    value: ${{ steps.pkgs_nix.outputs.changed }}
+    value: ${{ steps.pkg_nix.outputs.changed }}
   documentation:
     description: "Whether documentation has changed"
     value: ${{ steps.documentation.outputs.changed }}
