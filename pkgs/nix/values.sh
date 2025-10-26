@@ -7,7 +7,7 @@ capture() {
 }
 
 repo_name="$(basename "$GITHUB_REPOSITORY")"
-capture REPO_NAME "$repo_name"
-capture VERSION "${TAG#v}"
-capture REPO_OWNER "${GITHUB_REPOSITORY%%/*}"
+capture PKG_REPO "$repo_name"
+capture PKG_VERSION "${TAG#v}"
+capture PKLG_OWNER "${GITHUB_REPOSITORY%%/*}"
 # HASH is supplied by CI
