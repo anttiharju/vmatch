@@ -42,6 +42,10 @@ jobs:
           enforce: ${{ (steps.changed.outputs.binary == 'true' || steps.changed.outputs.pkg_brew == 'true' || steps.changed.outputs.pkg_github == 'true') && github.event_name != 'push' }}
 
       - if: always()
+        name: hash-nix
+        uses: anttiharju/actions/hash-nix@v0
+
+      - if: always()
         name: action-validator
         uses: anttiharju/actions/action-validator@v1
 
