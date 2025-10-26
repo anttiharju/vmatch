@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 set -euo pipefail
-cd "$(dirname "${BASH_SOURCE[0]}")"
 
 capture() {
   eval "export $1=\"$2\""
@@ -18,6 +17,8 @@ capture PKG_HOMEPAGE "$homepage"
 capture PKG_VERSION "${TAG#v}"
 capture PKG_OWNER "${GITHUB_REPOSITORY%%/*}"
 
+repo_root="$(git rev-parse --show-toplevel)"
+cd "$repo_root"
 pattern="$repo-*64.tar.gz"
 gh release download "$TAG" --pattern "$pattern" --clobber
 for binary in $pattern; do
