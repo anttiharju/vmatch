@@ -9,5 +9,7 @@ capture() {
 repo_name="$(basename "$GITHUB_REPOSITORY")"
 capture PKG_REPO "$repo_name"
 capture PKG_VERSION "${TAG#v}"
-capture PKLG_OWNER "${GITHUB_REPOSITORY%%/*}"
-# HASH is supplied by CI
+capture PKG_OWNER "${GITHUB_REPOSITORY%%/*}"
+pkg_rev="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$TAG" --jq '.object.sha')"
+capture PKG_REV "$pkg_rev"
+# PKG_HASH is supplied by CI
