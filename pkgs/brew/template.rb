@@ -9,7 +9,7 @@ class ${PKG_CLASS} < Formula
 
   on_macos do
     if Hardware::CPU.intel?
-      url 'https://github.com/${PKG_OWNER}/${PKG_REPO}/releases/download/v${version}/${PKG_REPO}-darwin-amd64.tar.gz'
+      url 'https://github.com/${PKG_OWNER}/${PKG_REPO}/releases/download/v${PKG_VERSION}/${PKG_REPO}-darwin-amd64.tar.gz'
       sha256 '${PKG_MAC_INTEL_SHA}'
 
       def install
@@ -17,7 +17,7 @@ class ${PKG_CLASS} < Formula
       end
     end
     if Hardware::CPU.arm?
-      url 'https://github.com/${PKG_OWNER}/${PKG_REPO}/releases/download/v${version}/${PKG_REPO}-darwin-arm64.tar.gz'
+      url 'https://github.com/${PKG_OWNER}/${PKG_REPO}/releases/download/v${PKG_VERSION}/${PKG_REPO}-darwin-arm64.tar.gz'
       sha256 '${PKG_MAC_ARM_SHA}'
 
       def install
@@ -28,7 +28,7 @@ class ${PKG_CLASS} < Formula
 
   on_linux do
     if Hardware::CPU.intel? && Hardware::CPU.is_64_bit?
-      url 'https://github.com/${PKG_OWNER}/${PKG_REPO}/releases/download/v${version}/${PKG_REPO}-linux-amd64.tar.gz'
+      url 'https://github.com/${PKG_OWNER}/${PKG_REPO}/releases/download/v${PKG_VERSION}/${PKG_REPO}-linux-amd64.tar.gz'
       sha256 '${PKG_LINUX_INTEL_SHA}'
 
       def install
@@ -36,7 +36,7 @@ class ${PKG_CLASS} < Formula
       end
     end
     if Hardware::CPU.arm? && Hardware::CPU.is_64_bit?
-      url 'https://github.com/${PKG_OWNER}/${PKG_REPO}/releases/download/v${version}/${PKG_REPO}-linux-arm64.tar.gz'
+      url 'https://github.com/${PKG_OWNER}/${PKG_REPO}/releases/download/v${PKG_VERSION}/${PKG_REPO}-linux-arm64.tar.gz'
       sha256 '${PKG_LINUX_ARM_SHA}'
 
       def install
