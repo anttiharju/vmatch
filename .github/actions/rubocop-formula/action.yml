@@ -8,7 +8,7 @@ runs:
       uses: anttiharju/actions/install-envsubst@v0
     - name: Render formula template
       env:
-        TAG: "1.0.0" # this value does not matter
+        TAG: "1.0.0" # FIXME: has to point to an actual release
         GH_TOKEN: ${{ github.token }}
       uses: anttiharju/actions/render-template@v0
       with:
