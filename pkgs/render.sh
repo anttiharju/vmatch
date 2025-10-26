@@ -25,7 +25,7 @@ for arg in "$@"; do
 done
 
 RENDER_CACHE=values.cache
-TAG="$(git tag --sort=-creatordate | head -n1)"
+TAG="$(git tag --sort=-creatordate | head -n1)" # also supplied by CI
 
 source github/env_mock.sh
 
