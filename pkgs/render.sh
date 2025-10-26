@@ -31,7 +31,7 @@ source github/actions_env_mock.sh
 
 # Paths for source are hardcoded to benefit from shellcheck static analysis
 if [[ "$pkg" == "brew" ]]; then
-  source brew/package.sh
+  source brew/template.sh
 elif [[ "$pkg" == "nix" ]]; then
   source nix/template.sh
 fi
