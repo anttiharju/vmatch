@@ -9,4 +9,5 @@ fi
 # shellcheck disable=SC1091
 source values.cache
 
-envsubst < "template.nix" > ".template.nix"
+envsubst < "template.nix" > ".final.nix"
+cp template.nix .template.nix
