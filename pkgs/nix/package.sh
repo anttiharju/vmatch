@@ -2,10 +2,10 @@
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
-if [[ ! -f "$RENDER_CACHE" || -n "${NO_CACHE:-}" ]]; then
-  source values.sh | tee "$RENDER_CACHE"
-else
+if [[ -f "$RENDER_CACHE" && -z "${NO_CACHE:-}" ]]; then
   cat "$RENDER_CACHE"
+else
+  source values.sh | tee "$RENDER_CACHE"
 fi
 
 # shellcheck disable=SC1091
