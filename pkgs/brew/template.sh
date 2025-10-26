@@ -10,6 +10,3 @@ fi
 
 # shellcheck disable=SC1091
 source values.cache
-
-envsubst < "template.rb" > "$PKG_REPO.rb"
-cp template.rb "$PKG_REPO.tpl.rb" # for easier visual diffing

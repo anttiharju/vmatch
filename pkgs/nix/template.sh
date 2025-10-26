@@ -10,6 +10,3 @@ fi
 
 # shellcheck disable=SC1091
 source values.cache
-
-envsubst < "template.nix" > "$PKG_REPO.nix"
-cp template.nix "$PKG_REPO.tpl.nix" # for easier visual diffing

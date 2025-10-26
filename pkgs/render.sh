@@ -33,6 +33,11 @@ source github/actions_env_mock.sh
 # Paths for source are hardcoded to benefit from shellcheck static analysis
 if [[ "$pkg" == "brew" ]]; then
   source brew/template.sh
+  ext="rb"
 elif [[ "$pkg" == "nix" ]]; then
   source nix/template.sh
+  ext="nix"
 fi
+
+envsubst < "template.$ext" > "$PKG_REPO.$ext"
+cp "template.$ext" "$PKG_REPO.tpl.$ext" # for easier visual diffing
