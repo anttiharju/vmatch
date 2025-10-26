@@ -18,15 +18,8 @@ case "$pkg" in
     ;;
 esac
 
-# Parse optional flags
-shift
-for arg in "$@"; do
-  case "$arg" in
-    --no-cache)
-      export NO_CACHE=1
-      ;;
-  esac
-done
+# Parse flags
+[[ " $* " =~ " --no-cache " ]] && export NO_CACHE=1
 
 # Setup env
 source github/actions_env_mock.sh
