@@ -4,6 +4,8 @@ cd "$(dirname "${BASH_SOURCE[0]}")"
 
 if [[ ! -f "$RENDER_CACHE" || -n "${NO_CACHE:-}" ]]; then
   source values.sh | tee "$RENDER_CACHE"
+else
+  cat "$RENDER_CACHE"
 fi
 
 # shellcheck disable=SC1091
