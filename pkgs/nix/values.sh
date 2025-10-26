@@ -6,8 +6,8 @@ capture() {
   echo "export $1=\"$2\""
 }
 
-repo_name="$(basename "$GITHUB_REPOSITORY")"
-capture PKG_REPO "$repo_name"
+repo="$(basename "$GITHUB_REPOSITORY")"
+capture PKG_REPO "$repo"
 capture PKG_VERSION "${TAG#v}"
 capture PKG_OWNER "${GITHUB_REPOSITORY%%/*}"
 rev="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$TAG" --jq '.object.sha')"
