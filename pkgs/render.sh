@@ -23,17 +23,17 @@ esac
 
 # Setup env
 source github/actions_env_mock.sh
-render_cache="values.cache"
+cache="values.cache"
 tag="$(git tag --sort=-creatordate | head -n1)"
 export TAG="$tag" # also supplied by CI
 
 # Render
 cd "$pkg"
-if [[ -f "$render_cache" && -z "${NO_CACHE:-}" ]]; then
-  cat "$render_cache"
+if [[ -f "$cache" && -z "${NO_CACHE:-}" ]]; then
+  cat "$cache"
 else
   # shellcheck disable=SC1091
-  source "values.sh" | tee "$render_cache"
+  source "values.sh" | tee "$cache"
 fi
 
 # shellcheck disable=SC1091
