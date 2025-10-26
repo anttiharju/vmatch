@@ -6,12 +6,15 @@ runs:
   steps:
     - name: Install envsbust
       uses: anttiharju/actions/install-envsubst@v0
-    - name: Render out final formula
-      shell: sh
+    - name: Render formula template
       env:
+        TAG: "1.0.0" # this value does not matter
         GH_TOKEN: ${{ github.token }}
-      run: |
-        ./pkgs/render.sh brew
+      uses: anttiharju/actions/render-template@v0
+      with:
+        template: pkgs/brew/template.rb
+        values: pkgs/brew/values.sh
+        output: "pkgs/brew/${{ github.event.repository.name }}.rb"
     - uses: anttiharju/actions/rubocop-file@v0
       with:
         file: "pkgs/brew/${{ github.event.repository.name }}.rb"
