@@ -1,11 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if [[ -z "${GITHUB_REPOSITORY:-}" ]]; then
-  echo "GITHUB_REPOSITORY is not set" >&2
-  exit 1
-fi
-
 capture() {
   eval "export $1=\"$2\""
   echo "export $1=\"$2\""
