@@ -20,7 +20,7 @@ fi
 TAG="$(git tag --sort=-creatordate | head -n1)"
 
 # Check if we need to download binaries by comparing cached tag with latest release tag
-tag_cache_file="$repo_root/tag"
+tag_cache_file="$(realpath ../tag)"
 cached_tag=""
 [[ -f "$tag_cache_file" ]] && cached_tag="$(cat "$tag_cache_file")"
 

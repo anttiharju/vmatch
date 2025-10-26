@@ -43,6 +43,7 @@ homebrew-tap
 pkgs/brew/values.cache
 pkgs/brew/*.rb
 !pkgs/brew/template.rb
+pkgs/tag
 
 # Binary archives
 *.tar.gz
