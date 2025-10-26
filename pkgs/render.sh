@@ -27,7 +27,7 @@ done
 RENDER_CACHE=values.cache
 TAG="$(git tag --sort=-creatordate | head -n1)" # also supplied by CI
 
-source github/env_mock.sh
+source github/actions_env_mock.sh
 
 # Paths for source are hardcoded to benefit from shellcheck static analysis
 if [[ "$pkg" == "brew" ]]; then
