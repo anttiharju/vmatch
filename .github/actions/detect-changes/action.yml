@@ -32,6 +32,11 @@ runs:
       with:
         wildcard: pkgs-github
         changes: ${{ inputs.changes }}
+    - id: pkgs_nix
+      uses: anttiharju/actions/compare-changes@v1
+      with:
+        wildcard: pkgs-nix
+        changes: ${{ inputs.changes }}
     - id: documentation
       uses: anttiharju/actions/compare-changes@v1
       with:
@@ -58,11 +63,14 @@ outputs:
     description: "Whether Go code has changed"
     value: ${{ steps.go_code.outputs.changed }}
   pkgs_brew:
-    description: "Whether Brew distribution has changed"
+    description: "Whether Brew package has changed"
     value: ${{ steps.pkgs_brew.outputs.changed }}
   pkgs_github:
-    description: "Whether GitHub distribution has changed"
+    description: "Whether GitHub package has changed"
     value: ${{ steps.pkgs_github.outputs.changed }}
+  pkgs_nix:
+    description: "Whether Nix package has changed"
+    value: ${{ steps.pkgs_nix.outputs.changed }}
   documentation:
     description: "Whether documentation has changed"
     value: ${{ steps.documentation.outputs.changed }}
