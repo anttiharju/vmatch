@@ -33,5 +33,5 @@ source github/env_mock.sh
 if [[ "$pkg" == "brew" ]]; then
   source brew/package.sh
 elif [[ "$pkg" == "nix" ]]; then
-  source nix/package.sh
+  source nix/template.sh
 fi
