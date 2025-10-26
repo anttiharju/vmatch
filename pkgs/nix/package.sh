@@ -2,7 +2,7 @@
 set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")"
 
-if [[ ! -f "$RENDER_CACHE" ]]; then
+if [[ ! -f "$RENDER_CACHE" || -n "${NO_CACHE:-}" ]]; then
   source values.sh | tee "$RENDER_CACHE"
 fi
 
