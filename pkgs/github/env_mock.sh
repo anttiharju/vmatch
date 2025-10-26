@@ -1,14 +1,18 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-remote_url="$(git remote get-url origin 2>/dev/null || echo "")"
+#remote_url=https://example.com/owner/repository.git
+#remote_url=git@example.com:owner/repository.git
+remote_url="$(git remote get-url origin)"
 
-if [[ "$remote_url" =~ github.com[:/]([^/]+)/([^/.]+) ]]; then
-  owner="${BASH_REMATCH[1]}"
-  repo_name="${BASH_REMATCH[2]}"
-  GITHUB_REPOSITORY="$owner/$repo_name"
-fi
-GITHUB_SHA="$(git rev-parse HEAD)"
+normalized_url="${remote_url/://}"
+temp="${normalized_url%/*}"
+owner="$(basename "$temp")"
 
+repository="$(basename -s .git "$remote_url")"
+
+GITHUB_REPOSITORY="$owner/$repository"
 export GITHUB_REPOSITORY
+
+GITHUB_SHA="$(git rev-parse HEAD)"
 export GITHUB_SHA
