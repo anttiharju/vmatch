@@ -9,7 +9,7 @@ echo "./pkgs/github/archive.sh $version $os $arch"
 
 rm -rf "tmp/$os-$arch"
 repo_name="$(basename -s .git "$(git remote get-url origin)")"
-bin_path="tmp/$os-$arch/$repo_name"
-CGO_ENABLED=0 go build -ldflags "-s -w -buildid=github-$version" -trimpath -o "$bin_path"
+bin="tmp/$os-$arch/$repo_name"
+CGO_ENABLED=0 go build -ldflags "-s -w -buildid=github-$version" -trimpath -o "$bin"
 
-tar -czf "$repo_name-$os-$arch.tar.gz" "$bin_path"
+tar -czf "$repo_name-$os-$arch.tar.gz" "$bin"
