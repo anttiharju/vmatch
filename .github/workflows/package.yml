@@ -58,3 +58,6 @@ jobs:
 
             https://github.com/${{ github.repository }}/blob/${{ github.sha }}/.github/workflows/package.yml
           working-directory: homebrew-tap
+#      - uses: cachix/install-nix-action@fd24c48048070c1be9acd18c9d369a83f0fe94d7 # v31
+#        with:
+#          nix_path: nixpkgs=channel:nixos-25.05
