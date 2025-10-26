@@ -12,7 +12,7 @@ case "$pkg" in
     ext="nix"
     ;;
   *)
-    echo "Usage: $0 <PKG> [--quick] [--local-tap]"
+    echo "Usage: $0 <PKG> [--no-cache]"
     echo "Valid packages: brew, nix"
     exit 1
     ;;
