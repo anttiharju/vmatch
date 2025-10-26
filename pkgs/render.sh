@@ -3,8 +3,8 @@ set -euo pipefail
 cd "$(dirname "${BASH_SOURCE[0]}")" # normalize working directory so caller wd does not matter
 
 # Validate PKG as enum
-PKG="${1:-}"
-case "$PKG" in
+pkg="${1:-}"
+case "$pkg" in
   brew|nix)
     ;;
   *)
@@ -14,11 +14,14 @@ case "$PKG" in
     ;;
 esac
 
+RENDER_CACHE=values.cache
+RENDER_TAG="$(git tag --sort=-creatordate | head -n1)"
+
 source github/env_mock.sh
 
 # Paths for source are hardcoded to benefit from shellcheck static analysis
-if [[ "$PKG" == "brew" ]]; then
+if [[ "$pkg" == "brew" ]]; then
   source brew/package.sh
-elif [[ "$PKG" == "nix" ]]; then
+elif [[ "$pkg" == "nix" ]]; then
   source nix/package.sh
 fi

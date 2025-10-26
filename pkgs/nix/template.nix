@@ -1,14 +1,14 @@
 { buildGoModule, fetchFromGitHub }:
 
 buildGoModule {
-  pname = "${repo_name}";
-  version = "${version}";
+  pname = "${REPO_NAME}";
+  version = "${VERSION}";
 
   src = fetchFromGitHub {
-    owner = "${repo_owner}";
-    repo = "${repo_name}";
+    owner = "${REPO_OWNER}";
+    repo = "${REPO_NAME}";
     rev = "${GITHUB_SHA}";
-    hash = "${hash}";
+    hash = "${HASH}";
   };
 
   vendorHash = null;

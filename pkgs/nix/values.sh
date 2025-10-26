@@ -12,8 +12,8 @@ capture() {
 }
 
 repo_name="$(basename "$GITHUB_REPOSITORY")"
-echo "repo_name=\"$repo_name\""
+echo "REPO_NAME=\"$repo_name\""
 
-capture version "${TAG#v}"
-capture repo_owner "${GITHUB_REPOSITORY%%/*}"
+capture VERSION "${RENDER_TAG#v}"
+capture REPO_OWNER "${GITHUB_REPOSITORY%%/*}"
 # hash is handled by CI

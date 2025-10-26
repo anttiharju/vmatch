@@ -14,5 +14,5 @@ repository="$(basename -s .git "$remote_url")"
 GITHUB_REPOSITORY="$owner/$repository"
 export GITHUB_REPOSITORY
 
-GITHUB_SHA="$(git rev-parse HEAD)"
+GITHUB_SHA="$(git rev-list -n 1 "$RENDER_TAG")"
 export GITHUB_SHA

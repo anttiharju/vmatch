@@ -1,4 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
+cd "$(dirname "${BASH_SOURCE[0]}")"
 
-echo "$GITHUB_REPOSITORY"
+if [[ ! -f "$RENDER_CACHE" ]]; then
+  source values.sh | tee "$RENDER_CACHE"
+fi
+
+# shellcheck disable=SC1091
+source values.cache
+
+envsubst < "template.nix" > ".template.nix"
