@@ -14,7 +14,7 @@ capture() {
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 
 repo_name="$(basename "$GITHUB_REPOSITORY")"
-echo "repo_name=\"$repo_name\""
+capture repo_name "$repo_name"
 
 capture class_name "$(awk 'BEGIN{print toupper(substr("'"$repo_name"'",1,1)) substr("'"$repo_name"'",2)}')"
 capture description "$(gh repo view --json description --jq .description)"
