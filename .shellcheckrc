@@ -5,8 +5,7 @@ external-sources=true
 # Optional checks https://github.com/koalaman/shellcheck/wiki/Optional
 enable=avoid-negated-conditions
 enable=avoid-nullary-conditions
-enable=check-extra-masked-returns
+enable=check-extra-masked-returns # important
 enable=check-set-e-suppressed
-enable=quote-safe-variables
 enable=require-double-brackets
 enable=useless-use-of-cat

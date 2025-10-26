@@ -24,8 +24,9 @@ for arg in "$@"; do
   esac
 done
 
-RENDER_CACHE=values.cache
-TAG="$(git tag --sort=-creatordate | head -n1)" # also supplied by CI
+tag="$(git tag --sort=-creatordate | head -n1)"
+export TAG="$tag" # also supplied by CI
+export RENDER_CACHE="values.cache"
 
 source github/actions_env_mock.sh
 
