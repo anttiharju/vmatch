@@ -8,8 +8,8 @@ arch="$3"
 echo "./pkgs/github/archive.sh $version $os $arch"
 
 rm -rf "tmp/$os-$arch"
-repo_name="$(basename -s .git "$(git remote get-url origin)")"
-bin="tmp/$os-$arch/$repo_name"
+repo="$(basename -s .git "$(git remote get-url origin)")"
+bin="tmp/$os-$arch/$repo"
 CGO_ENABLED=0 go build -ldflags "-s -w -buildid=github-$version" -trimpath -o "$bin"
 
-tar -czf "$repo_name-$os-$arch.tar.gz" "$bin"
+tar -czf "$repo-$os-$arch.tar.gz" "$bin"
