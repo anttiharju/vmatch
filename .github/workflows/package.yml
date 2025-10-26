@@ -34,6 +34,8 @@ jobs:
           repository: anttiharju/homebrew-tap
           token: ${{ steps.generate-token.outputs.token }}
           path: homebrew-tap
+      - name: Debug
+        run: tree -L 3
       - name: Render formula template
         env:
           TAG: ${{ inputs.tag }}
