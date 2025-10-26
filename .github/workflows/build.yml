@@ -23,15 +23,15 @@ jobs:
     with:
       type: ${{ needs.plan.outputs.release_type }}
 
-  distribute:
-    name: Distribute
+  package:
+    name: Package
     needs:
       - plan
       - release
     if: needs.plan.outputs.release == 'true'
     permissions:
       contents: write
-    uses: ./.github/workflows/distribute.yml
+    uses: ./.github/workflows/package.yml
     with:
       tag: ${{ needs.release.outputs.tag }}
     secrets: inherit

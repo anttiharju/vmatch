@@ -1,4 +1,4 @@
-# Homebrew distribution
+# Homebrew tap
 
 This directory contains bash scripts:
 

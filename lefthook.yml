@@ -21,11 +21,11 @@ pre-commit:
       run: editorconfig-checker {staged_files}
 
     - name: go build
-      glob: "{dist/wrap/*,internal/*,go.mod,main.go}"
+      glob: "{internal/*,go.*,*.go}"
       run: go build
 
     - name: go test
-      glob: "{dist/wrap/*,internal/*,go.mod,main.go}"
+      glob: "{internal/*,go.*,*.go}"
       run: go test ./...
 
     - name: golangci-lint
@@ -47,7 +47,7 @@ pre-commit:
 
     - name: rubocop
       glob: "{*.rb}"
-      run: ./dist/brew/render.sh --quick && find dist/brew -name "*.rb" -type f -not -name "*template*" -exec rubocop {} \;
+      run: ./pkgs/brew/render.sh --quick && find pkgs/brew -name "*.rb" -type f -not -name "*template*" -exec rubocop {} \;
 
     - name: shellcheck
       glob: "*.sh"

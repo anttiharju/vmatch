@@ -11,7 +11,7 @@ on:
     outputs:
       release:
         description: "Whether to trigger release workflows"
-        value: ${{ jobs.validate.outputs.release_type != '' || (jobs.validate.outputs.binary_changed == 'true' || jobs.validate.outputs.dist_changed == 'true') }}
+        value: ${{ jobs.validate.outputs.release_type != '' || (jobs.validate.outputs.binary_changed == 'true' || jobs.validate.outputs.pkgs_changed == 'true') }}
       release_type:
         description: "The type of release to perform; major, minor, patch, or false"
         value: ${{ jobs.validate.outputs.release_type }}
@@ -39,7 +39,7 @@ jobs:
         name: Require semantic version label
         uses: anttiharju/actions/require-semver-label@v1
         with:
-          enforce: ${{ (steps.changed.outputs.binary == 'true' || steps.changed.outputs.dist_brew == 'true' || steps.changed.outputs.dist_github == 'true') && github.event_name != 'push' }}
+          enforce: ${{ (steps.changed.outputs.binary == 'true' || steps.changed.outputs.pkgs_brew == 'true' || steps.changed.outputs.pkgs_github == 'true') && github.event_name != 'push' }}
 
       - if: always()
         name: action-validator
@@ -85,7 +85,7 @@ jobs:
         with:
           patterns: "{*.yml,*.md}"
 
-      - if: always() && (steps.changed.outputs.dist_brew == 'true' || github.event_name != 'pull_request')
+      - if: always() && (steps.changed.outputs.pkgs_brew == 'true' || github.event_name != 'pull_request')
         name: Rubocop formula
         uses: ./.github/actions/rubocop-formula
 
@@ -94,6 +94,6 @@ jobs:
         uses: anttiharju/actions/shellcheck@v1
     outputs:
       binary_changed: ${{ steps.changed.outputs.binary }}
-      dist_changed: ${{ steps.changed.outputs.dist_brew || steps.changed.outputs.dist_github }}
+      pkgs_changed: ${{ steps.changed.outputs.pkgs_brew || steps.changed.outputs.pkgs_github }}
       release_type: ${{ steps.semver.outputs.bump }}
       documentation_changed: ${{ steps.changed.outputs.documentation }}
