@@ -10,32 +10,6 @@ import (
 	"github.com/anttiharju/vmatch/internal/exitcode"
 )
 
-type BuildInfo struct {
-	version string
-	time    string
-	rev     string
-}
-
-func (b BuildInfo) Version() string {
-	return b.version
-}
-
-func (b BuildInfo) Time() string {
-	return b.time
-}
-
-func (b BuildInfo) Rev() string {
-	return b.rev
-}
-
-func New(version, time, rev string) BuildInfo {
-	return BuildInfo{
-		version: version,
-		time:    time,
-		rev:     rev,
-	}
-}
-
 func Print(info BuildInfo) exitcode.Exitcode {
 	if buildInfo, ok := debug.ReadBuildInfo(); ok {
 		version := strings.TrimPrefix(buildInfo.Main.Version, "v")
