@@ -36,7 +36,7 @@ func New(version, time, rev string) BuildInfo {
 	}
 }
 
-func Print(_ BuildInfo) exitcode.Exitcode {
+func Print(info BuildInfo) exitcode.Exitcode {
 	if buildInfo, ok := debug.ReadBuildInfo(); ok {
 		version := strings.TrimPrefix(buildInfo.Main.Version, "v")
 		goVersion := buildInfo.GoVersion
@@ -52,8 +52,17 @@ func Print(_ BuildInfo) exitcode.Exitcode {
 			}
 		}
 
-		if buildTime == "" {
-			buildTime = "1970-01-01T00:00:00Z"
+		infoVersion := info.Version()
+		if infoVersion != "" {
+			version = infoVersion
+		}
+		infoTime := info.Time()
+		if infoTime != "" {
+			buildTime = infoTime
+		}
+		infoRev := info.Rev()
+		if infoRev != "" {
+			revision = infoRev
 		}
 
 		revision = revision[:8]
