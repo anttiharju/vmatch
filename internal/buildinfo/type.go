@@ -1,9 +1,13 @@
 package buildinfo
 
 type BuildInfo struct {
-	version string
-	time    string
-	rev     string
+	revision string
+	version  string
+	time     string
+}
+
+func (b BuildInfo) Revision() string {
+	return b.revision
 }
 
 func (b BuildInfo) Version() string {
@@ -14,14 +18,10 @@ func (b BuildInfo) Time() string {
 	return b.time
 }
 
-func (b BuildInfo) Rev() string {
-	return b.rev
-}
-
-func New(version, time, rev string) BuildInfo {
+func New(revision, version, time string) BuildInfo {
 	return BuildInfo{
-		version: version,
-		time:    time,
-		rev:     rev,
+		revision: revision,
+		version:  version,
+		time:     time,
 	}
 }

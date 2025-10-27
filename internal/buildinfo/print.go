@@ -26,6 +26,10 @@ func Print(info BuildInfo) exitcode.Exitcode {
 			}
 		}
 
+		infoRev := info.Revision()
+		if infoRev != "" {
+			revision = infoRev
+		}
 		infoVersion := info.Version()
 		if infoVersion != "" {
 			version = infoVersion
@@ -33,10 +37,6 @@ func Print(info BuildInfo) exitcode.Exitcode {
 		infoTime := info.Time()
 		if infoTime != "" {
 			buildTime = infoTime
-		}
-		infoRev := info.Rev()
-		if infoRev != "" {
-			revision = infoRev
 		}
 
 		const maxLength = 8

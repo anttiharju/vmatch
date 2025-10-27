@@ -11,15 +11,15 @@ import (
 )
 
 var (
-	version string
-	time    string
-	rev     string
+	revision string
+	version  string
+	time     string
 )
 
 func main() {
 	go interrupt.Listen(exitcode.Interrupt, os.Interrupt)
 
 	ctx := context.Background()
-	exitCode := choose.Wrapper(ctx, buildinfo.New(version, time, rev), os.Args[1:])
+	exitCode := choose.Wrapper(ctx, buildinfo.New(revision, version, time), os.Args[1:])
 	os.Exit(exitCode)
 }
