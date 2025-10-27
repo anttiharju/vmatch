@@ -38,7 +38,7 @@ site
 
 # Nested checkouts during package workflow
 homebrew-tap
-nixpkgs-anttiharju
+nur-packages
 
 # render.sh tmp files
 pkgs/*/*.cache
