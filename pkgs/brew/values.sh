@@ -17,6 +17,14 @@ capture PKG_HOMEPAGE "$homepage"
 capture PKG_VERSION "${TAG#v}"
 capture PKG_OWNER "${GITHUB_REPOSITORY%%/*}"
 
+if [[ "$TAG" = "v0.0.0" ]]; then
+  capture PKG_MAC_INTEL_SHA "devel"
+  capture PKG_MAC_ARM_SHA "devel"
+  capture PKG_LINUX_INTEL_SHA "devel"
+  capture PKG_LINUX_ARM_SHA "devel"
+  exit 0
+fi
+
 repo_root="$(git rev-parse --show-toplevel)"
 cd "$repo_root"
 pattern="$repo-*64.tar.gz"

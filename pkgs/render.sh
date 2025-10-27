@@ -25,6 +25,7 @@ esac
 source github/actions_env_mock.sh
 cache="$pkg/values.cache"
 tag="$(git tag --sort=-creatordate | head -n1)"
+tag="${tag:-v0.0.0}"
 export TAG="$tag" # also supplied by CI
 
 # Render
