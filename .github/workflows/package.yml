@@ -37,7 +37,6 @@ jobs:
       - name: Render template
         env:
           TAG: ${{ inputs.tag }}
-          GH_TOKEN: ${{ github.token }}
         uses: anttiharju/actions/render-template@v0
         with:
           template: pkgs/brew/template.rb
@@ -70,14 +69,13 @@ jobs:
         with:
           repository: anttiharju/nixpkgs-anttiharju
           token: ${{ steps.generate-token.outputs.token }}
-          path: nixkpgs-anttiharju
+          path: nixpkgs-anttiharju
       - uses: cachix/install-nix-action@fd24c48048070c1be9acd18c9d369a83f0fe94d7 # v31
         with:
           nix_path: nixpkgs=channel:nixos-25.05
       - name: Render template
         env:
           TAG: ${{ inputs.tag }}
-          GH_TOKEN: ${{ github.token }}
         uses: anttiharju/actions/render-template@v0
         with:
           template: pkgs/nix/template.nix
