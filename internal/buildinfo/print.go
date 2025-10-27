@@ -30,10 +30,12 @@ func Print(info BuildInfo) exitcode.Exitcode {
 		if infoRev != "" {
 			revision = infoRev
 		}
+
 		infoVersion := info.Version()
 		if infoVersion != "" {
 			version = infoVersion
 		}
+
 		infoTime := info.Time()
 		if infoTime != "" {
 			buildTime = infoTime
