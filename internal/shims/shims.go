@@ -68,7 +68,7 @@ func Inject() exitcode.Exitcode {
 }
 
 //go:embed go.sh golangci-lint.sh
-var scripts embed.FS
+var shims embed.FS
 
 func createShim(binDir string, script Shim) error {
 	name := string(script)
@@ -79,7 +79,7 @@ func createShim(binDir string, script Shim) error {
 		return nil
 	}
 
-	content, err := fs.ReadFile(scripts, sourcePath)
+	content, err := fs.ReadFile(shims, sourcePath)
 	if err != nil {
 		return fmt.Errorf("failed to read embedded script %s: %w", name, err)
 	}
