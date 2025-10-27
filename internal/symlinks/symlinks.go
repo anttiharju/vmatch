@@ -37,7 +37,7 @@ func sync() error {
 		return nil
 	}
 
-	scriptNames := buildScriptNamesMap()
+	scriptNames := buildShimNamesMap()
 
 	binaries, err := collectRelevantBinaries(goBinDir, scriptNames)
 	if err != nil {
@@ -79,13 +79,13 @@ func getGoBinDir() (string, error) {
 	return goBinDir, nil
 }
 
-func buildScriptNamesMap() map[string]bool {
-	scriptNames := make(map[string]bool)
+func buildShimNamesMap() map[string]bool {
+	shimNames := make(map[string]bool)
 	for _, shim := range shims.Shims() {
-		scriptNames[string(shim)] = true
+		shimNames[string(shim)] = true
 	}
 
-	return scriptNames
+	return shimNames
 }
 
 func collectRelevantBinaries(goBinDir string, shimNames map[string]bool) ([]string, error) {
