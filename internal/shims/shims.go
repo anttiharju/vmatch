@@ -70,10 +70,10 @@ func Inject() exitcode.Exitcode {
 //go:embed go.sh golangci-lint.sh
 var shims embed.FS
 
-func createShim(binDir string, script Shim) error {
-	name := string(script)
-	sourcePath := script.File()
-	destPath := filepath.Join(binDir, string(script))
+func createShim(binDir string, shim Shim) error {
+	name := string(shim)
+	sourcePath := shim.File()
+	destPath := filepath.Join(binDir, string(shim))
 
 	if exists(destPath) {
 		return nil
