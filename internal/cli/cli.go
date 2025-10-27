@@ -15,7 +15,7 @@ func firstArgIs(arg string, args []string) bool {
 	return len(args) > 0 && args[0] == arg
 }
 
-func Wrapper(ctx context.Context, info buildinfo.BuildInfo, args []string) int {
+func Start(ctx context.Context, info buildinfo.BuildInfo, args []string) int {
 	exitCode := scripts.Inject()
 	if exitCode != 0 {
 		return exitCode

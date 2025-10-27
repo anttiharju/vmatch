@@ -20,6 +20,6 @@ func main() {
 	go interrupt.Listen(exitcode.Interrupt, os.Interrupt)
 
 	ctx := context.Background()
-	exitCode := cli.Wrapper(ctx, buildinfo.New(revision, version, time), os.Args[1:])
+	exitCode := cli.Start(ctx, buildinfo.New(revision, version, time), os.Args[1:])
 	os.Exit(exitCode)
 }
