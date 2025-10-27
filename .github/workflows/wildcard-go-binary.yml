@@ -7,8 +7,8 @@ on:
       - wildcard
     paths:
       - "internal/**/*"
-      - "go.mod"
-      - "main.go"
+      - "*.go"
+      - "go.*"
 
 jobs:
   wildcard:
