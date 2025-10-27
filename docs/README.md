@@ -22,6 +22,10 @@
 
 **A:** It is better, if you can get the buy-in for Nix.
 
+**Q:** How does this compare to https://mise.jdx.dev/dev-tools/shims.html#shims?
+
+**A:** It is pretty much exactly like mise shims.
+
 ## Why
 
 Collaborators using different versions of `golangci-lint` may get different output, leading to confusion and wasted time in code reviews. Ideally, a team would agree to use `vmatch` as their source for `go` and `golangci-lint`. That way, they would always have the right version installed.
