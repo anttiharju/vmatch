@@ -65,8 +65,9 @@ func Print(info BuildInfo) exitcode.Exitcode {
 			revision = infoRev
 		}
 
-		if len(revision) > 8 {
-			revision = revision[:8]
+		const maxLength = 8
+		if len(revision) > maxLength {
+			revision = revision[:maxLength]
 		}
 
 		programName := filepath.Base(os.Args[0])
