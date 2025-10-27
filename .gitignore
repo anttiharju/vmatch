@@ -41,9 +41,9 @@ homebrew-tap
 nur-packages
 
 # render.sh tmp files
-pkgs/*/*.cache
 pkgs/*/*
-!pkgs/*/template.*
+!pkgs/*/*.*
+pkgs/*/*.cache
 
 # Binary archives
 *.tar.gz
