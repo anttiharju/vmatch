@@ -105,14 +105,14 @@ func collectRelevantBinaries(goBinDir string, scriptNames map[string]bool) ([]st
 	return binaries, nil
 }
 
-func shouldIncludeBinary(name string, scriptNames map[string]bool) bool {
+func shouldIncludeBinary(name string, shimtNames map[string]bool) bool {
 	// Skip hidden files (files starting with a dot)
 	if strings.HasPrefix(name, ".") {
 		return false
 	}
 
 	// Skip files that match shim names
-	if scriptNames[name] {
+	if shimtNames[name] {
 		return false
 	}
 
