@@ -1,4 +1,4 @@
-package scripts
+package shims
 
 import (
 	"embed"
@@ -10,18 +10,18 @@ import (
 	"github.com/anttiharju/vmatch/internal/exitcode"
 )
 
-type Script string
+type Shim string
 
 const (
-	Golang       Script = "go"
-	GolangCILint Script = "golangci-lint"
+	Golang       Shim = "go"
+	GolangCILint Shim = "golangci-lint"
 )
 
-func Scripts() []Script {
-	return []Script{Golang, GolangCILint}
+func Shims() []Shim {
+	return []Shim{Golang, GolangCILint}
 }
 
-func (s Script) File() string {
+func (s Shim) File() string {
 	switch s {
 	case Golang:
 		return "go.sh"
@@ -43,7 +43,7 @@ func Inject() exitcode.Exitcode {
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error: failed to get home directory: %v\n", err)
 
-		return exitcode.ScriptsHomeError
+		return exitcode.ShimHomeError
 	}
 
 	binDir := filepath.Join(homeDir, ".vmatch", "bin")
@@ -51,16 +51,16 @@ func Inject() exitcode.Exitcode {
 		if err := os.MkdirAll(binDir, 0o755); err != nil {
 			fmt.Fprintf(os.Stderr, "Error: failed to create directory %s: %v\n", binDir, err)
 
-			return exitcode.ScriptsCreateError
+			return exitcode.ShimCreateError
 		}
 	}
 
-	scripts := Scripts()
-	for _, script := range scripts {
-		if err := createScript(binDir, script); err != nil {
-			fmt.Fprintf(os.Stderr, "Error: failed to create script %s: %v\n", script, err)
+	shims := Shims()
+	for _, shim := range shims {
+		if err := createShim(binDir, shim); err != nil {
+			fmt.Fprintf(os.Stderr, "Error: failed to create shim %s: %v\n", shim, err)
 
-			return exitcode.ScriptsDirError
+			return exitcode.ShimDirError
 		}
 	}
 
@@ -68,25 +68,25 @@ func Inject() exitcode.Exitcode {
 }
 
 //go:embed go.sh golangci-lint.sh
-var scripts embed.FS
+var shims embed.FS
 
-func createScript(binDir string, script Script) error {
-	name := string(script)
-	sourcePath := script.File()
-	destPath := filepath.Join(binDir, string(script))
+func createShim(binDir string, shim Shim) error {
+	name := string(shim)
+	sourcePath := shim.File()
+	destPath := filepath.Join(binDir, string(shim))
 
 	if exists(destPath) {
 		return nil
 	}
 
-	content, err := fs.ReadFile(scripts, sourcePath)
+	content, err := fs.ReadFile(shims, sourcePath)
 	if err != nil {
-		return fmt.Errorf("failed to read embedded script %s: %w", name, err)
+		return fmt.Errorf("failed to read embedded shim %s: %w", name, err)
 	}
 
 	//nolint:gosec // using 0o755 instead of 0o600 is intentional here
 	if err := os.WriteFile(destPath, content, 0o755); err != nil {
-		return fmt.Errorf("failed to write script %s: %w", name, err)
+		return fmt.Errorf("failed to write shim %s: %w", name, err)
 	}
 
 	return nil

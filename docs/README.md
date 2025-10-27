@@ -105,7 +105,7 @@ Go versions are downloaded from Google servers and stored under `~/.vmatch`, lik
 11 directories, 3 files
 ```
 
-Contents of `~/.vmatch/bin` are symlinked from `$(go env GOPATH)/bin`, expect for `go` or `golangci-lint`, because those are shell scripts that wrap `vmatch`
+Contents of `~/.vmatch/bin` are symlinked from `$(go env GOPATH)/bin`, expect for `go` or `golangci-lint` which are shims, i.e. shell scripts that wrap `vmatch`.
 
 If your `go.mod` does not specify the full version, for example `1.24` instead of `1.24.3`, `vmatch` defaults to `1.24.0` for simplicity, surprisingly, sometimes there is a Go `1.minor` and sometimes a Go `1.minor.0` version released. See for yourself:
 

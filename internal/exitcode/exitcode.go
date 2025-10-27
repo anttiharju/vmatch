@@ -5,21 +5,15 @@ type Exitcode int
 const (
 	Success Exitcode = iota
 	Interrupt
-	NoGo
-	GoPathIssue
-	BinPathIssue
-	WorkDirIssue
-	VersionReadFileIssue
-	VersionIssue
-	VersionValidationIssue
-	CmdStartIssue
-	CmdWaitIssue
-	UserHomeDirIssue
-	InstallPathIssue
+	CMDStartError
+	CMDInstallError
+	CMDFindError
+	CMDWaitError
+	InstallPathError
 	VersionError
 	CLIError
-	ScriptsHomeError
-	ScriptsCreateError
-	ScriptsDirError
+	ShimHomeError
+	ShimCreateError
+	ShimDirError
 	DoctorError
 )

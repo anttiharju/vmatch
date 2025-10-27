@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	"github.com/anttiharju/vmatch/internal/exitcode"
-	"github.com/anttiharju/vmatch/internal/scripts"
+	"github.com/anttiharju/vmatch/internal/shims"
 	"github.com/anttiharju/vmatch/internal/wrapper"
 )
 
@@ -33,12 +33,12 @@ func validateVersion(version string) (string, error) {
 	return version, nil
 }
 
-func Wrap(script scripts.Script) *WrappedLinter {
-	baseWrapper := wrapper.BaseWrapper{Name: string(script)}
+func Wrap(shim shims.Shim) *WrappedLinter {
+	baseWrapper := wrapper.BaseWrapper{Name: string(shim)}
 
 	err := baseWrapper.GenerateInstallPath(".golangci-version", linterParser, validateVersion)
 	if err != nil {
-		baseWrapper.ExitWithPrintln(exitcode.InstallPathIssue, err.Error())
+		baseWrapper.ExitWithPrintln(exitcode.InstallPathError, err.Error())
 	}
 
 	return &WrappedLinter{
@@ -72,8 +72,8 @@ func (w *WrappedLinter) noBinary() bool {
 func (w *WrappedLinter) install(ctx context.Context) {
 	//nolint:lll // Install command example from https://golangci-lint.run/welcome/install/#binaries
 	// curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.59.1
-	// todo: pin to a sha instead of HEAD, but automate updates
-	curl := "curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/cc3567e3127d8530afb69be1b7bd20ba9ebcc7c1/install.sh"
+	// todo: automate sha updates
+	curl := "curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/870ddc133592c3609f26af3b6f05ce2dd4a7afda/install.sh"
 	pipe := " | "
 	sh := "sh -s -- -b "
 	command := curl + pipe + sh + w.InstallPath + " v" + w.DesiredVersion
@@ -81,12 +81,12 @@ func (w *WrappedLinter) install(ctx context.Context) {
 
 	err := cmd.Start()
 	if err != nil {
-		w.ExitWithPrint(exitcode.CmdStartIssue, "failed to start command: "+err.Error())
+		w.ExitWithPrint(exitcode.CMDStartError, "failed to start command: "+err.Error())
 	}
 
 	err = cmd.Wait()
 	if err != nil {
-		w.ExitWithPrint(exitcode.CmdStartIssue, "failed to wait for command: "+err.Error())
+		w.ExitWithPrint(exitcode.CMDWaitError, "failed to wait for command: "+err.Error())
 	}
 }
 

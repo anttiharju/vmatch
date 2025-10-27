@@ -12,7 +12,7 @@ import (
 
 	"github.com/anttiharju/vmatch/internal/exitcode"
 	"github.com/anttiharju/vmatch/internal/install"
-	"github.com/anttiharju/vmatch/internal/scripts"
+	"github.com/anttiharju/vmatch/internal/shims"
 	"github.com/anttiharju/vmatch/internal/wrapper"
 )
 
@@ -50,12 +50,12 @@ func validateVersion(version string) (string, error) {
 	return version, nil
 }
 
-func Wrap(script scripts.Script) *WrappedLanguage {
-	baseWrapper := wrapper.BaseWrapper{Name: string(script)}
+func Wrap(shim shims.Shim) *WrappedLanguage {
+	baseWrapper := wrapper.BaseWrapper{Name: string(shim)}
 
 	err := baseWrapper.GenerateInstallPath("go.mod", languageParser, validateVersion)
 	if err != nil {
-		baseWrapper.ExitWithPrintln(exitcode.InstallPathIssue, err.Error())
+		baseWrapper.ExitWithPrintln(exitcode.InstallPathError, err.Error())
 	}
 
 	return &WrappedLanguage{
@@ -91,11 +91,11 @@ func (w *WrappedLanguage) install(ctx context.Context) {
 
 	err := install.FromURL(ctx, w.DesiredVersion, downloadURL, w.InstallPath)
 	if err != nil {
-		w.ExitWithPrint(exitcode.CmdStartIssue, "failed to install Go: "+err.Error())
+		w.ExitWithPrint(exitcode.CMDInstallError, "failed to install Go: "+err.Error())
 	}
 
 	if w.noBinary() {
-		w.ExitWithPrint(exitcode.CmdStartIssue, "failed to install Go: binary not found after installation")
+		w.ExitWithPrint(exitcode.CMDFindError, "failed to install Go: binary not found after installation")
 	}
 }
 

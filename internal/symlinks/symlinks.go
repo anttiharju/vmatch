@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/anttiharju/vmatch/internal/scripts"
+	"github.com/anttiharju/vmatch/internal/shims"
 )
 
 func Sync() {
@@ -37,14 +37,14 @@ func sync() error {
 		return nil
 	}
 
-	scriptNames := buildScriptNamesMap()
+	shimNames := buildShimNamesMap()
 
-	binaries, err := collectRelevantBinaries(goBinDir, scriptNames)
+	binaries, err := collectRelevantBinaries(goBinDir, shimNames)
 	if err != nil {
 		return fmt.Errorf("collecting relevant binaries: %w", err)
 	}
 
-	if err := cleanVmatchBinDirectory(vmatchDir, scriptNames); err != nil {
+	if err := cleanVmatchBinDirectory(vmatchDir, shimNames); err != nil {
 		return fmt.Errorf("cleaning vmatch bin directory: %w", err)
 	}
 
@@ -79,16 +79,16 @@ func getGoBinDir() (string, error) {
 	return goBinDir, nil
 }
 
-func buildScriptNamesMap() map[string]bool {
-	scriptNames := make(map[string]bool)
-	for _, script := range scripts.Scripts() {
-		scriptNames[string(script)] = true
+func buildShimNamesMap() map[string]bool {
+	shimNames := make(map[string]bool)
+	for _, shim := range shims.Shims() {
+		shimNames[string(shim)] = true
 	}
 
-	return scriptNames
+	return shimNames
 }
 
-func collectRelevantBinaries(goBinDir string, scriptNames map[string]bool) ([]string, error) {
+func collectRelevantBinaries(goBinDir string, shimNames map[string]bool) ([]string, error) {
 	entries, err := os.ReadDir(goBinDir)
 	if err != nil {
 		return nil, fmt.Errorf("reading directory %s: %w", goBinDir, err)
@@ -97,7 +97,7 @@ func collectRelevantBinaries(goBinDir string, scriptNames map[string]bool) ([]st
 	binaries := make([]string, 0, len(entries))
 
 	for _, entry := range entries {
-		if shouldIncludeBinary(entry.Name(), scriptNames) {
+		if shouldIncludeBinary(entry.Name(), shimNames) {
 			binaries = append(binaries, entry.Name())
 		}
 	}
@@ -105,29 +105,29 @@ func collectRelevantBinaries(goBinDir string, scriptNames map[string]bool) ([]st
 	return binaries, nil
 }
 
-func shouldIncludeBinary(name string, scriptNames map[string]bool) bool {
+func shouldIncludeBinary(name string, shimtNames map[string]bool) bool {
 	// Skip hidden files (files starting with a dot)
 	if strings.HasPrefix(name, ".") {
 		return false
 	}
 
-	// Skip files that match script names
-	if scriptNames[name] {
+	// Skip files that match shim names
+	if shimtNames[name] {
 		return false
 	}
 
 	return true
 }
 
-func cleanVmatchBinDirectory(vmatchDir string, scriptNames map[string]bool) error {
+func cleanVmatchBinDirectory(vmatchDir string, shimNames map[string]bool) error {
 	entries, err := os.ReadDir(vmatchDir)
 	if err != nil {
 		return fmt.Errorf("reading directory %s: %w", vmatchDir, err)
 	}
 
 	for _, entry := range entries {
-		// Skip if it's a script we want to keep
-		if scriptNames[entry.Name()] {
+		// Skip if it's a shim we want to keep
+		if shimNames[entry.Name()] {
 			continue
 		}
 

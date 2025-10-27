@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 
 	"github.com/anttiharju/vmatch/internal/exitcode"
-	"github.com/anttiharju/vmatch/internal/scripts"
+	"github.com/anttiharju/vmatch/internal/shims"
 )
 
 func Diagnose() exitcode.Exitcode {
@@ -20,8 +20,8 @@ func Diagnose() exitcode.Exitcode {
 
 	binDir := filepath.Join(homeDir, ".vmatch", "bin")
 	expectedPaths := map[string]string{
-		string(scripts.Golang):       filepath.Join(binDir, string(scripts.Golang)),
-		string(scripts.GolangCILint): filepath.Join(binDir, string(scripts.GolangCILint)),
+		string(shims.Golang):       filepath.Join(binDir, string(shims.Golang)),
+		string(shims.GolangCILint): filepath.Join(binDir, string(shims.GolangCILint)),
 	}
 
 	healthy := true
