@@ -28,7 +28,15 @@ func (b BuildInfo) Rev() string {
 	return b.rev
 }
 
-func Print() exitcode.Exitcode {
+func New(version, time, rev string) BuildInfo {
+	return BuildInfo{
+		version: version,
+		time:    time,
+		rev:     rev,
+	}
+}
+
+func Print(_ BuildInfo) exitcode.Exitcode {
 	if buildInfo, ok := debug.ReadBuildInfo(); ok {
 		version := strings.TrimPrefix(buildInfo.Main.Version, "v")
 		goVersion := buildInfo.GoVersion
