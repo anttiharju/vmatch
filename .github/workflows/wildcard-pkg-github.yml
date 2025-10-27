@@ -6,7 +6,7 @@ on:
     branches:
       - wildcard
     paths:
-      - "pkgs/github/**/*"
+      - "release/github/**/*"
 
 jobs:
   wildcard:

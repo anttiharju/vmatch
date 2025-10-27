@@ -48,8 +48,8 @@ jobs:
           TAG: ${{ inputs.tag }}
         uses: anttiharju/actions/render-template@v0
         with:
-          template: pkgs/brew/template.rb
-          values: pkgs/brew/values.sh
+          template: release/brew/template.rb
+          values: release/brew/values.sh
           output: homebrew-tap/Formula/${{ steps.underscore.outputs.filename }}.rb
       - name: Commit changes
         uses: anttiharju/actions/commit-changes@v0
@@ -87,8 +87,8 @@ jobs:
           TAG: ${{ inputs.tag }}
         uses: anttiharju/actions/render-template@v0
         with:
-          template: pkgs/nix/template.nix
-          values: pkgs/nix/values.sh
+          template: release/nix/template.nix
+          values: release/nix/values.sh
           output: nur-packages/pkgs/${{ github.event.repository.name }}/default.nix
       - name: Sync nur-packages root default.nix
         uses: anttiharju/actions/sync-default-nix@v0
