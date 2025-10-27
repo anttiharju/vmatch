@@ -15,7 +15,7 @@ buildGoModule {
     "-s"
     "-w"
     "-X main.revision=${PKG_REV}"
-    "-X main.version=v${PKG_VERSION}"
+    "-X main.version=${PKG_VERSION}"
     "-X main.time=${PKG_TIME}"
   ];
 
