@@ -88,7 +88,7 @@ func buildScriptNamesMap() map[string]bool {
 	return scriptNames
 }
 
-func collectRelevantBinaries(goBinDir string, scriptNames map[string]bool) ([]string, error) {
+func collectRelevantBinaries(goBinDir string, shimNames map[string]bool) ([]string, error) {
 	entries, err := os.ReadDir(goBinDir)
 	if err != nil {
 		return nil, fmt.Errorf("reading directory %s: %w", goBinDir, err)
@@ -97,7 +97,7 @@ func collectRelevantBinaries(goBinDir string, scriptNames map[string]bool) ([]st
 	binaries := make([]string, 0, len(entries))
 
 	for _, entry := range entries {
-		if shouldIncludeBinary(entry.Name(), scriptNames) {
+		if shouldIncludeBinary(entry.Name(), shimNames) {
 			binaries = append(binaries, entry.Name())
 		}
 	}
