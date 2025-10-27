@@ -41,8 +41,11 @@ homebrew-tap
 nur-packages
 
 # render.sh tmp files
-pkgs/*/*.cache
 pkgs/*/*
+!pkgs/*/*.*
+pkgs/*/*.cache
+pkgs/brew/*.rb
+pkgs/nix/*.nix
 !pkgs/*/template.*
 
 # Binary archives
@@ -53,6 +56,3 @@ tmp
 
 # rubocop-file action
 /*.lock
-
-# Nix
-!flake.lock

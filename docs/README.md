@@ -10,21 +10,29 @@
 
 ## FAQ
 
-**Q:** What about [https://go.dev/blog/toolchain](https://go.dev/blog/toolchain)?
+### Q: What about [https://go.dev/blog/toolchain](https://go.dev/blog/toolchain)?
 
-**A:** It is about forward-compatibility, `vmatch` installs the Go version specified in your project. I have found Go's promises of backward-compatibility to be squishy in practice, `brew install go` has not been sufficient for some project setups.
+**A:** Toolchain is about forward-compatibility, `vmatch` installs the Go version specified in your project. I have found Go's promises of backward-compatibility to be squishy in practice, `brew install go` has not been sufficient for some project setups.
 
-**Q:** What about `go run`? (Go 1.24 and after `go run` calls are cached)
+### Q: What about `go run`? (Go 1.24 and after `go run` calls are cached)
 
 **A:** It is probably the easy thing to introduce to your team and is a fine addition to Go.
 
-**Q:** What about https://github.com/nix-community/nix-direnv?
+### Q: What about https://github.com/nix-community/nix-direnv?
 
 **A:** It is better, if you can get the buy-in for Nix.
 
-**Q:** How does this compare to https://mise.jdx.dev/dev-tools/shims.html#shims?
+### Q: How does this compare to https://mise.jdx.dev/dev-tools/shims.html#shims?
 
 **A:** It is pretty much exactly like mise shims.
+
+### Q: Go binaries downloaded by vmatch don't work on NixOS
+
+**A:** It is some versions of Go binaries supplied by Google are dynamically linked (on Linux you can check with `ldd`). I am personally a Nix on macOS user and know others who use Nix of Arch, where vmatch happens to work.
+
+### Q: Should I use this?
+
+**A:** If it is helpful to you, yes. Given the other projects mentioned above (Nix and mise) this wouldn't be my go-to solution (pun intended) and one can view it as more of a nontrivial playground for my CI, packaging, and Git hooks setups.
 
 ## Why
 
