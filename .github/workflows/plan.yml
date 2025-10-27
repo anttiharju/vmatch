@@ -94,6 +94,6 @@ jobs:
         uses: anttiharju/actions/shellcheck@v0
     outputs:
       binary_changed: ${{ steps.changed.outputs.binary }}
-      pkgs_changed: ${{ steps.changed.outputs.pkg_brew || steps.changed.outputs.pkg_github }}
+      pkgs_changed: ${{ steps.changed.outputs.pkg_brew || steps.changed.outputs.pkg_github || steps.changed.outputs.pkg_nix }}
       release_type: ${{ steps.semver.outputs.bump }}
       documentation_changed: ${{ steps.changed.outputs.documentation }}
