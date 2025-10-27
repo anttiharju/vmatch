@@ -38,7 +38,7 @@ func Wrap(shim shims.Shim) *WrappedLinter {
 
 	err := baseWrapper.GenerateInstallPath(".golangci-version", linterParser, validateVersion)
 	if err != nil {
-		baseWrapper.ExitWithPrintln(exitcode.InstallPathIssue, err.Error())
+		baseWrapper.ExitWithPrintln(exitcode.InstallPathError, err.Error())
 	}
 
 	return &WrappedLinter{
@@ -81,12 +81,12 @@ func (w *WrappedLinter) install(ctx context.Context) {
 
 	err := cmd.Start()
 	if err != nil {
-		w.ExitWithPrint(exitcode.CMDStartIssue, "failed to start command: "+err.Error())
+		w.ExitWithPrint(exitcode.CMDStartError, "failed to start command: "+err.Error())
 	}
 
 	err = cmd.Wait()
 	if err != nil {
-		w.ExitWithPrint(exitcode.CMDFindIssue, "failed to wait for command: "+err.Error())
+		w.ExitWithPrint(exitcode.CMDFindError, "failed to wait for command: "+err.Error())
 	}
 }
 

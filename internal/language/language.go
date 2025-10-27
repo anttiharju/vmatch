@@ -55,7 +55,7 @@ func Wrap(shim shims.Shim) *WrappedLanguage {
 
 	err := baseWrapper.GenerateInstallPath("go.mod", languageParser, validateVersion)
 	if err != nil {
-		baseWrapper.ExitWithPrintln(exitcode.InstallPathIssue, err.Error())
+		baseWrapper.ExitWithPrintln(exitcode.InstallPathError, err.Error())
 	}
 
 	return &WrappedLanguage{
@@ -91,11 +91,11 @@ func (w *WrappedLanguage) install(ctx context.Context) {
 
 	err := install.FromURL(ctx, w.DesiredVersion, downloadURL, w.InstallPath)
 	if err != nil {
-		w.ExitWithPrint(exitcode.CMDStartIssue, "failed to install Go: "+err.Error())
+		w.ExitWithPrint(exitcode.CMDStartError, "failed to install Go: "+err.Error())
 	}
 
 	if w.noBinary() {
-		w.ExitWithPrint(exitcode.CMDFindIssue, "failed to install Go: binary not found after installation")
+		w.ExitWithPrint(exitcode.CMDFindError, "failed to install Go: binary not found after installation")
 	}
 }
 
