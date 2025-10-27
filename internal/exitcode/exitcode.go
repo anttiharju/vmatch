@@ -18,8 +18,8 @@ const (
 	InstallPathIssue
 	VersionError
 	CLIError
-	ScriptsHomeError
-	ScriptsCreateError
-	ScriptsDirError
+	ShimHomeError
+	ShimCreateError
+	ShimDirError
 	DoctorError
 )

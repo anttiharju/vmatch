@@ -43,7 +43,7 @@ func Inject() exitcode.Exitcode {
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error: failed to get home directory: %v\n", err)
 
-		return exitcode.ScriptsHomeError
+		return exitcode.ShimHomeError
 	}
 
 	binDir := filepath.Join(homeDir, ".vmatch", "bin")
@@ -51,7 +51,7 @@ func Inject() exitcode.Exitcode {
 		if err := os.MkdirAll(binDir, 0o755); err != nil {
 			fmt.Fprintf(os.Stderr, "Error: failed to create directory %s: %v\n", binDir, err)
 
-			return exitcode.ScriptsCreateError
+			return exitcode.ShimCreateError
 		}
 	}
 
@@ -60,7 +60,7 @@ func Inject() exitcode.Exitcode {
 		if err := createShim(binDir, shim); err != nil {
 			fmt.Fprintf(os.Stderr, "Error: failed to create script %s: %v\n", shim, err)
 
-			return exitcode.ScriptsDirError
+			return exitcode.ShimDirError
 		}
 	}
 
