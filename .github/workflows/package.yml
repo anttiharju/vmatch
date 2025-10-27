@@ -79,8 +79,8 @@ jobs:
         with:
           template: pkgs/nix/template.nix
           values: pkgs/nix/values.sh
-          output: nur-packages/pkgs/${{ github.event.repository.name }}.nix
-      - name: Sync nur-packages default.nix
+          output: nur-packages/pkgs/${{ github.event.repository.name }}/default.nix
+      - name: Sync nur-packages root default.nix
         uses: anttiharju/actions/sync-default-nix@v0
         with:
           working-directory: nur-packages
