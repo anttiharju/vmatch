@@ -16,7 +16,6 @@ on:
 
 jobs:
   homebrew-tap:
-    name: Homebrew tap
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
@@ -52,7 +51,7 @@ jobs:
             https://github.com/${{ github.repository }}/blob/${{ github.sha }}/.github/workflows/package.yml
           working-directory: homebrew-tap
 
-  nixpkgs-anttiharju:
+  nur-packages:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
@@ -63,13 +62,13 @@ jobs:
         with:
           app-id: ${{ secrets.ANTTIHARJU_BOT_ID }}
           private-key: ${{ secrets.ANTTIHARJU_BOT_PRIVATE_KEY }}
-          repositories: nixpkgs-anttiharju
+          repositories: nur-packages
       - name: Checkout
         uses: actions/checkout@v5
         with:
-          repository: anttiharju/nixpkgs-anttiharju
+          repository: anttiharju/nur-packages
           token: ${{ steps.generate-token.outputs.token }}
-          path: nixpkgs-anttiharju
+          path: nur-packages
       - uses: cachix/install-nix-action@fd24c48048070c1be9acd18c9d369a83f0fe94d7 # v31
         with:
           nix_path: nixpkgs=channel:nixos-25.05
@@ -80,13 +79,17 @@ jobs:
         with:
           template: pkgs/nix/template.nix
           values: pkgs/nix/values.sh
-          output: nixpkgs-anttiharju/pkgs/${{ github.event.repository.name }}.nix
+          output: nur-packages/pkgs/${{ github.event.repository.name }}.nix
+      - name: Sync nur-packages default.nix
+        uses: anttiharju/actions/sync-default-nix@v0
+        with:
+          working-directory: nur-packages
       - name: Commit changes
         uses: anttiharju/actions/commit-changes@v0
         with:
+          working-directory: nur-packages
           committer: "${{ github.actor }}[bot]"
           message: |
             Update ${{ github.event.repository.name }} to ${{ inputs.tag }}
 
             https://github.com/${{ github.repository }}/blob/${{ github.sha }}/.github/workflows/package.yml
-          working-directory: nixpkgs-anttiharju
