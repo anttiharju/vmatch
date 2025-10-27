@@ -57,7 +57,7 @@ func Inject() exitcode.Exitcode {
 
 	scripts := Scripts()
 	for _, script := range scripts {
-		if err := createScript(binDir, script); err != nil {
+		if err := createShim(binDir, script); err != nil {
 			fmt.Fprintf(os.Stderr, "Error: failed to create script %s: %v\n", script, err)
 
 			return exitcode.ScriptsDirError
@@ -70,7 +70,7 @@ func Inject() exitcode.Exitcode {
 //go:embed go.sh golangci-lint.sh
 var scripts embed.FS
 
-func createScript(binDir string, script Shim) error {
+func createShim(binDir string, script Shim) error {
 	name := string(script)
 	sourcePath := script.File()
 	destPath := filepath.Join(binDir, string(script))
