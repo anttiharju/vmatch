@@ -58,7 +58,7 @@ func Inject() exitcode.Exitcode {
 	scripts := Shims()
 	for _, shim := range scripts {
 		if err := createShim(binDir, shim); err != nil {
-			fmt.Fprintf(os.Stderr, "Error: failed to create script %s: %v\n", shim, err)
+			fmt.Fprintf(os.Stderr, "Error: failed to create shim %s: %v\n", shim, err)
 
 			return exitcode.ShimDirError
 		}
@@ -81,12 +81,12 @@ func createShim(binDir string, script Shim) error {
 
 	content, err := fs.ReadFile(shims, sourcePath)
 	if err != nil {
-		return fmt.Errorf("failed to read embedded script %s: %w", name, err)
+		return fmt.Errorf("failed to read embedded shim %s: %w", name, err)
 	}
 
 	//nolint:gosec // using 0o755 instead of 0o600 is intentional here
 	if err := os.WriteFile(destPath, content, 0o755); err != nil {
-		return fmt.Errorf("failed to write script %s: %w", name, err)
+		return fmt.Errorf("failed to write shim %s: %w", name, err)
 	}
 
 	return nil
