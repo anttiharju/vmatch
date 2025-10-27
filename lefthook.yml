@@ -50,5 +50,5 @@ pre-commit:
       run: ./pkgs/render.sh brew && find pkgs/brew -name "*.rb" -type f -not -name "*template*" -exec rubocop {} \;
 
     - name: shellcheck
-      glob: "*.sh"
+      glob: "{*.sh,.shellcheckrc}"
       run: git ls-files -z '*.sh' | xargs -0 shellcheck --color=always --source-path=SCRIPTDIR
