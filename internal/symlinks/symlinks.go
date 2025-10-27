@@ -119,7 +119,7 @@ func shouldIncludeBinary(name string, scriptNames map[string]bool) bool {
 	return true
 }
 
-func cleanVmatchBinDirectory(vmatchDir string, scriptNames map[string]bool) error {
+func cleanVmatchBinDirectory(vmatchDir string, shimNames map[string]bool) error {
 	entries, err := os.ReadDir(vmatchDir)
 	if err != nil {
 		return fmt.Errorf("reading directory %s: %w", vmatchDir, err)
@@ -127,7 +127,7 @@ func cleanVmatchBinDirectory(vmatchDir string, scriptNames map[string]bool) erro
 
 	for _, entry := range entries {
 		// Skip if it's a shim we want to keep
-		if scriptNames[entry.Name()] {
+		if shimNames[entry.Name()] {
 			continue
 		}
 
