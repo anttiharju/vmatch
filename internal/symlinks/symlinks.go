@@ -81,7 +81,7 @@ func getGoBinDir() (string, error) {
 
 func buildScriptNamesMap() map[string]bool {
 	scriptNames := make(map[string]bool)
-	for _, script := range shims.Scripts() {
+	for _, script := range shims.Shims() {
 		scriptNames[string(script)] = true
 	}
 

@@ -30,7 +30,9 @@ pre-commit:
 
     - name: golangci-lint
       glob: "{.golangci-version,.golangci.yml,*.go}"
-      run: golangci-lint run --fix
+      run: |
+        golangci-lint fmt
+        golangci-lint run --fix
       stage_fixed: true
 
     - name: Keep .yml

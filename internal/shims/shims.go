@@ -17,7 +17,7 @@ const (
 	GolangCILint Shim = "golangci-lint"
 )
 
-func Scripts() []Shim {
+func Shims() []Shim {
 	return []Shim{Golang, GolangCILint}
 }
 
@@ -55,7 +55,7 @@ func Inject() exitcode.Exitcode {
 		}
 	}
 
-	scripts := Scripts()
+	scripts := Shims()
 	for _, script := range scripts {
 		if err := createShim(binDir, script); err != nil {
 			fmt.Fprintf(os.Stderr, "Error: failed to create script %s: %v\n", script, err)
