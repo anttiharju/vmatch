@@ -53,4 +53,4 @@ pre-commit:
 
     - name: shellcheck
       glob: "{*.sh,.shellcheckrc}"
-      run: git ls-files -z '*.sh' | xargs -0 shellcheck --color=always --source-path=SCRIPTDIR
+      run: git ls-files -z '*.sh' | xargs -0 shellcheck --color=always
