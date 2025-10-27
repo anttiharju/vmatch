@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	"github.com/anttiharju/vmatch/internal/exitcode"
-	"github.com/anttiharju/vmatch/internal/scripts"
+	"github.com/anttiharju/vmatch/internal/shims"
 	"github.com/anttiharju/vmatch/internal/wrapper"
 )
 
@@ -33,7 +33,7 @@ func validateVersion(version string) (string, error) {
 	return version, nil
 }
 
-func Wrap(script scripts.Script) *WrappedLinter {
+func Wrap(script shims.Script) *WrappedLinter {
 	baseWrapper := wrapper.BaseWrapper{Name: string(script)}
 
 	err := baseWrapper.GenerateInstallPath(".golangci-version", linterParser, validateVersion)

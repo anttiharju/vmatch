@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/anttiharju/vmatch/internal/scripts"
+	"github.com/anttiharju/vmatch/internal/shims"
 )
 
 func Sync() {
@@ -81,7 +81,7 @@ func getGoBinDir() (string, error) {
 
 func buildScriptNamesMap() map[string]bool {
 	scriptNames := make(map[string]bool)
-	for _, script := range scripts.Scripts() {
+	for _, script := range shims.Scripts() {
 		scriptNames[string(script)] = true
 	}
 

@@ -8,7 +8,7 @@ import (
 	"github.com/anttiharju/vmatch/internal/exitcode"
 	"github.com/anttiharju/vmatch/internal/language"
 	"github.com/anttiharju/vmatch/internal/linter"
-	"github.com/anttiharju/vmatch/internal/scripts"
+	"github.com/anttiharju/vmatch/internal/shims"
 	"github.com/anttiharju/vmatch/internal/symlinks"
 )
 
@@ -17,7 +17,7 @@ func firstArgIs(arg string, args []string) bool {
 }
 
 func Start(ctx context.Context, info buildinfo.BuildInfo, args []string) int {
-	exitCode := scripts.Inject()
+	exitCode := shims.Inject()
 	if exitCode != 0 {
 		return int(exitCode)
 	}
@@ -26,14 +26,14 @@ func Start(ctx context.Context, info buildinfo.BuildInfo, args []string) int {
 		symlinks.Sync()
 	}()
 
-	if firstArgIs(string(scripts.Golang), args) {
-		wrappedLanguage := language.Wrap(scripts.Golang)
+	if firstArgIs(string(shims.Golang), args) {
+		wrappedLanguage := language.Wrap(shims.Golang)
 
 		return wrappedLanguage.Run(ctx, args[1:])
 	}
 
-	if firstArgIs(string(scripts.GolangCILint), args) {
-		wrappedLinter := linter.Wrap(scripts.GolangCILint)
+	if firstArgIs(string(shims.GolangCILint), args) {
+		wrappedLinter := linter.Wrap(shims.GolangCILint)
 
 		return wrappedLinter.Run(ctx, args[1:])
 	}
