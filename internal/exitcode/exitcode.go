@@ -12,8 +12,8 @@ const (
 	VersionReadFileIssue
 	VersionIssue
 	VersionValidationIssue
-	CmdStartIssue
-	CmdWaitIssue
+	CMDStartIssue
+	CMDWaitIssue
 	UserHomeDirIssue
 	InstallPathIssue
 	VersionError

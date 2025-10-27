@@ -91,11 +91,11 @@ func (w *WrappedLanguage) install(ctx context.Context) {
 
 	err := install.FromURL(ctx, w.DesiredVersion, downloadURL, w.InstallPath)
 	if err != nil {
-		w.ExitWithPrint(exitcode.CmdStartIssue, "failed to install Go: "+err.Error())
+		w.ExitWithPrint(exitcode.CMDStartIssue, "failed to install Go: "+err.Error())
 	}
 
 	if w.noBinary() {
-		w.ExitWithPrint(exitcode.CmdStartIssue, "failed to install Go: binary not found after installation")
+		w.ExitWithPrint(exitcode.CMDStartIssue, "failed to install Go: binary not found after installation")
 	}
 }
 

@@ -81,12 +81,12 @@ func (w *WrappedLinter) install(ctx context.Context) {
 
 	err := cmd.Start()
 	if err != nil {
-		w.ExitWithPrint(exitcode.CmdStartIssue, "failed to start command: "+err.Error())
+		w.ExitWithPrint(exitcode.CMDStartIssue, "failed to start command: "+err.Error())
 	}
 
 	err = cmd.Wait()
 	if err != nil {
-		w.ExitWithPrint(exitcode.CmdStartIssue, "failed to wait for command: "+err.Error())
+		w.ExitWithPrint(exitcode.CMDStartIssue, "failed to wait for command: "+err.Error())
 	}
 }
 
