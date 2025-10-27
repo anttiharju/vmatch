@@ -86,7 +86,7 @@ func (w *WrappedLinter) install(ctx context.Context) {
 
 	err = cmd.Wait()
 	if err != nil {
-		w.ExitWithPrint(exitcode.CMDFindError, "failed to wait for command: "+err.Error())
+		w.ExitWithPrint(exitcode.CMDWaitError, "failed to wait for command: "+err.Error())
 	}
 }
 

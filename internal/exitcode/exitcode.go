@@ -5,16 +5,10 @@ type Exitcode int
 const (
 	Success Exitcode = iota
 	Interrupt
-	NoGoError
-	GoPathError
-	BinPathError
-	WorkDirError
-	VersionReadFileError
-	VersionValidationError
 	CMDStartError
+	CMDInstallError
 	CMDFindError
 	CMDWaitError
-	UserHomeDirError
 	InstallPathError
 	VersionError
 	CLIError
