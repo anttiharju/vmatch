@@ -33,8 +33,8 @@ func validateVersion(version string) (string, error) {
 	return version, nil
 }
 
-func Wrap(script shims.Shim) *WrappedLinter {
-	baseWrapper := wrapper.BaseWrapper{Name: string(script)}
+func Wrap(shim shims.Shim) *WrappedLinter {
+	baseWrapper := wrapper.BaseWrapper{Name: string(shim)}
 
 	err := baseWrapper.GenerateInstallPath(".golangci-version", linterParser, validateVersion)
 	if err != nil {
