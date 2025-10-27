@@ -10,18 +10,18 @@ import (
 	"github.com/anttiharju/vmatch/internal/exitcode"
 )
 
-type Script string
+type Shim string
 
 const (
-	Golang       Script = "go"
-	GolangCILint Script = "golangci-lint"
+	Golang       Shim = "go"
+	GolangCILint Shim = "golangci-lint"
 )
 
-func Scripts() []Script {
-	return []Script{Golang, GolangCILint}
+func Scripts() []Shim {
+	return []Shim{Golang, GolangCILint}
 }
 
-func (s Script) File() string {
+func (s Shim) File() string {
 	switch s {
 	case Golang:
 		return "go.sh"
@@ -70,7 +70,7 @@ func Inject() exitcode.Exitcode {
 //go:embed go.sh golangci-lint.sh
 var scripts embed.FS
 
-func createScript(binDir string, script Script) error {
+func createScript(binDir string, script Shim) error {
 	name := string(script)
 	sourcePath := script.File()
 	destPath := filepath.Join(binDir, string(script))
