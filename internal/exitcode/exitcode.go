@@ -13,6 +13,7 @@ const (
 	VersionIssue
 	VersionValidationIssue
 	CMDStartIssue
+	CMDFindIssue
 	CMDWaitIssue
 	UserHomeDirIssue
 	InstallPathIssue

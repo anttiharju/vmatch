@@ -72,7 +72,7 @@ func (w *WrappedLinter) noBinary() bool {
 func (w *WrappedLinter) install(ctx context.Context) {
 	//nolint:lll // Install command example from https://golangci-lint.run/welcome/install/#binaries
 	// curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.59.1
-	// todo: pin to a sha instead of HEAD, but automate updates
+	// todo: automate sha updates
 	curl := "curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/cc3567e3127d8530afb69be1b7bd20ba9ebcc7c1/install.sh"
 	pipe := " | "
 	sh := "sh -s -- -b "
@@ -86,7 +86,7 @@ func (w *WrappedLinter) install(ctx context.Context) {
 
 	err = cmd.Wait()
 	if err != nil {
-		w.ExitWithPrint(exitcode.CMDStartIssue, "failed to wait for command: "+err.Error())
+		w.ExitWithPrint(exitcode.CMDFindIssue, "failed to wait for command: "+err.Error())
 	}
 }
 

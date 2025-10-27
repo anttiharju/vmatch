@@ -95,7 +95,7 @@ func (w *WrappedLanguage) install(ctx context.Context) {
 	}
 
 	if w.noBinary() {
-		w.ExitWithPrint(exitcode.CMDStartIssue, "failed to install Go: binary not found after installation")
+		w.ExitWithPrint(exitcode.CMDFindIssue, "failed to install Go: binary not found after installation")
 	}
 }
 
