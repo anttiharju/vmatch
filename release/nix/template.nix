@@ -14,6 +14,9 @@ buildGoModule {
   ldflags = [
     "-s"
     "-w"
+    "-X main.revision=${PKG_REV}"
+    "-X main.version=v${PKG_VERSION}"
+    "-X main.time=${PKG_TIME}"
   ];
 
   vendorHash = null;

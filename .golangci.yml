@@ -99,6 +99,16 @@ linters:
         linters:
           - funlen
           - varnamelen
+
+      # Required to get version subcommand to work with Nix packaging
+      - path: "main.go"
+        text: "revision is a global variable"
+        linters:
+          - gochecknoglobals
+      - path: "main.go"
+        text: "time is a global variable"
+        linters:
+          - gochecknoglobals
 formatters:
   enable:
     - gci
