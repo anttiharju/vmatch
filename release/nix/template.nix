@@ -14,8 +14,6 @@ buildGoModule {
   ldflags = [
     "-s"
     "-w"
-    "-buildid=nix-${PKG_VERSION}"
-    "-trimpath"
   ];
 
   vendorHash = null;
