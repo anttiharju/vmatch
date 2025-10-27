@@ -6,7 +6,7 @@ on:
     branches:
       - wildcard
     paths:
-      - "pkgs/brew/**/*"
+      - "release/brew/**/*"
 
 jobs:
   wildcard:

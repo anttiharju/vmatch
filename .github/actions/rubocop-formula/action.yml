@@ -11,10 +11,10 @@ runs:
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
-        ./pkgs/render.sh brew
+        ./release/render.sh brew
     - name: Output name with underscores
       id: underscore
       uses: ./.github/actions/underscore-name
     - uses: anttiharju/actions/rubocop-file@v0
       with:
-        file: "pkgs/brew/${{ steps.underscore.outputs.filename }}.rb"
+        file: "release/brew/${{ steps.underscore.outputs.filename }}.rb"

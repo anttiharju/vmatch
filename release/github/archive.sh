@@ -6,7 +6,7 @@ cd "$repo_root"
 version="$1"
 os="$2"
 arch="$3"
-echo "./pkgs/github/archive.sh $version $os $arch"
+echo "./release/github/archive.sh $version $os $arch"
 
 rm -rf "tmp/$os-$arch"
 remote_url="$(git remote get-url origin)"

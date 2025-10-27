@@ -47,7 +47,7 @@ pre-commit:
 
     - name: rubocop
       glob: "{*.rb}"
-      run: ./pkgs/render.sh brew && find pkgs/brew -name "*.rb" -type f -not -name "*template*" -exec rubocop {} \;
+      run: ./release/render.sh brew && find release/brew -name "*.rb" -type f -not -name "*template*" -exec rubocop {} \;
 
     - name: shellcheck
       glob: "{*.sh,.shellcheckrc}"

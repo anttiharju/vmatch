@@ -6,7 +6,7 @@ on:
     branches:
       - wildcard
     paths:
-      - "pkgs/nix/**/*"
+      - "release/nix/**/*"
 
 jobs:
   wildcard:
