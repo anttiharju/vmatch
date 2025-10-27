@@ -65,7 +65,9 @@ func Print(info BuildInfo) exitcode.Exitcode {
 			revision = infoRev
 		}
 
-		revision = revision[:8]
+		if len(revision) > 8 {
+			revision = revision[:8]
+		}
 
 		programName := filepath.Base(os.Args[0])
 		fmt.Printf("%s has version %s built with %s from %s on %s\n", programName, version, goVersion, revision, buildTime)
