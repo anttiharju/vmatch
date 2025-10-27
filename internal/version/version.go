@@ -25,6 +25,9 @@ func Print() exitcode.Exitcode {
 				}
 			case "vcs.time":
 				buildTime = setting.Value
+				if buildTime == "" {
+					buildTime = "1970-01-01T00:00:00Z"
+				}
 			}
 		}
 
