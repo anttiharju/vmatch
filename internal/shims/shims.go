@@ -55,8 +55,8 @@ func Inject() exitcode.Exitcode {
 		}
 	}
 
-	scripts := Shims()
-	for _, shim := range scripts {
+	shims := Shims()
+	for _, shim := range shims {
 		if err := createShim(binDir, shim); err != nil {
 			fmt.Fprintf(os.Stderr, "Error: failed to create shim %s: %v\n", shim, err)
 
