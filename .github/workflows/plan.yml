@@ -11,7 +11,7 @@ on:
     outputs:
       release:
         description: "Whether to trigger release workflows"
-        value: ${{ jobs.validate.outputs.release_type != '' || (jobs.validate.outputs.binary_changed == 'true' || jobs.validate.outputs.pkgs_changed == 'true') }}
+        value: ${{ (jobs.validate.outputs.release_type != '' || (jobs.validate.outputs.binary_changed == 'true' || jobs.validate.outputs.pkgs_changed == 'true')) && github.event.repository.name != 'go-starter' }}
       release_type:
         description: "The type of release to perform; major, minor, patch, or false"
         value: ${{ jobs.validate.outputs.release_type }}
