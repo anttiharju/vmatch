@@ -46,9 +46,7 @@ func Print(_ BuildInfo) exitcode.Exitcode {
 		for _, setting := range buildInfo.Settings {
 			switch setting.Key {
 			case "vcs.revision":
-				if len(setting.Value) >= 8 {
-					revision = setting.Value[:8]
-				}
+				revision = setting.Value
 			case "vcs.time":
 				buildTime = setting.Value
 			}
@@ -57,6 +55,8 @@ func Print(_ BuildInfo) exitcode.Exitcode {
 		if buildTime == "" {
 			buildTime = "1970-01-01T00:00:00Z"
 		}
+
+		revision = revision[:8]
 
 		programName := filepath.Base(os.Args[0])
 		fmt.Printf("%s has version %s built with %s from %s on %s\n", programName, version, goVersion, revision, buildTime)
