@@ -44,6 +44,9 @@ nur-packages
 pkgs/*/*
 !pkgs/*/*.*
 pkgs/*/*.cache
+pkgs/brew/*.rb
+pkgs/nix/*.nix
+!pkgs/*/template.*
 
 # Binary archives
 *.tar.gz
