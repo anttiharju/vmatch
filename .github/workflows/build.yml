@@ -22,18 +22,6 @@ jobs:
     uses: ./.github/workflows/release.yml
     with:
       type: ${{ needs.plan.outputs.release_type }}
-
-  package:
-    name: Package
-    needs:
-      - plan
-      - release
-    if: needs.plan.outputs.release == 'true'
-    permissions:
-      contents: write
-    uses: ./.github/workflows/package.yml
-    with:
-      tag: ${{ needs.release.outputs.tag }}
     secrets: inherit
 
   documentation:

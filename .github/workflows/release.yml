@@ -8,10 +8,11 @@ on:
       type:
         required: true
         type: string
-    outputs:
-      tag:
-        description: "Whether to trigger release workflows"
-        value: ${{ jobs.github.outputs.tag }}
+    secrets:
+      ANTTIHARJU_BOT_ID:
+        required: true
+      ANTTIHARJU_BOT_PRIVATE_KEY:
+        required: true
 
 jobs:
   github:
@@ -74,3 +75,94 @@ jobs:
           find . -maxdepth 1 -name '${{ github.event.repository.name }}-*-*.tar.gz' -exec gh release upload "$TAG" {} \;
     outputs:
       tag: ${{ steps.release.outputs.tag }}
+
+  homebrew-tap:
+    needs: github
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+      - name: Generate commit token
+        id: generate-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.ANTTIHARJU_BOT_ID }}
+          private-key: ${{ secrets.ANTTIHARJU_BOT_PRIVATE_KEY }}
+          repositories: homebrew-tap
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          repository: anttiharju/homebrew-tap
+          token: ${{ steps.generate-token.outputs.token }}
+          path: homebrew-tap
+      - name: Convert hyphens to underscores
+        id: file
+        shell: bash
+        env:
+          REPO_NAME: ${{ github.event.repository.name }}
+        run: |
+          echo "name=${REPO_NAME//-/_}" >> "$GITHUB_OUTPUT"
+      - name: Output name with underscores
+        id: underscore
+        uses: ./.github/actions/underscore-name
+      - name: Render template
+        env:
+          TAG: ${{ needs.github.outputs.tag }}
+        uses: anttiharju/actions/render-template@v0
+        with:
+          template: release/brew/template.rb
+          values: release/brew/values.sh
+          output: homebrew-tap/Formula/${{ steps.underscore.outputs.filename }}.rb
+      - name: Commit changes
+        uses: anttiharju/actions/commit-changes@v0
+        with:
+          committer: "${{ github.actor }}[bot]"
+          message: |
+            Update ${{ github.event.repository.name }} to ${{ needs.github.outputs.tag }}
+
+            https://github.com/${{ github.repository }}/blob/${{ github.sha }}/.github/workflows/package.yml
+          working-directory: homebrew-tap
+
+  nur-packages:
+    needs: github
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+      - name: Generate commit token
+        id: generate-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.ANTTIHARJU_BOT_ID }}
+          private-key: ${{ secrets.ANTTIHARJU_BOT_PRIVATE_KEY }}
+          repositories: nur-packages
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          repository: anttiharju/nur-packages
+          token: ${{ steps.generate-token.outputs.token }}
+          path: nur-packages
+      - uses: cachix/install-nix-action@fd24c48048070c1be9acd18c9d369a83f0fe94d7 # v31
+        with:
+          nix_path: nixpkgs=channel:nixos-25.05
+      - name: Render template
+        env:
+          TAG: ${{ needs.github.outputs.tag }}
+        uses: anttiharju/actions/render-template@v0
+        with:
+          template: release/nix/template.nix
+          values: release/nix/values.sh
+          output: nur-packages/pkgs/${{ github.event.repository.name }}/default.nix
+      - name: Sync nur-packages root default.nix
+        uses: anttiharju/actions/sync-default-nix@v0
+        with:
+          working-directory: nur-packages
+      - name: Commit changes
+        uses: anttiharju/actions/commit-changes@v0
+        with:
+          working-directory: nur-packages
+          committer: "${{ github.actor }}[bot]"
+          message: |
+            Update ${{ github.event.repository.name }} to ${{ needs.github.outputs.tag }}
+
+            https://github.com/${{ github.repository }}/blob/${{ github.sha }}/.github/workflows/package.yml
