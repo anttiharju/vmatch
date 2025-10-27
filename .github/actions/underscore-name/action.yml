@@ -1,0 +1,17 @@
+name: "Underscore name"
+description: "Output repository name with underscores instead of hyphens"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Convert hyphens to underscores
+      id: file
+      shell: bash
+      env:
+        REPO_NAME: ${{ github.event.repository.name }}
+      run: |
+        echo "name=${REPO_NAME//-/_}" >> "$GITHUB_OUTPUT"
+outputs:
+  filename:
+    description: "Filename with underscores"
+    value: ${{ steps.file.outputs.name }}

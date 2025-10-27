@@ -8,7 +8,7 @@ capture() {
 
 repo="$(basename "$GITHUB_REPOSITORY")"
 capture PKG_REPO "$repo"
-class="$(awk 'BEGIN{print toupper(substr("'"$repo"'",1,1)) substr("'"$repo"'",2)}')"
+class="$(echo "$repo" | awk -F'-' '{for(i=1;i<=NF;i++) printf "%s%s", toupper(substr($i,1,1)), substr($i,2)}')"
 capture PKG_CLASS "$class"
 desc="$(gh repo view --json description --jq .description)"
 capture PKG_DESC "$desc"
