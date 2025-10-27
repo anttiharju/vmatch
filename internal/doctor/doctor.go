@@ -6,15 +6,16 @@ import (
 	"os/exec"
 	"path/filepath"
 
+	"github.com/anttiharju/vmatch/internal/exitcode"
 	"github.com/anttiharju/vmatch/internal/scripts"
 )
 
-func Diagnose() int {
+func Diagnose() exitcode.Exitcode {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		fmt.Printf("❌ Error getting home directory: %v\n", err)
 
-		return 1
+		return exitcode.DoctorError
 	}
 
 	binDir := filepath.Join(homeDir, ".vmatch", "bin")
@@ -60,7 +61,7 @@ func Diagnose() int {
 
 	inform(binDir, healthy)
 
-	return 0
+	return exitcode.Success
 }
 
 func inform(binDir string, healthy bool) {

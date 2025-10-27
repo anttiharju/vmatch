@@ -17,4 +17,9 @@ const (
 	UserHomeDirIssue
 	InstallPathIssue
 	VersionError
+	CLIError
+	ScriptsHomeError
+	ScriptsCreateError
+	ScriptsDirError
+	DoctorError
 )
