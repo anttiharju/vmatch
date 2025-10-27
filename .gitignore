@@ -53,6 +53,3 @@ tmp
 
 # rubocop-file action
 /*.lock
-
-# Nix
-!flake.lock
