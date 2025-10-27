@@ -99,6 +99,7 @@ linters:
         linters:
           - funlen
           - varnamelen
+
       # Required to get version subcommand to work with Nix packaging
       - path: "main.go"
         text: "revision is a global variable"
