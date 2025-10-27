@@ -6,6 +6,8 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+
+	"github.com/anttiharju/vmatch/internal/exitcode"
 )
 
 type Script string
@@ -36,12 +38,12 @@ func exists(path string) bool {
 	return err == nil
 }
 
-func Inject() int {
+func Inject() exitcode.Exitcode {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error: failed to get home directory: %v\n", err)
 
-		return 1
+		return exitcode.ScriptsHomeError
 	}
 
 	binDir := filepath.Join(homeDir, ".vmatch", "bin")
@@ -49,7 +51,7 @@ func Inject() int {
 		if err := os.MkdirAll(binDir, 0o755); err != nil {
 			fmt.Fprintf(os.Stderr, "Error: failed to create directory %s: %v\n", binDir, err)
 
-			return 1
+			return exitcode.ScriptsCreateError
 		}
 	}
 
@@ -58,11 +60,11 @@ func Inject() int {
 		if err := createScript(binDir, script); err != nil {
 			fmt.Fprintf(os.Stderr, "Error: failed to create script %s: %v\n", script, err)
 
-			return 1
+			return exitcode.ScriptsDirError
 		}
 	}
 
-	return 0
+	return exitcode.Success
 }
 
 //go:embed go.sh golangci-lint.sh
