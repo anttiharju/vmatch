@@ -50,8 +50,8 @@ func validateVersion(version string) (string, error) {
 	return version, nil
 }
 
-func Wrap(script shims.Shim) *WrappedLanguage {
-	baseWrapper := wrapper.BaseWrapper{Name: string(script)}
+func Wrap(shim shims.Shim) *WrappedLanguage {
+	baseWrapper := wrapper.BaseWrapper{Name: string(shim)}
 
 	err := baseWrapper.GenerateInstallPath("go.mod", languageParser, validateVersion)
 	if err != nil {
