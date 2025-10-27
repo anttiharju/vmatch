@@ -37,7 +37,6 @@ jobs:
       - name: Render template
         env:
           TAG: ${{ inputs.tag }}
-          GH_TOKEN: ${{ github.token }}
         uses: anttiharju/actions/render-template@v0
         with:
           template: pkgs/brew/template.rb
@@ -77,7 +76,6 @@ jobs:
       - name: Render template
         env:
           TAG: ${{ inputs.tag }}
-          GH_TOKEN: ${{ github.token }}
         uses: anttiharju/actions/render-template@v0
         with:
           template: pkgs/nix/template.nix
