@@ -111,7 +111,7 @@ func shouldIncludeBinary(name string, scriptNames map[string]bool) bool {
 		return false
 	}
 
-	// Skip files that match script names
+	// Skip files that match shim names
 	if scriptNames[name] {
 		return false
 	}
@@ -126,7 +126,7 @@ func cleanVmatchBinDirectory(vmatchDir string, scriptNames map[string]bool) erro
 	}
 
 	for _, entry := range entries {
-		// Skip if it's a script we want to keep
+		// Skip if it's a shim we want to keep
 		if scriptNames[entry.Name()] {
 			continue
 		}
