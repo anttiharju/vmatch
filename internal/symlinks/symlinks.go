@@ -37,14 +37,14 @@ func sync() error {
 		return nil
 	}
 
-	scriptNames := buildShimNamesMap()
+	shimNames := buildShimNamesMap()
 
-	binaries, err := collectRelevantBinaries(goBinDir, scriptNames)
+	binaries, err := collectRelevantBinaries(goBinDir, shimNames)
 	if err != nil {
 		return fmt.Errorf("collecting relevant binaries: %w", err)
 	}
 
-	if err := cleanVmatchBinDirectory(vmatchDir, scriptNames); err != nil {
+	if err := cleanVmatchBinDirectory(vmatchDir, shimNames); err != nil {
 		return fmt.Errorf("cleaning vmatch bin directory: %w", err)
 	}
 
