@@ -34,7 +34,7 @@ jobs:
           repository: anttiharju/homebrew-tap
           token: ${{ steps.generate-token.outputs.token }}
           path: homebrew-tap
-      - name: Render formula template
+      - name: Render template
         env:
           TAG: ${{ inputs.tag }}
           GH_TOKEN: ${{ github.token }}
@@ -74,7 +74,7 @@ jobs:
       - uses: cachix/install-nix-action@fd24c48048070c1be9acd18c9d369a83f0fe94d7 # v31
         with:
           nix_path: nixpkgs=channel:nixos-25.05
-      - name: Render formula template
+      - name: Render template
         env:
           TAG: ${{ inputs.tag }}
           GH_TOKEN: ${{ github.token }}
@@ -82,7 +82,7 @@ jobs:
         with:
           template: pkgs/nix/template.nix
           values: pkgs/nix/values.sh
-          output: nixpkgs-anttiharju/Formula/${{ github.event.repository.name }}.rb
+          output: nixpkgs-anttiharju/pkgs/${{ github.event.repository.name }}.nix
       - name: Commit changes
         uses: anttiharju/actions/commit-changes@v0
         with:
