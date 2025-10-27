@@ -142,6 +142,19 @@ jobs:
           repository: anttiharju/nur-packages
           token: ${{ steps.generate-token.outputs.token }}
           path: nur-packages
+      - name: Setup cache
+        id: cache
+        run: |
+          if [ -f "go.sum" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Setup Go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: "go.mod"
+          cache: ${{ steps.cache.outputs.enabled }}
       - uses: cachix/install-nix-action@v31
         with:
           nix_path: nixpkgs=channel:nixos-25.05
