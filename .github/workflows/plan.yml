@@ -39,7 +39,7 @@ jobs:
         name: Require semantic version label
         uses: anttiharju/actions/require-semver-label@v0
         with:
-          enforce: ${{ (steps.changed.outputs.binary == 'true' || steps.changed.outputs.pkg_brew == 'true' || steps.changed.outputs.pkg_github == 'true') && github.event_name != 'push' }}
+          enforce: ${{ (steps.changed.outputs.binary == 'true' || steps.changed.outputs.pkgs ) && github.event_name != 'push' }}
 
       - if: always() && !cancelled()
         name: action-validator
@@ -94,6 +94,6 @@ jobs:
         uses: anttiharju/actions/shellcheck@v0
     outputs:
       binary_changed: ${{ steps.changed.outputs.binary }}
-      pkgs_changed: ${{ steps.changed.outputs.pkg_brew || steps.changed.outputs.pkg_github || steps.changed.outputs.pkg_nix }}
+      pkgs_changed: ${{ steps.changed.outputs.pkgs }}
       release_type: ${{ steps.semver.outputs.bump }}
       documentation_changed: ${{ steps.changed.outputs.documentation }}

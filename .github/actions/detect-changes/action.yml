@@ -71,6 +71,9 @@ outputs:
   pkg_nix:
     description: "Whether Nix package has changed"
     value: ${{ steps.pkg_nix.outputs.changed }}
+  pkgs:
+    description: "Whether any package has changed"
+    value: ${{ steps.changed.outputs.pkg_brew || steps.changed.outputs.pkg_github || steps.changed.outputs.pkg_nix }}
   documentation:
     description: "Whether documentation has changed"
     value: ${{ steps.documentation.outputs.changed }}
