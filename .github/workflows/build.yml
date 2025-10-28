@@ -26,9 +26,7 @@ jobs:
 
   documentation:
     name: Documentation
-    needs:
-      - plan
-      - release
+    needs: plan
     if: |
       always() && !failure() && !cancelled() &&
       needs.plan.outputs.documentation == 'true'
