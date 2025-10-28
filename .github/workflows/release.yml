@@ -63,18 +63,16 @@ jobs:
         run: |
           ./release/github/archive.sh "$tag" "$GOOS" "$GOARCH"
       - name: Create GitHub release
-        id: release
         uses: anttiharju/actions/release@v0
         with:
-          version: ${{ inputs.version }}
+          title: ${{ inputs.version }}
+          tag: "v${{ inputs.version }}" # Go expects version tags to be prefixed with "v"
       - name: Upload archives to release
         env:
           GH_TOKEN: ${{ github.token }}
-          tag: ${{ steps.release.outputs.tag }}
+          tag: "v${{ inputs.version }}"
         run: |
           find . -maxdepth 1 -name '${{ github.event.repository.name }}-*-*.tar.gz' -exec gh release upload "$tag" {} \;
-    outputs:
-      tag: ${{ steps.release.outputs.tag }}
 
   homebrew-tap:
     name: Homebrew
@@ -108,7 +106,7 @@ jobs:
         uses: ./.github/actions/underscore-name
       - name: Render template
         env:
-          TAG: ${{ needs.github.outputs.tag }} # brew/values.sh expects TAG variable
+          TAG: "v${{ inputs.version }}" # brew/values.sh expects TAG variable
         uses: anttiharju/actions/render-template@v0
         with:
           template: release/brew/template.rb
