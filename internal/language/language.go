@@ -63,7 +63,7 @@ func Wrap(shim shims.Shim) *WrappedLanguage {
 	}
 }
 
-func (w *WrappedLanguage) Run(ctx context.Context, args []string) int {
+func (w *WrappedLanguage) Run(ctx context.Context, args []string) exitcode.Exitcode {
 	if w.noBinary() {
 		w.install(ctx)
 	}
@@ -77,7 +77,7 @@ func (w *WrappedLanguage) Run(ctx context.Context, args []string) int {
 
 	_ = language.Run()
 
-	return language.ProcessState.ExitCode()
+	return exitcode.Exitcode(language.ProcessState.ExitCode())
 }
 
 func (w *WrappedLanguage) noBinary() bool {
