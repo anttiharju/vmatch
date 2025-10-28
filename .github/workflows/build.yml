@@ -21,7 +21,7 @@ jobs:
       contents: write
     uses: ./.github/workflows/release.yml
     with:
-      type: ${{ needs.plan.outputs.release_type }}
+      version: ${{ needs.plan.outputs.version }}
     secrets: inherit
 
   documentation:

@@ -5,7 +5,7 @@ permissions:
 on:
   workflow_call:
     inputs:
-      type:
+      version:
         required: true
         type: string
     secrets:
@@ -25,7 +25,7 @@ jobs:
         id: release
         uses: anttiharju/actions/release@v0
         with:
-          type: ${{ inputs.type }}
+          version: ${{ inputs.version }}
       - name: Setup cache
         id: cache
         run: |
@@ -126,7 +126,6 @@ jobs:
 
   nur-packages:
     name: Nix
-    needs: github
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
@@ -149,7 +148,7 @@ jobs:
           nix_path: nixpkgs=channel:nixos-25.05
       - name: Render template
         env:
-          TAG: ${{ needs.github.outputs.tag }}
+          TAG: "v${{ inputs.version }}"
         uses: anttiharju/actions/render-template@v0
         with:
           template: release/nix/template.nix
@@ -165,6 +164,6 @@ jobs:
           working-directory: nur-packages
           committer: "${{ github.actor }}[bot]"
           message: |
-            Update ${{ github.event.repository.name }} to ${{ needs.github.outputs.tag }}
+            Update ${{ github.event.repository.name }} to v${{ inputs.version }}
 
             https://github.com/${{ github.repository }}/blob/${{ github.sha }}/.github/workflows/package.yml
