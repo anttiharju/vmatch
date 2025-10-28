@@ -25,17 +25,17 @@ runs:
     - id: brew
       uses: anttiharju/actions/compare-changes@v0
       with:
-        wildcard: pkg-brew
+        wildcard: brew
         changes: ${{ inputs.changes }}
     - id: github
       uses: anttiharju/actions/compare-changes@v0
       with:
-        wildcard: pkg-github
+        wildcard: github
         changes: ${{ inputs.changes }}
     - id: nix
       uses: anttiharju/actions/compare-changes@v0
       with:
-        wildcard: pkg-nix
+        wildcard: nix
         changes: ${{ inputs.changes }}
     - id: documentation
       uses: anttiharju/actions/compare-changes@v0
