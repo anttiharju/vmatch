@@ -21,11 +21,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
-      - name: Create GitHub release
-        id: release
-        uses: anttiharju/actions/release@v0
-        with:
-          version: ${{ inputs.version }}
       - name: Setup cache
         id: cache
         run: |
@@ -43,30 +38,35 @@ jobs:
         env:
           GOOS: darwin
           GOARCH: arm64
-          tag: ${{ steps.release.outputs.tag }}
+          tag: "v${{ inputs.version }}"
         run: |
           ./release/github/archive.sh "$tag" "$GOOS" "$GOARCH"
       - name: Create linux-amd64 archive
         env:
           GOOS: linux
           GOARCH: amd64
-          tag: ${{ steps.release.outputs.tag }}
+          tag: "v${{ inputs.version }}"
         run: |
           ./release/github/archive.sh "$tag" "$GOOS" "$GOARCH"
       - name: Create darwin-amd64 archive
         env:
           GOOS: darwin
           GOARCH: amd64
-          tag: ${{ steps.release.outputs.tag }}
+          tag: "v${{ inputs.version }}"
         run: |
           ./release/github/archive.sh "$tag" "$GOOS" "$GOARCH"
       - name: Create linux-arm64 archive
         env:
           GOOS: linux
           GOARCH: arm64
-          tag: ${{ steps.release.outputs.tag }}
+          tag: "v${{ inputs.version }}"
         run: |
           ./release/github/archive.sh "$tag" "$GOOS" "$GOARCH"
+      - name: Create GitHub release
+        id: release
+        uses: anttiharju/actions/release@v0
+        with:
+          version: ${{ inputs.version }}
       - name: Upload archives to release
         env:
           GH_TOKEN: ${{ github.token }}
