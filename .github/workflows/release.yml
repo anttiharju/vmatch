@@ -43,30 +43,30 @@ jobs:
         env:
           GOOS: darwin
           GOARCH: arm64
-          version: ${{ steps.release.outputs.tag }}
+          tag: ${{ steps.release.outputs.tag }}
         run: |
-          ./release/github/archive.sh "$version" "$GOOS" "$GOARCH"
+          ./release/github/archive.sh "$tag" "$GOOS" "$GOARCH"
       - name: Create linux-amd64 archive
         env:
           GOOS: linux
           GOARCH: amd64
-          version: ${{ steps.release.outputs.tag }}
+          tag: ${{ steps.release.outputs.tag }}
         run: |
-          ./release/github/archive.sh "$version" "$GOOS" "$GOARCH"
+          ./release/github/archive.sh "$tag" "$GOOS" "$GOARCH"
       - name: Create darwin-amd64 archive
         env:
           GOOS: darwin
           GOARCH: amd64
-          version: ${{ steps.release.outputs.tag }}
+          tag: ${{ steps.release.outputs.tag }}
         run: |
-          ./release/github/archive.sh "$version" "$GOOS" "$GOARCH"
+          ./release/github/archive.sh "$tag" "$GOOS" "$GOARCH"
       - name: Create linux-arm64 archive
         env:
           GOOS: linux
           GOARCH: arm64
-          version: ${{ steps.release.outputs.tag }}
+          tag: ${{ steps.release.outputs.tag }}
         run: |
-          ./release/github/archive.sh "$version" "$GOOS" "$GOARCH"
+          ./release/github/archive.sh "$tag" "$GOOS" "$GOARCH"
       - name: Upload archives to release
         env:
           GH_TOKEN: ${{ github.token }}
