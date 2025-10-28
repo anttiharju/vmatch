@@ -12,7 +12,7 @@ import (
 	"strings"
 )
 
-func FromURL(ctx context.Context, version, url, installPath string) error {
+func FromURL(ctx context.Context, url, installPath string) error {
 	// Ensure install directory exists
 	err := os.MkdirAll(installPath, 0o755)
 	if err != nil {
@@ -22,18 +22,7 @@ func FromURL(ctx context.Context, version, url, installPath string) error {
 	// Download the file
 	body, err := downloadFile(ctx, url)
 	if err != nil {
-		// If download fails and version ends with ".0", try without it
-		if strings.HasSuffix(version, ".0") {
-			altVersion := strings.TrimSuffix(version, ".0")
-			altURL := strings.Replace(url, version, altVersion, 1)
-
-			body, err = downloadFile(ctx, altURL)
-			if err != nil {
-				return errors.New("failed to download (also tried without .0 suffix): " + err.Error())
-			}
-		} else {
-			return errors.New("failed to download: " + err.Error())
-		}
+		return errors.New("failed to download: " + err.Error())
 	}
 	defer body.Close()
 

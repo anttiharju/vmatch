@@ -42,11 +42,6 @@ func validateVersion(version string) (string, error) {
 		return "", fmt.Errorf("invalid version format '%s'", version)
 	}
 
-	// If the version is in major.minor format, add .0 so that a version can still be downloaded.
-	if strings.Count(version, ".") == 1 {
-		return version + ".0", nil
-	}
-
 	return version, nil
 }
 
@@ -89,7 +84,7 @@ func (w *WrappedLanguage) noBinary() bool {
 func (w *WrappedLanguage) install(ctx context.Context) {
 	downloadURL := buildDownloadURL(w.DesiredVersion)
 
-	err := install.FromURL(ctx, w.DesiredVersion, downloadURL, w.InstallPath)
+	err := install.FromURL(ctx, downloadURL, w.InstallPath)
 	if err != nil {
 		w.ExitWithPrint(exitcode.CMDInstallError, "failed to install Go: "+err.Error())
 	}
