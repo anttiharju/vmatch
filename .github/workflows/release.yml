@@ -70,9 +70,9 @@ jobs:
       - name: Upload archives to release
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG: ${{ steps.release.outputs.tag }}
+          tag: ${{ steps.release.outputs.tag }}
         run: |
-          find . -maxdepth 1 -name '${{ github.event.repository.name }}-*-*.tar.gz' -exec gh release upload "$TAG" {} \;
+          find . -maxdepth 1 -name '${{ github.event.repository.name }}-*-*.tar.gz' -exec gh release upload "$tag" {} \;
     outputs:
       tag: ${{ steps.release.outputs.tag }}
 
