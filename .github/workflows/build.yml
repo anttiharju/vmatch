@@ -16,18 +16,18 @@ jobs:
     name: Release
     needs: plan
     if: needs.plan.outputs.version != ''
-    permissions:
-      contents: write
     uses: ./.github/workflows/release.yml
     with:
       version: ${{ needs.plan.outputs.version }}
+    permissions:
+      contents: write
     secrets: inherit
 
   documentation:
     name: Documentation
     needs: plan
     if: needs.plan.outputs.documentation == 'true'
+    uses: ./.github/workflows/documentation.yml
     permissions:
       contents: write
-    uses: ./.github/workflows/documentation.yml
     secrets: inherit
