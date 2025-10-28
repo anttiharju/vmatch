@@ -14,8 +14,7 @@ jobs:
 
   release:
     name: Release
-    needs:
-      - plan
+    needs: plan
     if: needs.plan.outputs.version != ''
     permissions:
       contents: write
