@@ -12,3 +12,10 @@ owner="$(basename "$temp")"
 repository="$(basename -s .git "$remote_url")"
 
 export GITHUB_REPOSITORY="$owner/$repository"
+
+if [[ "$TAG" = "v0.0.0" ]]; then
+  rev="$(gh api "repos/$GITHUB_REPOSITORY/commits/HEAD" --jq '.sha')"
+else
+  rev="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$TAG" --jq '.object.sha')"
+fi
+export GITHUB_SHA="$rev"
