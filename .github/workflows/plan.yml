@@ -35,13 +35,6 @@ jobs:
         id: semantic
         name: Require semantic version label
         uses: anttiharju/actions/require-semver-label@v0
-      # todo: merge into the above action
-      - if: always() && !cancelled()
-        id: next-semantic
-        name: Calculate next semantic version
-        uses: anttiharju/actions/next-semver@v0
-        with:
-          type: ${{ steps.semantic.outputs.bump }}
 
       - if: always() && !cancelled()
         name: action-validator
@@ -95,5 +88,5 @@ jobs:
         name: ShellCheck
         uses: anttiharju/actions/shellcheck@v0
     outputs:
-      version: ${{ steps.next-semantic.outputs.version }}
+      version: ${{ steps.semantic.outputs.version }}
       documentation_changed: ${{ steps.changed.outputs.documentation }}
