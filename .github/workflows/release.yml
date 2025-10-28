@@ -108,7 +108,7 @@ jobs:
         uses: ./.github/actions/underscore-name
       - name: Render template
         env:
-          TAG: ${{ needs.github.outputs.tag }}
+          TAG: ${{ needs.github.outputs.tag }} # brew/values.sh expects TAG variable
         uses: anttiharju/actions/render-template@v0
         with:
           template: release/brew/template.rb
