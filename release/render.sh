@@ -24,11 +24,29 @@ esac
 # Setup env
 source github/actions_env_mock.sh
 cache="$pkg/values.cache"
+hash_cache="$pkg.cache"
 tag="$(git tag --sort=-creatordate | head -n1)"
 tag="${tag:-v0.0.0}"
 export TAG="$tag" # also supplied by CI
 
+calculate_hash() {
+  local file="$1"
+  branch=$(git rev-parse --abbrev-ref HEAD)
+  hash=$(shasum -a 256 "$file" | cut -d' ' -f1)
+  echo "$branch-$hash"
+}
+
+# Check if values.sh changed
+if [[ -f "$hash_cache" ]]; then
+  current_hash=$(calculate_hash "$pkg/values.sh")
+  previous_hash=$(cat "$hash_cache")
+  [[ "$current_hash" != "$previous_hash" ]] && export NO_CACHE=1
+else
+  export NO_CACHE=1
+fi
+
 # Render
+calculate_hash "$pkg/values.sh" > "$hash_cache"
 if [[ -f "$cache" && -z "${NO_CACHE:-}" ]]; then
   cat "$cache"
 else

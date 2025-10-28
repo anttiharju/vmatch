@@ -10,7 +10,11 @@ repo="$(basename "$GITHUB_REPOSITORY")"
 capture PKG_REPO "$repo"
 capture PKG_VERSION "${TAG#v}"
 capture PKG_OWNER "${GITHUB_REPOSITORY%%/*}"
-rev="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$TAG" --jq '.object.sha')"
+if [[ "$TAG" = "v0.0.0" ]]; then
+  rev="$(gh api "repos/$GITHUB_REPOSITORY/commits/HEAD" --jq '.sha')"
+else
+  rev="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$TAG" --jq '.object.sha')"
+fi
 capture PKG_REV "$rev"
 sha256="$(nix-prefetch-url --quiet --unpack "https://github.com/$GITHUB_REPOSITORY/archive/$rev.tar.gz")"
 hash="$(nix hash convert --hash-algo sha256 --to sri "$sha256")"
