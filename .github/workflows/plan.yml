@@ -32,7 +32,7 @@ jobs:
           changes: ${{ steps.changes.outputs.array }}
 
       - if: always() && !cancelled() && (steps.changed.outputs.binary == 'true' || steps.changed.outputs.pkgs == 'true')
-        id: semver
+        id: semantic
         name: Require semantic version label
         uses: anttiharju/actions/require-semver-label@v0
       # todo: merge into the above action
@@ -41,7 +41,7 @@ jobs:
         name: Calculate next semantic version
         uses: anttiharju/actions/next-semver@v0
         with:
-          type: ${{ steps.semver.outputs.bump }}
+          type: ${{ steps.semantic.outputs.bump }}
 
       - if: always() && !cancelled()
         name: action-validator
