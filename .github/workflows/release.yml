@@ -78,7 +78,7 @@ jobs:
 
   homebrew-tap:
     name: Homebrew
-    needs: github
+    needs: github # Relies on binaries uploaded to the GitHub release
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
