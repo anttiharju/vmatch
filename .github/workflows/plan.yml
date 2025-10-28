@@ -99,6 +99,5 @@ jobs:
     outputs:
       binary_changed: ${{ steps.changed.outputs.binary }}
       pkgs_changed: ${{ steps.changed.outputs.pkgs }}
-      release_type: ${{ steps.semver.outputs.bump }}
       version: ${{ steps.next-semantic.outputs.version }}
       documentation_changed: ${{ steps.changed.outputs.documentation }}
