@@ -107,11 +107,6 @@ Go versions are downloaded from Google servers and stored under `~/.vmatch`, lik
 
 Contents of `~/.vmatch/bin` are symlinked from `$(go env GOPATH)/bin`, expect for `go` or `golangci-lint` which are shims, i.e. shell scripts that wrap `vmatch`.
 
-If your `go.mod` does not specify the full version, for example `1.24` instead of `1.24.3`, `vmatch` defaults to `1.24.0` for simplicity, surprisingly, sometimes there is a Go `1.minor` and sometimes a Go `1.minor.0` version released. See for yourself:
-
-- [https://dl.google.com/go/go1.20.darwin-amd64.pkg](https://dl.google.com/go/go1.20.darwin-amd64.pkg) and
-- [https://dl.google.com/go/go1.21.0.darwin-amd64.pkg](https://dl.google.com/go/go1.21.0.darwin-amd64.pkg)
-
 ## Usage
 
 After you have completed the installation, you can simply use `go` and `golangci-lint` as usual, as long as there's a `.golangci-version` or `go.mod` file available in current directory or above.
