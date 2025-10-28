@@ -42,8 +42,8 @@ jobs:
           TAG: "v${{ inputs.version }}"
         uses: anttiharju/actions/render-template@v0
         with:
-          template: release/nix/template.nix
-          values: release/nix/values.sh
+          template: .release/nix/template.nix
+          values: .release/nix/values.sh
           output: nur-packages/pkgs/${{ github.event.repository.name }}/default.nix
       - name: Sync nur-packages root default.nix
         uses: anttiharju/actions/sync-default-nix@v0
@@ -84,28 +84,28 @@ jobs:
           GOARCH: arm64
           tag: "v${{ inputs.version }}"
         run: |
-          ./release/github/archive.sh "$tag" "$GOOS" "$GOARCH"
+          ./.release/github/archive.sh "$tag" "$GOOS" "$GOARCH"
       - name: Create linux-amd64 archive
         env:
           GOOS: linux
           GOARCH: amd64
           tag: "v${{ inputs.version }}"
         run: |
-          ./release/github/archive.sh "$tag" "$GOOS" "$GOARCH"
+          ./.release/github/archive.sh "$tag" "$GOOS" "$GOARCH"
       - name: Create darwin-amd64 archive
         env:
           GOOS: darwin
           GOARCH: amd64
           tag: "v${{ inputs.version }}"
         run: |
-          ./release/github/archive.sh "$tag" "$GOOS" "$GOARCH"
+          ./.release/github/archive.sh "$tag" "$GOOS" "$GOARCH"
       - name: Create linux-arm64 archive
         env:
           GOOS: linux
           GOARCH: arm64
           tag: "v${{ inputs.version }}"
         run: |
-          ./release/github/archive.sh "$tag" "$GOOS" "$GOARCH"
+          ./.release/github/archive.sh "$tag" "$GOOS" "$GOARCH"
       - name: Create GitHub release
         uses: anttiharju/actions/release@v0
         with:
@@ -153,8 +153,8 @@ jobs:
           TAG: "v${{ inputs.version }}" # brew/values.sh expects TAG variable
         uses: anttiharju/actions/render-template@v0
         with:
-          template: release/brew/template.rb
-          values: release/brew/values.sh
+          template: .release/brew/template.rb
+          values: .release/brew/values.sh
           output: homebrew-tap/Formula/${{ steps.underscore.outputs.filename }}.rb
       - name: Commit changes
         uses: anttiharju/actions/commit-changes@v0

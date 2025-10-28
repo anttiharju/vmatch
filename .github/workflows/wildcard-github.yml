@@ -6,7 +6,7 @@ on:
     branches:
       - wildcard
     paths:
-      - "release/github/**/*"
+      - ".release/github/**/*"
 
 jobs:
   wildcard:

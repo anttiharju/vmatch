@@ -72,7 +72,7 @@ outputs:
     description: "Whether Nix has changed"
     value: ${{ steps.nix.outputs.changed }}
   release:
-    description: "Whether any package has changed"
+    description: "Whether any release has changed"
     value: ${{ steps.changed.outputs.brew || steps.changed.outputs.github || steps.changed.outputs.nix }}
   documentation:
     description: "Whether documentation has changed"
