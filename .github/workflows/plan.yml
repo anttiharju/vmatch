@@ -31,12 +31,10 @@ jobs:
         with:
           changes: ${{ steps.changes.outputs.array }}
 
-      - if: always() && !cancelled() && (steps.changed.outputs.binary == 'true' || steps.changed.outputs.pkgs )
+      - if: always() && !cancelled() && (steps.changed.outputs.binary == 'true' || steps.changed.outputs.pkgs == 'true')
         id: semver
         name: Require semantic version label
         uses: anttiharju/actions/require-semver-label@v0
-        with:
-          enforce: ${{ github.event_name == 'pull_request' }}
       # todo: merge into the above action
       - if: always() && !cancelled()
         id: next-semantic
