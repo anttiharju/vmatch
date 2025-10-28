@@ -18,10 +18,10 @@ capture PKG_VERSION "${TAG#v}"
 capture PKG_OWNER "${GITHUB_REPOSITORY%%/*}"
 
 if [[ "$TAG" = "v0.0.0" ]]; then
-  capture PKG_MAC_INTEL_SHA "devel"
-  capture PKG_MAC_ARM_SHA "devel"
-  capture PKG_LINUX_INTEL_SHA "devel"
-  capture PKG_LINUX_ARM_SHA "devel"
+  capture PKG_MAC_INTEL_SHA "TBD"
+  capture PKG_MAC_ARM_SHA "TBD"
+  capture PKG_LINUX_INTEL_SHA "TBD"
+  capture PKG_LINUX_ARM_SHA "TBD"
   exit 0
 fi
 
