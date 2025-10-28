@@ -21,5 +21,5 @@ func main() {
 
 	ctx := context.Background()
 	exitCode := cli.Start(ctx, buildinfo.New(revision, version, time), os.Args[1:])
-	os.Exit(exitCode)
+	os.Exit(int(exitCode))
 }

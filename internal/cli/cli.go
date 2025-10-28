@@ -16,10 +16,10 @@ func firstArgIs(arg string, args []string) bool {
 	return len(args) > 0 && args[0] == arg
 }
 
-func Start(ctx context.Context, info buildinfo.BuildInfo, args []string) int {
+func Start(ctx context.Context, info buildinfo.BuildInfo, args []string) exitcode.Exitcode {
 	exitCode := shims.Inject()
 	if exitCode != 0 {
-		return int(exitCode)
+		return exitCode
 	}
 
 	defer func() {
@@ -29,22 +29,22 @@ func Start(ctx context.Context, info buildinfo.BuildInfo, args []string) int {
 	if firstArgIs(string(shims.Golang), args) {
 		wrappedLanguage := language.Wrap(shims.Golang)
 
-		return wrappedLanguage.Run(ctx, args[1:])
+		return exitcode.Exitcode(wrappedLanguage.Run(ctx, args[1:]))
 	}
 
 	if firstArgIs(string(shims.GolangCILint), args) {
 		wrappedLinter := linter.Wrap(shims.GolangCILint)
 
-		return wrappedLinter.Run(ctx, args[1:])
+		return exitcode.Exitcode(wrappedLinter.Run(ctx, args[1:]))
 	}
 
 	if firstArgIs("version", args) {
-		return int(buildinfo.Print(info))
+		return buildinfo.Print(info)
 	}
 
 	if firstArgIs("doctor", args) {
-		return int(doctor.Diagnose())
+		return doctor.Diagnose()
 	}
 
-	return int(exitcode.CLIError)
+	return exitcode.CLIError
 }
