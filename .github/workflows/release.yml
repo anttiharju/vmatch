@@ -117,12 +117,12 @@ jobs:
       - name: Commit changes
         uses: anttiharju/actions/commit-changes@v0
         with:
+          working-directory: homebrew-tap
           committer: "${{ github.actor }}[bot]"
           message: |
             Update ${{ github.event.repository.name }} to ${{ inputs.version }}
 
             https://github.com/${{ github.repository }}/blob/${{ github.sha }}/.github/workflows/package.yml
-          working-directory: homebrew-tap
 
   nur-packages:
     name: Nix
