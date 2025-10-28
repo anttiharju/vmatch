@@ -97,7 +97,5 @@ jobs:
         name: ShellCheck
         uses: anttiharju/actions/shellcheck@v0
     outputs:
-      binary_changed: ${{ steps.changed.outputs.binary }}
-      pkgs_changed: ${{ steps.changed.outputs.pkgs }}
       version: ${{ steps.next-semantic.outputs.version }}
       documentation_changed: ${{ steps.changed.outputs.documentation }}
