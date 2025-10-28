@@ -119,7 +119,7 @@ jobs:
         with:
           committer: "${{ github.actor }}[bot]"
           message: |
-            Update ${{ github.event.repository.name }} to ${{ needs.github.outputs.tag }}
+            Update ${{ github.event.repository.name }} to ${{ inputs.version }}
 
             https://github.com/${{ github.repository }}/blob/${{ github.sha }}/.github/workflows/package.yml
           working-directory: homebrew-tap
@@ -164,6 +164,6 @@ jobs:
           working-directory: nur-packages
           committer: "${{ github.actor }}[bot]"
           message: |
-            Update ${{ github.event.repository.name }} to v${{ inputs.version }}
+            Update ${{ github.event.repository.name }} to ${{ inputs.version }}
 
             https://github.com/${{ github.repository }}/blob/${{ github.sha }}/.github/workflows/package.yml
