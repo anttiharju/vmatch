@@ -46,7 +46,7 @@ func Wrap(shim shims.Shim) *WrappedLinter {
 	}
 }
 
-func (w *WrappedLinter) Run(ctx context.Context, args []string) int {
+func (w *WrappedLinter) Run(ctx context.Context, args []string) exitcode.Exitcode {
 	if w.noBinary() {
 		w.install(ctx)
 	}
@@ -60,7 +60,7 @@ func (w *WrappedLinter) Run(ctx context.Context, args []string) int {
 
 	_ = linter.Run()
 
-	return linter.ProcessState.ExitCode()
+	return exitcode.Exitcode(linter.ProcessState.ExitCode())
 }
 
 func (w *WrappedLinter) noBinary() bool {

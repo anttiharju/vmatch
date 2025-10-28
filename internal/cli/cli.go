@@ -29,13 +29,13 @@ func Start(ctx context.Context, info buildinfo.BuildInfo, args []string) exitcod
 	if firstArgIs(string(shims.Golang), args) {
 		wrappedLanguage := language.Wrap(shims.Golang)
 
-		return exitcode.Exitcode(wrappedLanguage.Run(ctx, args[1:]))
+		return wrappedLanguage.Run(ctx, args[1:])
 	}
 
 	if firstArgIs(string(shims.GolangCILint), args) {
 		wrappedLinter := linter.Wrap(shims.GolangCILint)
 
-		return exitcode.Exitcode(wrappedLinter.Run(ctx, args[1:]))
+		return wrappedLinter.Run(ctx, args[1:])
 	}
 
 	if firstArgIs("version", args) {
