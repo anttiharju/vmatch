@@ -47,7 +47,7 @@ jobs:
         name: action-validator
         uses: anttiharju/actions/action-validator@v0
 
-      - if: always() && !cancelled() && (steps.changed.outputs.github_actions_workflows == 'true' || github.event_name != 'pull_request')
+      - if: always() && !cancelled() && (steps.changed.outputs.github_actions_workflows == 'true' || github.event_name == 'push')
         name: actionlint
         uses: anttiharju/actions/actionlint@v0
 
@@ -59,17 +59,17 @@ jobs:
         name: EditorConfig-Checker
         uses: anttiharju/actions/editorconfig-checker@v0
 
-      - if: always() && !cancelled() && (steps.changed.outputs.binary == 'true' || github.event_name != 'pull_request')
+      - if: always() && !cancelled() && (steps.changed.outputs.binary == 'true' || github.event_name == 'push')
         name: go build
         uses: anttiharju/actions/go-build@v0
 
-      - if: always() && !cancelled() && (steps.changed.outputs.binary == 'true' || github.event_name != 'pull_request')
+      - if: always() && !cancelled() && (steps.changed.outputs.binary == 'true' || github.event_name == 'push')
         name: go test
         shell: sh
         run: |
           go test ./...
 
-      - if: always() && !cancelled() && (steps.changed.outputs.go_code == 'true' || github.event_name != 'pull_request')
+      - if: always() && !cancelled() && (steps.changed.outputs.go_code == 'true' || github.event_name == 'push')
         name: golangci-lint
         uses: anttiharju/actions/golangci-lint@v0
 
@@ -77,21 +77,21 @@ jobs:
         name: Keep .yml
         uses: anttiharju/actions/keep-yml@v0
 
-      - if: always() && !cancelled() && (steps.changed.outputs.documentation == 'true' || github.event_name != 'pull_request')
+      - if: always() && !cancelled() && (steps.changed.outputs.documentation == 'true' || github.event_name == 'push')
         name: MkDocs
         uses: anttiharju/actions/mkdocs-build-strict@v0
 
-      - if: always() && !cancelled() && (steps.changed.outputs.md_and_yml == 'true' || github.event_name != 'pull_request')
+      - if: always() && !cancelled() && (steps.changed.outputs.md_and_yml == 'true' || github.event_name == 'push')
         name: Prettier
         uses: anttiharju/actions/prettier@v0
         with:
           patterns: "{*.yml,*.md}"
 
-      - if: always() && !cancelled() && (steps.changed.outputs.pkg_brew == 'true' || github.event_name != 'pull_request')
+      - if: always() && !cancelled() && (steps.changed.outputs.pkg_brew == 'true' || github.event_name == 'push')
         name: Rubocop formula
         uses: ./.github/actions/rubocop-formula
 
-      - if: always() && !cancelled() && (steps.changed.outputs.scripts == 'true' || github.event_name != 'pull_request')
+      - if: always() && !cancelled() && (steps.changed.outputs.scripts == 'true' || github.event_name == 'push')
         name: ShellCheck
         uses: anttiharju/actions/shellcheck@v0
     outputs:
