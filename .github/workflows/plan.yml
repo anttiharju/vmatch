@@ -87,7 +87,7 @@ jobs:
         with:
           patterns: "{*.yml,*.md}"
 
-      - if: always() && !cancelled() && (steps.changed.outputs.pkg_brew == 'true' || github.event_name == 'push')
+      - if: always() && !cancelled() && (steps.changed.outputs.brew == 'true' || github.event_name == 'push')
         name: Rubocop formula
         uses: ./.github/actions/rubocop-formula
 

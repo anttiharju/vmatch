@@ -22,17 +22,17 @@ runs:
       with:
         wildcard: golangci-lint
         changes: ${{ inputs.changes }}
-    - id: pkg_brew
+    - id: brew
       uses: anttiharju/actions/compare-changes@v0
       with:
         wildcard: pkg-brew
         changes: ${{ inputs.changes }}
-    - id: pkg_github
+    - id: github
       uses: anttiharju/actions/compare-changes@v0
       with:
         wildcard: pkg-github
         changes: ${{ inputs.changes }}
-    - id: pkg_nix
+    - id: nix
       uses: anttiharju/actions/compare-changes@v0
       with:
         wildcard: pkg-nix
@@ -62,18 +62,18 @@ outputs:
   go_code:
     description: "Whether Go code has changed"
     value: ${{ steps.go_code.outputs.changed }}
-  pkg_brew:
-    description: "Whether Brew package has changed"
-    value: ${{ steps.pkg_brew.outputs.changed }}
-  pkg_github:
-    description: "Whether GitHub package has changed"
-    value: ${{ steps.pkg_github.outputs.changed }}
-  pkg_nix:
-    description: "Whether Nix package has changed"
-    value: ${{ steps.pkg_nix.outputs.changed }}
+  brew:
+    description: "Whether Brew has changed"
+    value: ${{ steps.brew.outputs.changed }}
+  github:
+    description: "Whether GitHub has changed"
+    value: ${{ steps.github.outputs.changed }}
+  nix:
+    description: "Whether Nix has changed"
+    value: ${{ steps.nix.outputs.changed }}
   release:
     description: "Whether any package has changed"
-    value: ${{ steps.changed.outputs.pkg_brew || steps.changed.outputs.pkg_github || steps.changed.outputs.pkg_nix }}
+    value: ${{ steps.changed.outputs.brew || steps.changed.outputs.github || steps.changed.outputs.nix }}
   documentation:
     description: "Whether documentation has changed"
     value: ${{ steps.documentation.outputs.changed }}
