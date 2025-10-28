@@ -31,7 +31,7 @@ jobs:
         with:
           changes: ${{ steps.changes.outputs.array }}
 
-      - if: always() && !cancelled() && (steps.changed.outputs.binary == 'true' || steps.changed.outputs.pkgs == 'true')
+      - if: always() && !cancelled() && (steps.changed.outputs.binary == 'true' || steps.changed.outputs.release == 'true')
         id: semantic
         name: Require semantic version label
         uses: anttiharju/actions/require-semver-label@v0
