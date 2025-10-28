@@ -15,6 +15,10 @@
         "aarch64-darwin"
       ];
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
+
+      devPackages = pkgs: with pkgs; [
+        go
+      ];
     in
     {
       devShells = forAllSystems (
@@ -24,11 +28,26 @@
         in
         {
           default = pkgs.mkShell {
-            packages = with pkgs; [
-              go
-            ];
-
+            packages = devPackages pkgs;
             shellHook = '''';
+          };
+        }
+      );
+
+      packages = forAllSystems (
+        system:
+        let
+          pkgs = import nixpkgs { inherit system; };
+        in
+        {
+          ci = pkgs.dockerTools.buildImage {
+            name = "ci";
+            tag = "latest";
+            copyToRoot = pkgs.buildEnv {
+              name = "image-root";
+              paths = devPackages pkgs;
+              pathsToLink = [ "/bin" ];
+            };
           };
         }
       );
