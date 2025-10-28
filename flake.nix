@@ -2,7 +2,7 @@
   description = "Go development environment";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-25.05";
   };
 
   outputs =
