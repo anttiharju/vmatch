@@ -21,11 +21,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
-      - name: Create GitHub release
-        id: release
-        uses: anttiharju/actions/release@v0
-        with:
-          version: ${{ inputs.version }}
       - name: Setup cache
         id: cache
         run: |
@@ -43,42 +38,45 @@ jobs:
         env:
           GOOS: darwin
           GOARCH: arm64
-          version: ${{ steps.release.outputs.tag }}
+          tag: "v${{ inputs.version }}"
         run: |
-          ./release/github/archive.sh "$version" "$GOOS" "$GOARCH"
+          ./release/github/archive.sh "$tag" "$GOOS" "$GOARCH"
       - name: Create linux-amd64 archive
         env:
           GOOS: linux
           GOARCH: amd64
-          version: ${{ steps.release.outputs.tag }}
+          tag: "v${{ inputs.version }}"
         run: |
-          ./release/github/archive.sh "$version" "$GOOS" "$GOARCH"
+          ./release/github/archive.sh "$tag" "$GOOS" "$GOARCH"
       - name: Create darwin-amd64 archive
         env:
           GOOS: darwin
           GOARCH: amd64
-          version: ${{ steps.release.outputs.tag }}
+          tag: "v${{ inputs.version }}"
         run: |
-          ./release/github/archive.sh "$version" "$GOOS" "$GOARCH"
+          ./release/github/archive.sh "$tag" "$GOOS" "$GOARCH"
       - name: Create linux-arm64 archive
         env:
           GOOS: linux
           GOARCH: arm64
-          version: ${{ steps.release.outputs.tag }}
+          tag: "v${{ inputs.version }}"
         run: |
-          ./release/github/archive.sh "$version" "$GOOS" "$GOARCH"
+          ./release/github/archive.sh "$tag" "$GOOS" "$GOARCH"
+      - name: Create GitHub release
+        uses: anttiharju/actions/release@v0
+        with:
+          title: ${{ inputs.version }}
+          tag: "v${{ inputs.version }}" # Go expects version tags to be prefixed with "v"
       - name: Upload archives to release
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG: ${{ steps.release.outputs.tag }}
+          tag: "v${{ inputs.version }}"
         run: |
-          find . -maxdepth 1 -name '${{ github.event.repository.name }}-*-*.tar.gz' -exec gh release upload "$TAG" {} \;
-    outputs:
-      tag: ${{ steps.release.outputs.tag }}
+          find . -maxdepth 1 -name '${{ github.event.repository.name }}-*-*.tar.gz' -exec gh release upload "$tag" {} \;
 
   homebrew-tap:
     name: Homebrew
-    needs: github
+    needs: github # Relies on binaries uploaded to the GitHub release
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout
@@ -108,7 +106,7 @@ jobs:
         uses: ./.github/actions/underscore-name
       - name: Render template
         env:
-          TAG: ${{ needs.github.outputs.tag }}
+          TAG: "v${{ inputs.version }}" # brew/values.sh expects TAG variable
         uses: anttiharju/actions/render-template@v0
         with:
           template: release/brew/template.rb
@@ -117,12 +115,12 @@ jobs:
       - name: Commit changes
         uses: anttiharju/actions/commit-changes@v0
         with:
+          working-directory: homebrew-tap
           committer: "${{ github.actor }}[bot]"
           message: |
-            Update ${{ github.event.repository.name }} to ${{ needs.github.outputs.tag }}
+            Update ${{ github.event.repository.name }} to ${{ inputs.version }}
 
             https://github.com/${{ github.repository }}/blob/${{ github.sha }}/.github/workflows/package.yml
-          working-directory: homebrew-tap
 
   nur-packages:
     name: Nix
@@ -164,6 +162,6 @@ jobs:
           working-directory: nur-packages
           committer: "${{ github.actor }}[bot]"
           message: |
-            Update ${{ github.event.repository.name }} to v${{ inputs.version }}
+            Update ${{ github.event.repository.name }} to ${{ inputs.version }}
 
             https://github.com/${{ github.repository }}/blob/${{ github.sha }}/.github/workflows/package.yml

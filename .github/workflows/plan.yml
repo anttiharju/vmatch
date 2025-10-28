@@ -9,12 +9,9 @@ on:
     types: [opened, synchronize, reopened, labeled, unlabeled]
   workflow_call:
     outputs:
-      release:
-        description: "Whether to trigger release workflows"
-        value: ${{ (jobs.validate.outputs.release_type != '' || (jobs.validate.outputs.binary_changed == 'true' || jobs.validate.outputs.pkgs_changed == 'true')) && github.event.repository.name != 'go-starter' }}
       version:
-        description: "Version for the next release"
-        value: ${{ jobs.validate.outputs.version }}
+        description: "Version for the next release. Empty if no release is needed."
+        value: ${{ github.event.repository.name != 'go-starter' && jobs.validate.outputs.version || '' }}
       documentation:
         description: "Whether to update the documentation website"
         value: ${{ jobs.validate.outputs.documentation_changed == 'true' }}
@@ -34,25 +31,18 @@ jobs:
         with:
           changes: ${{ steps.changes.outputs.array }}
 
-      - if: always() && !cancelled()
-        id: semver
+      - if: always() && !cancelled() && (steps.changed.outputs.binary == 'true' || steps.changed.outputs.release == 'true' || github.event_name == 'push')
+        id: semantic
         name: Require semantic version label
-        uses: anttiharju/actions/require-semver-label@v0
+        uses: anttiharju/actions/semver-label@v0
         with:
-          enforce: ${{ (steps.changed.outputs.binary == 'true' || steps.changed.outputs.pkgs ) && github.event_name != 'push' }}
-      # todo: merge into the above action
-      - if: always() && !cancelled()
-        id: next-semantic
-        name: Calculate next semantic version
-        uses: anttiharju/actions/next-semver@v0
-        with:
-          type: ${{ steps.semver.outputs.bump }}
+          require: ${{ steps.changed.outputs.binary == 'true' || steps.changed.outputs.release == 'true' }}
 
       - if: always() && !cancelled()
         name: action-validator
         uses: anttiharju/actions/action-validator@v0
 
-      - if: always() && !cancelled() && (steps.changed.outputs.github_actions_workflows == 'true' || github.event_name != 'pull_request')
+      - if: always() && !cancelled() && (steps.changed.outputs.github_actions_workflows == 'true' || github.event_name == 'push')
         name: actionlint
         uses: anttiharju/actions/actionlint@v0
 
@@ -64,17 +54,17 @@ jobs:
         name: EditorConfig-Checker
         uses: anttiharju/actions/editorconfig-checker@v0
 
-      - if: always() && !cancelled() && (steps.changed.outputs.binary == 'true' || github.event_name != 'pull_request')
+      - if: always() && !cancelled() && (steps.changed.outputs.binary == 'true' || github.event_name == 'push')
         name: go build
         uses: anttiharju/actions/go-build@v0
 
-      - if: always() && !cancelled() && (steps.changed.outputs.binary == 'true' || github.event_name != 'pull_request')
+      - if: always() && !cancelled() && (steps.changed.outputs.binary == 'true' || github.event_name == 'push')
         name: go test
         shell: sh
         run: |
           go test ./...
 
-      - if: always() && !cancelled() && (steps.changed.outputs.go_code == 'true' || github.event_name != 'pull_request')
+      - if: always() && !cancelled() && (steps.changed.outputs.go_code == 'true' || github.event_name == 'push')
         name: golangci-lint
         uses: anttiharju/actions/golangci-lint@v0
 
@@ -82,26 +72,23 @@ jobs:
         name: Keep .yml
         uses: anttiharju/actions/keep-yml@v0
 
-      - if: always() && !cancelled() && (steps.changed.outputs.documentation == 'true' || github.event_name != 'pull_request')
+      - if: always() && !cancelled() && (steps.changed.outputs.documentation == 'true' || github.event_name == 'push')
         name: MkDocs
         uses: anttiharju/actions/mkdocs-build-strict@v0
 
-      - if: always() && !cancelled() && (steps.changed.outputs.md_and_yml == 'true' || github.event_name != 'pull_request')
+      - if: always() && !cancelled() && (steps.changed.outputs.md_and_yml == 'true' || github.event_name == 'push')
         name: Prettier
         uses: anttiharju/actions/prettier@v0
         with:
           patterns: "{*.yml,*.md}"
 
-      - if: always() && !cancelled() && (steps.changed.outputs.pkg_brew == 'true' || github.event_name != 'pull_request')
+      - if: always() && !cancelled() && (steps.changed.outputs.brew == 'true' || github.event_name == 'push')
         name: Rubocop formula
         uses: ./.github/actions/rubocop-formula
 
-      - if: always() && !cancelled() && (steps.changed.outputs.scripts == 'true' || github.event_name != 'pull_request')
+      - if: always() && !cancelled() && (steps.changed.outputs.scripts == 'true' || github.event_name == 'push')
         name: ShellCheck
         uses: anttiharju/actions/shellcheck@v0
     outputs:
-      binary_changed: ${{ steps.changed.outputs.binary }}
-      pkgs_changed: ${{ steps.changed.outputs.pkgs }}
-      release_type: ${{ steps.semver.outputs.bump }}
-      version: ${{ steps.next-semantic.outputs.version }}
+      version: ${{ steps.semantic.outputs.version }}
       documentation_changed: ${{ steps.changed.outputs.documentation }}
