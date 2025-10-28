@@ -73,7 +73,7 @@ outputs:
     value: ${{ steps.nix.outputs.changed }}
   release:
     description: "Whether any release has changed"
-    value: ${{ steps.changed.outputs.brew || steps.changed.outputs.github || steps.changed.outputs.nix }}
+    value: ${{ steps.brew.outputs.changed || steps.github.outputs.changed || steps.nix.outputs.changed }}
   documentation:
     description: "Whether documentation has changed"
     value: ${{ steps.documentation.outputs.changed }}
