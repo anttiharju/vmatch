@@ -3,10 +3,11 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-25.05";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs?ref=nixos-unstable";
   };
 
   outputs =
-    { self, nixpkgs, ... }:
+    { self, nixpkgs, nixpkgs-unstable, ... }:
     let
       supportedSystems = [
         "x86_64-linux"
@@ -16,7 +17,7 @@
       ];
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
 
-      devPackages = pkgs: with pkgs; [
+      devPackages = pkgs: pkgs-unstable: with pkgs; [
         go
         action-validator
         actionlint
@@ -28,7 +29,7 @@
             mkdocs-material
           ]
         ))
-        #prettier
+        pkgs-unstable.prettier
         rubocop
         shellcheck
       ];
@@ -38,10 +39,11 @@
         system:
         let
           pkgs = import nixpkgs { inherit system; };
+          pkgs-unstable = import nixpkgs-unstable { inherit system; };
         in
         {
           default = pkgs.mkShell {
-            packages = devPackages pkgs;
+            packages = devPackages pkgs pkgs-unstable;
             shellHook = '''';
           };
         }
@@ -51,6 +53,7 @@
         system:
         let
           pkgs = import nixpkgs { inherit system; };
+          pkgs-unstable = import nixpkgs-unstable { inherit system; };
         in
         {
           ci = pkgs.dockerTools.buildImage {
@@ -58,7 +61,7 @@
             tag = "latest";
             copyToRoot = pkgs.buildEnv {
               name = "image-root";
-              paths = devPackages pkgs;
+              paths = devPackages pkgs pkgs-unstable;
               pathsToLink = [ "/bin" ];
             };
           };
