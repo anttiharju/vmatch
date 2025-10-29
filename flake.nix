@@ -109,6 +109,14 @@
               mkdir -p /usr/bin
               ln -sf ${pkgs.coreutils}/bin/env /usr/bin/env
 
+              # Symlink all binaries to /usr/bin for GitHub Actions compatibility (e.g. setup-go modifies PATH and we lose /bin)
+              for binary in /bin/*; do
+                if [ -f "$binary" ] || [ -L "$binary" ]; then
+                  realpath=$(readlink -f "$binary")
+                  ln -sf "$realpath" /usr/bin/$(basename "$binary")
+                fi
+              done
+
               # /usr/local/bin
               mkdir -p /usr/local/bin
               chmod 755 /usr/local/bin
