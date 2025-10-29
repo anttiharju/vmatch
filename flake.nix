@@ -107,6 +107,10 @@
               mkdir -p /etc/ssl/certs
               ln -sf ${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt /etc/ssl/certs/ca-certificates.crt
               ln -sf ${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt /etc/ssl/certs/ca-bundle.crt
+
+              # To fix 'parallel golangci-lint is running'
+              mkdir -p /tmp
+              chmod 1777 /tmp
             '';
           };
         }
