@@ -40,19 +40,23 @@ jobs:
 
       - if: always() && !cancelled()
         name: action-validator
-        uses: anttiharju/actions/action-validator@v0
+        run: |
+          git ls-files -z ".github/*/*.yml" "*/action.yml" | xargs -0 action-validator --verbose
 
       - if: always() && !cancelled() && (steps.changed.outputs.github_actions_workflows == 'true' || github.event_name == 'push')
         name: actionlint
-        uses: anttiharju/actions/actionlint@v0
+        run: |
+          actionlint -color
 
       - if: always() && !cancelled()
         name: relcheck
-        uses: anttiharju/actions/relcheck@v0
+        run: |
+          relcheck all --verbose --color=always
 
       - if: always() && !cancelled()
         name: EditorConfig-Checker
-        uses: anttiharju/actions/editorconfig-checker@v0
+        run: |
+          git ls-files -z | xargs -0 editorconfig-checker
 
       - if: always() && !cancelled() && (steps.changed.outputs.binary == 'true' || github.event_name == 'push')
         name: go build
@@ -66,29 +70,29 @@ jobs:
 
       - if: always() && !cancelled() && (steps.changed.outputs.go_code == 'true' || github.event_name == 'push')
         name: golangci-lint
-        uses: anttiharju/actions/golangci-lint@v0
+        run: golangci-lint run
 
       - if: always() && !cancelled()
         name: Keep .yml
         uses: anttiharju/actions/keep-yml@v0
 
       - if: always() && !cancelled() && (steps.changed.outputs.documentation == 'true' || github.event_name == 'push')
-        name: MkDocs
-        uses: anttiharju/actions/mkdocs-build-strict@v0
+        name: mkdocs
+        run: mkdocs build --strict
 
       - if: always() && !cancelled() && (steps.changed.outputs.md_and_yml == 'true' || github.event_name == 'push')
-        name: Prettier
-        uses: anttiharju/actions/prettier@v0
-        with:
-          patterns: "{*.yml,*.md}"
+        name: prettier
+        run: |
+          prettier "{*.yml,*.md}" --check
 
       - if: always() && !cancelled() && (steps.changed.outputs.brew == 'true' || github.event_name == 'push')
         name: Rubocop formula
         uses: ./.github/actions/rubocop-formula
 
       - if: always() && !cancelled() && (steps.changed.outputs.scripts == 'true' || github.event_name == 'push')
-        name: ShellCheck
-        uses: anttiharju/actions/shellcheck@v0
+        name: shellcheck
+        run: |
+          git ls-files -z '*.sh' | xargs -0 shellcheck --color=always
     outputs:
       version: ${{ steps.semantic.outputs.version }}
       documentation_changed: ${{ steps.changed.outputs.documentation }}
