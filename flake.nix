@@ -33,7 +33,7 @@
         ))
         pkgs-unstable.prettier # 217MB
         rubocop # 805MB
-        shellcheck
+        shellcheck # 123MB (note: also included by actionlint)
       ];
     in
     {
