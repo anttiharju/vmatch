@@ -99,6 +99,11 @@
             runAsRoot = ''
               #!${pkgs.runtimeShell}
 
+              # /usr/bin/env for shebangs
+              mkdir -p /usr/bin
+              ln -sf ${pkgs.coreutils}/bin/env /usr/bin/env
+
+              # cacert
               mkdir -p /etc/ssl/certs
               ln -sf ${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt /etc/ssl/certs/ca-certificates.crt
               ln -sf ${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt /etc/ssl/certs/ca-bundle.crt
