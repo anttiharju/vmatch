@@ -25,7 +25,7 @@
         actionlint # 121MB
         anttiharju.relcheck # 2MB
         editorconfig-checker # 4MB
-        golangci-lint
+        golangci-lint # 41MB
         (python313.withPackages (
           ps: with ps; [
             mkdocs-material # 239MB
