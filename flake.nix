@@ -4,10 +4,12 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-25.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    nur-anttiharju.url = "github:anttiharju/nur-packages";
+    nur-anttiharju.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
-    { self, nixpkgs, nixpkgs-unstable, ... }:
+    { self, nixpkgs, nixpkgs-unstable, nur-anttiharju, ... }:
     let
       supportedSystems = [
         "x86_64-linux"
@@ -17,11 +19,11 @@
       ];
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
 
-      devPackages = pkgs: pkgs-unstable: with pkgs; [
+      devPackages = pkgs: pkgs-unstable: anttiharju: with pkgs; [
         go
         action-validator
         actionlint
-        # relcheck
+        anttiharju.relcheck
         editorconfig-checker
         golangci-lint
         (python313.withPackages (
@@ -40,10 +42,11 @@
         let
           pkgs = import nixpkgs { inherit system; };
           pkgs-unstable = import nixpkgs-unstable { inherit system; };
+          anttiharju = nur-anttiharju.packages.${system};
         in
         {
           default = pkgs.mkShell {
-            packages = devPackages pkgs pkgs-unstable;
+            packages = devPackages pkgs pkgs-unstable anttiharju;
             shellHook = '''';
           };
         }
@@ -54,6 +57,7 @@
         let
           pkgs = import nixpkgs { inherit system; };
           pkgs-unstable = import nixpkgs-unstable { inherit system; };
+          anttiharju = nur-anttiharju.packages.${system};
         in
         {
           ci = pkgs.dockerTools.buildImage {
@@ -61,7 +65,7 @@
             tag = "latest";
             copyToRoot = pkgs.buildEnv {
               name = "image-root";
-              paths = devPackages pkgs pkgs-unstable;
+              paths = devPackages pkgs pkgs-unstable anttiharju;
               pathsToLink = [ "/bin" ];
             };
           };

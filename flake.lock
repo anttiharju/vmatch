@@ -32,10 +32,31 @@
         "type": "github"
       }
     },
+    "nur-anttiharju": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1761724961,
+        "narHash": "sha256-s2fysanj+aOZ2GFlEcDa3ckwquQz0sqCDP/5p+18/IA=",
+        "owner": "anttiharju",
+        "repo": "nur-packages",
+        "rev": "980ee54e3e6d7a87b8fefdf0517ea82edb225a89",
+        "type": "github"
+      },
+      "original": {
+        "owner": "anttiharju",
+        "repo": "nur-packages",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "nixpkgs": "nixpkgs",
-        "nixpkgs-unstable": "nixpkgs-unstable"
+        "nixpkgs-unstable": "nixpkgs-unstable",
+        "nur-anttiharju": "nur-anttiharju"
       }
     }
   },
