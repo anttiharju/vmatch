@@ -31,7 +31,7 @@
             mkdocs-material # 239MB
           ]
         ))
-        pkgs-unstable.prettier
+        pkgs-unstable.prettier # 217MB
         rubocop
         shellcheck
       ];
