@@ -49,7 +49,7 @@ jobs:
           version: ${{ steps.container.outputs.version }}
         run: |
           image_id="ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}-ci"
-          image_id="$(echo "$image_id" | tr '[A-Z]' '[a-z]')"
+          image_id="$(echo "$image_id" | tr '[:upper:]' '[:lower:]')"
           docker tag "ci:$version" "$image_id:$version"
           echo "id=$image_id" >> "$GITHUB_OUTPUT"
       - name: Log in to registry
