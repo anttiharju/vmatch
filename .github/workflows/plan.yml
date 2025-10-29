@@ -23,6 +23,7 @@ jobs:
     permissions:
       packages: write
     steps:
+      - run: echo "$PATH"
       - name: Checkout
         uses: actions/checkout@v4
       - name: Install Nix
