@@ -22,7 +22,7 @@
       devPackages = pkgs: pkgs-unstable: anttiharju: with pkgs; [ # 1.893GB
         go # 263MB
         action-validator # 4MB
-        actionlint
+        actionlint # 121MB
         anttiharju.relcheck
         editorconfig-checker
         golangci-lint
