@@ -32,7 +32,7 @@
           ]
         ))
         pkgs-unstable.prettier # 217MB
-        rubocop
+        rubocop # 805MB
         shellcheck
       ];
     in
