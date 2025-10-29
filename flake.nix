@@ -18,6 +18,19 @@
 
       devPackages = pkgs: with pkgs; [
         go
+        action-validator
+        actionlint
+        # relcheck
+        editorconfig-checker
+        golangci-lint
+        (python313.withPackages (
+          ps: with ps; [
+            mkdocs-material
+          ]
+        ))
+        #prettier
+        rubocop
+        shellcheck
       ];
     in
     {
