@@ -100,6 +100,7 @@
                 ]}"
                 "NIX_LD=${pkgs.stdenv.cc.bintools.dynamicLinker}"
               ];
+              User = "1001"; # https://github.com/actions/runner/issues/2033#issuecomment-1598547465
             };
             runAsRoot = ''
               #!${pkgs.runtimeShell}
