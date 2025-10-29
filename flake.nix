@@ -43,6 +43,8 @@
         findutils
         gnutar
         curl
+        jq
+        gzip
       ] ++ pkgs.lib.optionals (system == "aarch64-linux" || system == "x86_64-linux") [
         cacert
       ];
@@ -105,6 +107,10 @@
               # /usr/bin/env for shebangs
               mkdir -p /usr/bin
               ln -sf ${pkgs.coreutils}/bin/env /usr/bin/env
+
+              # /usr/local/bin
+              mkdir -p /usr/local/bin
+              chmod 755 /usr/local/bin
 
               # cacert
               mkdir -p /etc/ssl/certs
