@@ -23,7 +23,7 @@
         go # 263MB
         action-validator # 4MB
         actionlint # 121MB
-        anttiharju.relcheck
+        anttiharju.relcheck # 2MB
         editorconfig-checker
         golangci-lint
         (python313.withPackages (
