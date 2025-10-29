@@ -28,7 +28,7 @@
         golangci-lint
         (python313.withPackages (
           ps: with ps; [
-            mkdocs-material
+            mkdocs-material # 239MB
           ]
         ))
         pkgs-unstable.prettier
