@@ -19,7 +19,7 @@
       ];
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
 
-      devPackages = pkgs: pkgs-unstable: anttiharju: with pkgs; [
+      devPackages = pkgs: pkgs-unstable: anttiharju: with pkgs; [ # 1.893GB
         go
         action-validator
         actionlint
