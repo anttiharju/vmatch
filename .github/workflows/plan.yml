@@ -24,6 +24,11 @@ jobs:
       packages: write
     steps:
       - run: echo "$PATH"
+      - name: Setup Go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: "go.mod"
+      - run: echo "$PATH"
       - name: Checkout
         uses: actions/checkout@v4
       - name: Install Nix
