@@ -35,11 +35,14 @@
         pkgs-unstable.prettier # 217MB
         rubocop # 805MB
         shellcheck # 123MB (note: also included by actionlint)
+        gh
         # Everything below is required by GitHub Actions
         coreutils
         bash
         git
         findutils
+        gnutar
+        curl
       ] ++ pkgs.lib.optionals (system == "aarch64-linux" || system == "x86_64-linux") [
         cacert
       ];
