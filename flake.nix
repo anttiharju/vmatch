@@ -20,7 +20,7 @@
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
 
       devPackages = pkgs: pkgs-unstable: anttiharju: with pkgs; [ # 1.893GB
-        go
+        go # 263MB
         action-validator
         actionlint
         anttiharju.relcheck
