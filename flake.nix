@@ -21,7 +21,7 @@
 
       devPackages = pkgs: pkgs-unstable: anttiharju: with pkgs; [ # 1.893GB
         go # 263MB
-        action-validator
+        action-validator # 4MB
         actionlint
         anttiharju.relcheck
         editorconfig-checker
