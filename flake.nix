@@ -43,6 +43,7 @@
           rubocop # 805MB
           shellcheck # 123MB (note: also included by actionlint)
           gh
+          nix-prefetch-github
           # Everything below is required by GitHub Actions
           coreutils
           bash
