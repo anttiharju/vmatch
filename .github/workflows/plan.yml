@@ -64,14 +64,13 @@ jobs:
     outputs:
       version: ${{ steps.container.outputs.version }}
 
-  sudo-container:
-    name: Test sudo (container)
+  nix:
+    name: Test Nix in container
     needs: build-ci-container
     runs-on: ubuntu-24.04
     container:
       image: ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}-ci:${{ needs.build-ci-container.outputs.version }}
     steps:
-      - run: sudo echo hello
       - uses: cachix/install-nix-action@v31
         with:
           nix_path: nixpkgs=channel:nixos-25.05
