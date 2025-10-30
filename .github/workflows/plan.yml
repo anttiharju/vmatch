@@ -64,6 +64,27 @@ jobs:
     outputs:
       version: ${{ steps.container.outputs.version }}
 
+  sudo-container:
+    name: Test sudo (container)
+    needs: build-ci-container
+    runs-on: ubuntu-24.04
+    container:
+      image: ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}-ci:${{ needs.build-ci-container.outputs.version }}
+    steps:
+      - run: sudo echo hello
+      - uses: cachix/install-nix-action@v31
+        with:
+          nix_path: nixpkgs=channel:nixos-25.05
+      - run: nix --version
+      - name: full command
+        run: |
+          sha256="$(nix-prefetch-url --quiet --unpack "https://github.com/anttiharju/vmatch/archive/HEAD.tar.gz")"
+          nix hash convert --hash-algo sha256 --to sri "$sha256"
+      - name: simplified version
+        if: always()
+        run: |
+          nix hash convert --hash-algo sha256 --to sri "1rm46h0likn9sgdw8j49vksj2vv6n4ksw5j0xcx8snmwk352yxnq"
+
   validate:
     name: Validate
     needs: build-ci-container
