@@ -99,6 +99,7 @@
                   pkgs.glibc
                 ]}"
                 "NIX_LD=${pkgs.stdenv.cc.bintools.dynamicLinker}"
+                "PATH=/home/runner/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
               ];
               User = "1001"; # https://github.com/actions/runner/issues/2033#issuecomment-1598547465
             };
@@ -108,14 +109,6 @@
               # /usr/bin/env for shebangs
               mkdir -p /usr/bin
               ln -sf ${pkgs.coreutils}/bin/env /usr/bin/env
-
-              # Symlink all binaries to /usr/bin for GitHub Actions compatibility (e.g. setup-go modifies PATH and we lose /bin)
-              for binary in /bin/*; do
-                if [ -f "$binary" ] || [ -L "$binary" ]; then
-                  realpath=$(readlink -f "$binary")
-                  ln -sf "$realpath" /usr/bin/$(basename "$binary")
-                fi
-              done
 
               # /usr/local/bin
               mkdir -p /usr/local/bin
