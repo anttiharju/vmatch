@@ -74,8 +74,10 @@ jobs:
       - uses: cachix/install-nix-action@v31
         with:
           nix_path: nixpkgs=channel:nixos-25.05
-      - run: nix --version
-      - name: full command
+      - if: always()
+        run: nix --version
+      - if: always()
+        name: full command
         run: |
           sha256="$(nix-prefetch-url --quiet --unpack "https://github.com/anttiharju/vmatch/archive/HEAD.tar.gz")"
           nix hash convert --hash-algo sha256 --to sri "$sha256"
