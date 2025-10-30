@@ -9,6 +9,7 @@ on:
       - "internal/**/*"
       - "*.go"
       - "go.*"
+      - ".github/**"
 
 jobs:
   wildcard:
