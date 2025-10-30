@@ -71,18 +71,10 @@ jobs:
     container:
       image: ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}-ci:${{ needs.build-ci-container.outputs.version }}
     steps:
-      - run: nix-prefetch-github anttiharju vmatch --rev 8b56182b913d6c8a6a4936bcc98fd39276ecb30f | jq -r '.hash'
-      - if: always()
-        run: nix --version
-      - if: always()
-        name: full command
+      - name: Commands used by nix/values.sh
         run: |
           sha256="$(nix-prefetch-url --quiet --unpack "https://github.com/anttiharju/vmatch/archive/HEAD.tar.gz")"
           nix hash convert --hash-algo sha256 --to sri "$sha256"
-      - name: simplified version
-        if: always()
-        run: |
-          nix hash convert --hash-algo sha256 --to sri "1rm46h0likn9sgdw8j49vksj2vv6n4ksw5j0xcx8snmwk352yxnq"
 
   validate:
     name: Validate
