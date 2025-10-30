@@ -76,7 +76,7 @@
           # Fix not being able to run the unpatched node binaries that GitHub Actions mounts into the container
           nix-ld-setup = pkgs.runCommand "nix-ld-setup" {} ''
             mkdir -p $out/lib64
-            install -D -m755 ${pkgs.nix-ld}/libexec/nix-ld $out/lib64/$(basename ${pkgs.stdenv.cc.bintools.dynamicLinker})
+            install -D -m755 ${pkgs.nix-ld}/libexec/nix-ld "$out/lib64/$(basename ${pkgs.stdenv.cc.bintools.dynamicLinker})"
           '';
         in
         pkgs.lib.optionalAttrs (system == "x86_64-linux" || system == "aarch64-linux") {
