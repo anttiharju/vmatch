@@ -97,6 +97,7 @@
               nix-ld-setup
               pkgs.cacert
               pkgs.sudo
+              pkgs.nix.out
             ];
             config = {
               User = "1001"; # https://github.com/actions/runner/issues/2033#issuecomment-1598547465
