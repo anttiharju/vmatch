@@ -74,13 +74,9 @@
           anttiharju = nur-anttiharju.packages.${system};
 
           # Fix not being able to run the unpatched node binaries that GitHub Actions mounts into the container
-          libDir = if builtins.elem system [ "x86_64-linux" "aarch64-linux" ]
-            then "/lib64"
-            else "/lib";
-
           nix-ld-setup = pkgs.runCommand "nix-ld-setup" {} ''
-            mkdir -p $out${libDir}
-            install -D -m755 ${pkgs.nix-ld}/libexec/nix-ld $out${libDir}/$(basename ${pkgs.stdenv.cc.bintools.dynamicLinker})
+            mkdir -p $out/lib64
+            install -D -m755 ${pkgs.nix-ld}/libexec/nix-ld $out/lib64/$(basename ${pkgs.stdenv.cc.bintools.dynamicLinker})
           '';
         in
         pkgs.lib.optionalAttrs (system == "x86_64-linux" || system == "aarch64-linux") {
