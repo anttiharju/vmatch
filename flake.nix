@@ -73,7 +73,7 @@
           pkgs-unstable = import nixpkgs-unstable { inherit system; };
           anttiharju = nur-anttiharju.packages.${system};
 
-          # nix-ld is required because GitHub Actions mounts dynamically linked node binaries into the container
+          # Fix not being able to run the unpatched node binaries that GitHub Actions mounts into the container
           libDir = if builtins.elem system [ "x86_64-linux" "aarch64-linux" ]
             then "/lib64"
             else "/lib";
@@ -106,16 +106,16 @@
             runAsRoot = ''
               #!${pkgs.runtimeShell}
 
-              # /usr/bin/env for shebangs
+              # Fix /usr/bin/env shebangs
               mkdir -p /usr/bin
               ln -sf ${pkgs.coreutils}/bin/env /usr/bin/env
 
-              # cacert
+              # Fix https
               mkdir -p /etc/ssl/certs
               ln -sf ${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt /etc/ssl/certs/ca-certificates.crt
               ln -sf ${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt /etc/ssl/certs/ca-bundle.crt
 
-              # To fix 'parallel golangci-lint is running'
+              # Fix 'parallel golangci-lint is running'
               mkdir -p /tmp
               chmod 1777 /tmp
             '';
