@@ -52,6 +52,10 @@
           curl
           jq
           gzip
+          pkgs-unstable.envsubst
+          gawkInteractive
+          perl538 # for shasum
+          xz
         ];
     in
     {
