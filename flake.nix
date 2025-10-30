@@ -9,7 +9,13 @@
   };
 
   outputs =
-    { self, nixpkgs, nixpkgs-unstable, nur-anttiharju, ... }:
+    {
+      self,
+      nixpkgs,
+      nixpkgs-unstable,
+      nur-anttiharju,
+      ...
+    }:
     let
       container_version = "0.1.0";
       supportedSystems = [
@@ -20,32 +26,33 @@
       ];
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
 
-      devPackages = pkgs: pkgs-unstable: anttiharju: system: with pkgs; [
-        go # 263MB
-        action-validator # 4MB
-        actionlint # 121MB
-        anttiharju.relcheck # 2MB
-        editorconfig-checker # 4MB
-        golangci-lint # 41MB
-        (python313.withPackages (
-          ps: with ps; [
-            mkdocs-material # 239MB
-          ]
-        ))
-        pkgs-unstable.prettier # 217MB
-        rubocop # 805MB
-        shellcheck # 123MB (note: also included by actionlint)
-        gh
-        # Everything below is required by GitHub Actions
-        coreutils
-        bash
-        git
-        findutils
-        gnutar
-        curl
-        jq
-        gzip
-      ];
+      devPackages =
+        pkgs: pkgs-unstable: anttiharju: system: with pkgs; [
+          go # 263MB
+          action-validator # 4MB
+          actionlint # 121MB
+          anttiharju.relcheck # 2MB
+          editorconfig-checker # 4MB
+          golangci-lint # 41MB
+          (python313.withPackages (
+            ps: with ps; [
+              mkdocs-material # 239MB
+            ]
+          ))
+          pkgs-unstable.prettier # 217MB
+          rubocop # 805MB
+          shellcheck # 123MB (note: also included by actionlint)
+          gh
+          # Everything below is required by GitHub Actions
+          coreutils
+          bash
+          git
+          findutils
+          gnutar
+          curl
+          jq
+          gzip
+        ];
     in
     {
       container_version = container_version;
@@ -72,7 +79,7 @@
           anttiharju = nur-anttiharju.packages.${system};
 
           # Fix not being able to run the unpatched node binaries that GitHub Actions mounts into the container
-          nix-ld-setup = pkgs.runCommand "nix-ld-setup" {} ''
+          nix-ld-setup = pkgs.runCommand "nix-ld-setup" { } ''
             mkdir -p $out/lib64
             install -D -m755 ${pkgs.nix-ld}/libexec/nix-ld "$out/lib64/$(basename ${pkgs.stdenv.cc.bintools.dynamicLinker})"
           '';
@@ -88,10 +95,12 @@
             ];
             config = {
               Env = [
-                "NIX_LD_LIBRARY_PATH=${pkgs.lib.makeLibraryPath [
-                  pkgs.stdenv.cc.cc.lib
-                  pkgs.glibc
-                ]}"
+                "NIX_LD_LIBRARY_PATH=${
+                  pkgs.lib.makeLibraryPath [
+                    pkgs.stdenv.cc.cc.lib
+                    pkgs.glibc
+                  ]
+                }"
                 "NIX_LD=${pkgs.stdenv.cc.bintools.dynamicLinker}"
                 "PATH=/home/runner/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
               ];
