@@ -73,9 +73,6 @@ jobs:
     runs-on: ubuntu-24.04
     container:
       image: ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}-ci:${{ needs.build-ci-container.outputs.version }}
-      credentials:
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Find changes
         id: changes
