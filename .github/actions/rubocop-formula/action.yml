@@ -4,8 +4,6 @@ description: "Run rubocop on the render formula"
 runs:
   using: "composite"
   steps:
-    - name: Install envsbust
-      uses: anttiharju/actions/install-envsubst@v0
     - name: Render out final formula
       shell: sh
       env:
