@@ -138,6 +138,10 @@
               # Fix 'parallel golangci-lint is running'
               mkdir -p /tmp
               chmod 1777 /tmp
+
+              # Enable nix-command experimental feature
+              mkdir -p /etc/nix
+              echo "experimental-features = nix-command" > /etc/nix/nix.conf
             '';
           };
         }
