@@ -45,8 +45,6 @@
         curl
         jq
         gzip
-      ] ++ pkgs.lib.optionals (system == "aarch64-linux" || system == "x86_64-linux") [
-        cacert
       ];
     in
     {
@@ -83,11 +81,11 @@
           ci = pkgs.dockerTools.buildImage {
             name = "ci";
             tag = container_version;
-            copyToRoot = pkgs.buildEnv {
-              name = "image-root";
-              paths = (devPackages pkgs pkgs-unstable anttiharju system) ++ [ nix-ld-setup ];
-              pathsToLink = [ "/bin" "/lib" "/lib64" "/usr" ];
-            };
+            contents = (devPackages pkgs pkgs-unstable anttiharju system) ++ [
+              nix-ld-setup
+              pkgs.cacert
+              pkgs.sudo
+            ];
             config = {
               Env = [
                 "NIX_LD_LIBRARY_PATH=${pkgs.lib.makeLibraryPath [
