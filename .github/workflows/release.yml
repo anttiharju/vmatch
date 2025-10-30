@@ -37,14 +37,15 @@ jobs:
       - uses: cachix/install-nix-action@v31
         with:
           nix_path: nixpkgs=channel:nixos-25.05
-      - name: Render template
+      - name: Source values and render template
         env:
-          TAG: "v${{ inputs.version }}"
-        uses: anttiharju/actions/render-template@v0
-        with:
-          template: .release/nix/template.nix
-          values: .release/nix/values.sh
+          TAG: "v${{ inputs.version }}" # nix/values.sh expects TAG variable
+          GH_TOKEN: ${{ github.token }} # values script may use gh cli that needs this
           output: nur-packages/pkgs/${{ github.event.repository.name }}/default.nix
+        run: |
+          source .release/nix/values.sh
+          mkdir -p "$(dirname "$output")"
+          envsubst -i .release/nix/template.nix -no-unset -no-empty > "$output"
       - name: Sync nur-packages root default.nix
         uses: anttiharju/actions/sync-default-nix@v0
         with:
@@ -148,14 +149,15 @@ jobs:
       - name: Output name with underscores
         id: underscore
         uses: ./.github/actions/underscore-name
-      - name: Render template
+      - name: Source values and render template
         env:
           TAG: "v${{ inputs.version }}" # brew/values.sh expects TAG variable
-        uses: anttiharju/actions/render-template@v0
-        with:
-          template: .release/brew/template.rb
-          values: .release/brew/values.sh
+          GH_TOKEN: ${{ github.token }} # values script may use gh cli that needs this
           output: homebrew-tap/Formula/${{ steps.underscore.outputs.filename }}.rb
+        run: |
+          source .release/brew/values.sh
+          mkdir -p "$(dirname "$output")"
+          envsubst -i .release/brew/template.rb -no-unset -no-empty > "$output"
       - name: Commit changes
         uses: anttiharju/actions/commit-changes@v0
         with:
