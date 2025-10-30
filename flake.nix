@@ -110,10 +110,6 @@
               mkdir -p /usr/bin
               ln -sf ${pkgs.coreutils}/bin/env /usr/bin/env
 
-              # /usr/local/bin
-              mkdir -p /usr/local/bin
-              chmod 755 /usr/local/bin
-
               # cacert
               mkdir -p /etc/ssl/certs
               ln -sf ${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt /etc/ssl/certs/ca-certificates.crt
