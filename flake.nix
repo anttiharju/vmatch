@@ -99,6 +99,17 @@
             };
             runAsRoot = ''
               #!${pkgs.runtimeShell}
+              ${pkgs.dockerTools.shadowSetup}
+              useradd -u 1001 -m runner
+              echo "runner ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/runner
+              chmod 0440 /etc/sudoers.d/runner
+              mkdir -p /etc/pam.d
+              {
+                echo "auth       sufficient   pam_permit.so"
+                echo "account    sufficient   pam_permit.so"
+                echo "session    sufficient   pam_permit.so"
+              } > /etc/pam.d/sudo
+              chmod u+s /sbin/sudo
 
               # Fix /usr/bin/env shebangs
               mkdir -p /usr/bin
