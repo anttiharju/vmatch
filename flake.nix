@@ -59,7 +59,7 @@
         ];
     in
     {
-      container_version = container_version;
+      container_version = container_version; # This is here so that 'nix eval .#container_version --raw' works
       devShells = forAllSystems (
         system:
         let
