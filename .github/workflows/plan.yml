@@ -28,7 +28,7 @@ jobs:
     name: Validate
     runs-on: ubuntu-24.04
     container:
-      image: ${{ inputs.container || format('ghcr.io/{0}/{1}-ci:latest', github.repository_owner, github.event.repository.name) }}
+      image: ${{ inputs.container || format('ghcr.io/{0}/{1}-ci:0.1.0', github.repository_owner, github.event.repository.name) }}
     steps:
       - name: Find changes
         id: changes
