@@ -20,7 +20,7 @@
 
 ### Q: What about https://github.com/nix-community/nix-direnv?
 
-**A:** It is better, if you can get the buy-in for Nix.
+**A:** It is better, if you can get the buy-in for Nix. In fact, this repository uses a Nix setup that makes `vmatch` irrelevant for local development.
 
 ### Q: How does this compare to https://mise.jdx.dev/dev-tools/shims.html#shims?
 
@@ -32,7 +32,8 @@
 
 ### Q: Should I use this?
 
-**A:** If it is helpful to you, yes. Given the other projects mentioned above (Nix and mise) this wouldn't be my go-to solution (pun intended) and one can view it as more of a nontrivial playground for my CI, packaging, and Git hooks setups.
+**A:** If it is helpful to you, sure. Given the other projects mentioned above (Nix and mise) this wouldn't be my go-to solution (pun intended) and one can view it as more of a nontrivial playground for my CI, packaging, and Git hooks setups. You should also be aware that the code here has not been security audited and it does download binaries off of the internet and runs them, so use at your own caution. I've already (tried to) fixed one security issue caught by [GitHub Advanced Security](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security) here:
+* https://github.com/anttiharju/vmatch/pull/319
 
 ## Why
 
