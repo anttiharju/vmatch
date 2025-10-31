@@ -114,7 +114,7 @@
             runAsRoot = ''
               #!${pkgs.runtimeShell}
 
-              # Allow passwordless sudo for the runner user because that's how GitHub Actions work
+              # https://docs.github.com/en/actions/reference/runners/github-hosted-runners#administrative-privileges
               ${pkgs.dockerTools.shadowSetup}
               useradd -u 1001 -m runner
               echo "runner ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/runner
