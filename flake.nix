@@ -94,9 +94,10 @@
             tag = container_version;
             contents = (devPackages pkgs pkgs-unstable anttiharju system) ++ [
               nix-ld-setup
-              pkgs.cacert
+              pkgs.dockerTools.caCertificates
               pkgs.sudo
               pkgs.nix.out
+              pkgs.dockerTools.usrBinEnv
             ];
             config = {
               User = "1001"; # https://github.com/actions/runner/issues/2033#issuecomment-1598547465
@@ -128,15 +129,6 @@
                 echo "session    sufficient   pam_permit.so"
               } > /etc/pam.d/sudo
               chmod u+s /sbin/sudo
-
-              # Fix /usr/bin/env shebangs
-              mkdir -p /usr/bin
-              ln -sf ${pkgs.coreutils}/bin/env /usr/bin/env
-
-              # Fix https
-              mkdir -p /etc/ssl/certs
-              ln -sf ${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt /etc/ssl/certs/ca-certificates.crt
-              ln -sf ${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt /etc/ssl/certs/ca-bundle.crt
 
               # Fix 'parallel golangci-lint is running'
               mkdir -p /tmp
