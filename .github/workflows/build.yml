@@ -19,15 +19,7 @@ jobs:
     uses: ./.github/workflows/release.yml
     with:
       version: ${{ needs.plan.outputs.version }}
-    permissions:
-      contents: write
-    secrets: inherit
-
-  documentation:
-    name: Documentation
-    needs: plan
-    if: needs.plan.outputs.documentation == 'true'
-    uses: ./.github/workflows/documentation.yml
+      container: ${{ needs.plan.outputs.container }}
     permissions:
       contents: write
     secrets: inherit

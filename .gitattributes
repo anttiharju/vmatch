@@ -1,1 +1,3 @@
 .release/** linguist-vendored
+.envrc linguist-vendored
+flake.* linguist-vendored

@@ -8,6 +8,7 @@ on:
     paths:
       - "**/*.sh"
       - ".shellcheckrc"
+      - ".github/**"
 
 jobs:
   wildcard:

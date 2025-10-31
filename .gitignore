@@ -56,3 +56,7 @@ tmp
 
 # rubocop-file action
 /*.lock
+
+# Nix
+.direnv
+!flake.lock

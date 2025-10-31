@@ -4,8 +4,6 @@ description: "Run rubocop on the render formula"
 runs:
   using: "composite"
   steps:
-    - name: Install envsbust
-      uses: anttiharju/actions/install-envsubst@v0
     - name: Render out final formula
       shell: sh
       env:
@@ -15,6 +13,9 @@ runs:
     - name: Output name with underscores
       id: underscore
       uses: ./.github/actions/underscore-name
-    - uses: anttiharju/actions/rubocop-file@v0
-      with:
-        file: ".release/brew/${{ steps.underscore.outputs.filename }}.rb"
+    - name: rubocop
+      shell: sh
+      env:
+        filename: ${{ steps.underscore.outputs.filename }}
+      run: |
+        rubocop ".release/brew/$filename.rb"

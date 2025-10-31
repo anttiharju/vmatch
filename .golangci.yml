@@ -81,7 +81,7 @@ linters:
     - wastedassign
     - whitespace
     - wrapcheck
-    - wsl_v5
+    - wsl
     - zerologlint
   exclusions:
     generated: lax

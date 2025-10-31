@@ -7,6 +7,7 @@ on:
       - wildcard
     paths:
       - ".github/workflows/*.yml"
+      - ".github/**"
 
 jobs:
   wildcard:
