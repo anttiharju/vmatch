@@ -59,7 +59,7 @@ jobs:
           repository: anttiharju/nur-packages
           token: ${{ steps.generate-token.outputs.token }}
           path: nur-packages
-      - name: Source values and render template
+      - name: Source values and render template # TODO: use release/render.sh for this, needs output param
         env:
           TAG: "v${{ inputs.version }}" # nix/values.sh expects TAG variable
           GH_TOKEN: ${{ github.token }} # values script may use gh cli that needs this
@@ -171,7 +171,7 @@ jobs:
       - name: Output name with underscores
         id: underscore
         uses: ./.github/actions/underscore-name
-      - name: Source values and render template
+      - name: Source values and render template # TODO: use release/render.sh for this, needs output param
         env:
           TAG: "v${{ inputs.version }}" # brew/values.sh expects TAG variable
           GH_TOKEN: ${{ github.token }} # values script may use gh cli that needs this
