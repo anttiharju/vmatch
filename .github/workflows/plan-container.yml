@@ -60,7 +60,7 @@ jobs:
   validate:
     name: Validate
     needs: container
-    uses: ./.github/workflows/plan.yml
+    uses: ./.github/workflows/validate.yml
     permissions:
       contents: none
       pull-requests: none
