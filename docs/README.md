@@ -28,7 +28,7 @@
 
 ### Q: Go binaries downloaded by vmatch don't work on NixOS
 
-**A:** Some versions of Go binaries supplied by Google are dynamically linked (on Linux you can check with `ldd`) and therefore on NixOS you need to setup [`nix-ld`](https://github.com/nix-community/nix-ld) to be able to use `vmatch`. One advantage over `vmatch` has over Nix is that it's way easier to have arbitary versions installed. On Nix locking `nixpkgs-unstable` to a specific sha to get a specific version of Go may also cause cache misses that cause you to compile and download all the necessary dependencies (comparatively very slowly) for that version of Go.
+**A:** Some versions of Go binaries supplied by Google are dynamically linked (on Linux you can check with `ldd`) and therefore on NixOS you need to setup [`nix-ld`](https://github.com/nix-community/nix-ld) to be able to use `vmatch`. One advantage over `vmatch` has over Nix is that it's way easier to have arbitary versions installed. On Nix locking `nixpkgs-unstable` to a specific sha to get a specific version of Go may also cause cache misses that cause you to compile and download all the necessary dependencies (comparatively very slowly) for that version of Go. For Nix users on other operating systems this should not be an issue
 
 ### Q: Should I use this?
 
