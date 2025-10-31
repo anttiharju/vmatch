@@ -11,6 +11,8 @@ jobs:
   plan:
     name: Plan
     uses: ./.github/workflows/plan.yml
+    permissions:
+      packages: write
 
   release:
     name: Release
