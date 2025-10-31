@@ -148,13 +148,6 @@ jobs:
           repository: anttiharju/homebrew-tap
           token: ${{ steps.generate-token.outputs.token }}
           path: homebrew-tap
-      - name: Convert hyphens to underscores
-        id: file
-        shell: bash
-        env:
-          REPO_NAME: ${{ github.event.repository.name }}
-        run: |
-          echo "name=${REPO_NAME//-/_}" >> "$GITHUB_OUTPUT"
       - name: Output name with underscores
         id: underscore
         uses: ./.github/actions/underscore-name
