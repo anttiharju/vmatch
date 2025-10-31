@@ -20,7 +20,7 @@
 
 ### Q: What about https://github.com/nix-community/nix-direnv?
 
-**A:** It is better, if you can get the buy-in for Nix. In fact, this repository uses a Nix setup that makes `vmatch` irrelevant for local development.
+**A:** It is better, if you can get the buy-in for Nix. In fact, this repository uses a `flake.nix` setup that makes `vmatch` irrelevant for local development.
 
 ### Q: How does this compare to https://mise.jdx.dev/dev-tools/shims.html#shims?
 
