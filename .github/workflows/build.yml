@@ -19,6 +19,7 @@ jobs:
     uses: ./.github/workflows/release.yml
     with:
       version: ${{ needs.plan.outputs.version }}
+      container: ${{ needs.plan.outputs.container }}
     permissions:
       contents: write
     secrets: inherit
