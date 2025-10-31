@@ -28,20 +28,20 @@
 
       devPackages =
         pkgs: pkgs-unstable: anttiharju: system: with pkgs; [
-          go # 263MB
-          action-validator # 4MB
-          actionlint # 121MB
-          anttiharju.relcheck # 2MB
-          editorconfig-checker # 4MB
-          golangci-lint # 41MB
+          go
+          action-validator
+          actionlint
+          anttiharju.relcheck
+          editorconfig-checker
+          golangci-lint
           (python313.withPackages (
             ps: with ps; [
-              mkdocs-material # 239MB
+              mkdocs-material
             ]
           ))
-          pkgs-unstable.prettier # 217MB
-          rubocop # 805MB
-          shellcheck # 123MB (note: also included by actionlint)
+          pkgs-unstable.prettier
+          rubocop
+          shellcheck
           gh
           # Everything below is required by GitHub Actions
           coreutils
