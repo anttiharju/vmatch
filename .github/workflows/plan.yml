@@ -15,6 +15,9 @@ on:
       documentation:
         description: "Whether to update the documentation website"
         value: ${{ jobs.validate.outputs.documentation_changed == 'true' }}
+      container:
+        description: "Image in which all CI jobs should be ran"
+        value: ${{ jobs.container.outputs.image }}
 
 jobs:
   container:
