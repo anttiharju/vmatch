@@ -108,6 +108,7 @@
                   ]
                 }"
                 "NIX_LD=${pkgs.stdenv.cc.bintools.dynamicLinker}"
+                # PATH has to be defined so that actions that manipulate it (e.g. setup-go) don't break the environment
                 "PATH=/home/runner/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
               ];
             };
