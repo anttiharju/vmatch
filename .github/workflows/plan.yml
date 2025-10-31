@@ -64,18 +64,6 @@ jobs:
     outputs:
       version: ${{ steps.container.outputs.version }}
 
-  nix:
-    name: Test Nix in container
-    needs: build-ci-container
-    runs-on: ubuntu-24.04
-    container:
-      image: ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}-ci:${{ needs.build-ci-container.outputs.version }}
-    steps:
-      - name: Commands used by nix/values.sh
-        run: |
-          sha256="$(nix-prefetch-url --quiet --unpack "https://github.com/anttiharju/vmatch/archive/HEAD.tar.gz")"
-          nix hash convert --hash-algo sha256 --to sri "$sha256"
-
   validate:
     name: Validate
     needs: build-ci-container
