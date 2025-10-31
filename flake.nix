@@ -88,7 +88,7 @@
           '';
         in
         pkgs.lib.optionalAttrs (system == "x86_64-linux" || system == "aarch64-linux") {
-          ci = pkgs.dockerTools.buildImage {
+          ci = pkgs.dockerTools.buildLayeredImage {
             name = "ci";
             tag = container_version;
             contents = (devPackages pkgs pkgs-unstable anttiharju system) ++ [
@@ -111,7 +111,8 @@
                 "PATH=/home/runner/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
               ];
             };
-            runAsRoot = ''
+            enableFakechroot = true;
+            fakeRootCommands = ''
               #!${pkgs.runtimeShell}
 
               # https://docs.github.com/en/actions/reference/runners/github-hosted-runners#administrative-privileges
