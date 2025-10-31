@@ -22,12 +22,3 @@ jobs:
     permissions:
       contents: write
     secrets: inherit
-
-  documentation:
-    name: Documentation
-    needs: plan
-    if: needs.plan.outputs.documentation == 'true'
-    uses: ./.github/workflows/documentation.yml
-    permissions:
-      contents: write
-    secrets: inherit
