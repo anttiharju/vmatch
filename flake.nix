@@ -88,7 +88,7 @@
           '';
         in
         pkgs.lib.optionalAttrs (system == "x86_64-linux" || system == "aarch64-linux") {
-          ci = pkgs.dockerTools.buildLayeredImage {
+          ci = pkgs.dockerTools.streamLayeredImage {
             name = "ci";
             tag = container_version;
             contents = (devPackages pkgs pkgs-unstable anttiharju system) ++ [

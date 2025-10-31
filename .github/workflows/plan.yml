@@ -43,9 +43,7 @@ jobs:
         run: |
           echo "$container_version"
       - run: |
-          nix build .#ci
-      - run: |
-          docker load < result
+          nix build .#ci && ./result | docker load
       - name: Tag image for registry
         id: image
         env:
