@@ -70,7 +70,6 @@
         {
           default = pkgs.mkShell {
             packages = devPackages pkgs pkgs-unstable anttiharju system;
-            shellHook = '''';
           };
         }
       );
