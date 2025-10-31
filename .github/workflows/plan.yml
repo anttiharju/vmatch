@@ -125,7 +125,14 @@ jobs:
 
       - if: always() && !cancelled()
         name: Keep .yml
-        uses: anttiharju/actions/keep-yml@v0
+        run: |
+          YAML_FILES=$(git ls-files -z '*.yaml')
+          if [ -n "$YAML_FILES" ]; then
+            echo "Found the following .yaml files. Please use .yml extension instead."
+            echo "$YAML_FILES" | tr '\0' '\n'
+            exit 1
+          fi
+          echo "No .yaml files found. Good job!"
 
       - if: always() && !cancelled() && (steps.changed.outputs.documentation == 'true' || github.event_name == 'push')
         name: mkdocs
