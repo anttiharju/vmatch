@@ -15,6 +15,31 @@ on:
         required: true
 
 jobs:
+  documentation:
+    name: Documentation
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+    steps:
+      - name: Generate deploy token
+        id: deploy
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ secrets.ANTTIHARJU_BOT_ID }}
+          private-key: ${{ secrets.ANTTIHARJU_BOT_PRIVATE_KEY }}
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          token: ${{ steps.deploy.outputs.token }}
+      - name: Deploy to GitHub Pages
+        env:
+          GIT_AUTHOR_NAME: ${{ github.actor }}
+          GIT_AUTHOR_EMAIL: "${{ github.actor }}@users.noreply.github.com"
+          GIT_COMMITTER_NAME: "${{ github.actor }}[bot]"
+          GIT_COMMITTER_EMAIL: "${{ github.actor }}[bot]@users.noreply.github.com"
+        run: |
+          mkdocs gh-deploy --force --no-history
+
   nur-packages:
     name: Nix
     runs-on: ubuntu-24.04
