@@ -32,7 +32,7 @@
 
 ### Q: Should I use this?
 
-**A:** Probably not. Given the other projects mentioned above (Nix and mise) this wouldn't be my go-to solution (pun intended) and one can view it as more of a nontrivial playground for my CI, packaging, and Git hooks setups. You should also be aware that the code here has not been security audited and it does download binaries off of the internet and runs them, so use at your own caution. I've already (tried to) fixed one security issue caught by [GitHub Advanced Security](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security) here:
+**A:** Probably not. Given the other projects mentioned above (Nix and mise) this wouldn't be my go-to solution (pun intended) and one can view it as more of a nontrivial playground for my CI, packaging, and Git hooks setups. You should also be aware that the code here has not been security audited and it does download binaries off of the internet and runs them, so use at your own caution. I've already (at least tried to, "best effort") fixed one security issue caught by [GitHub Advanced Security](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security) here:
 * https://github.com/anttiharju/vmatch/pull/319
 
 ## Why
