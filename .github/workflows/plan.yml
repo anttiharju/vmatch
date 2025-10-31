@@ -110,7 +110,8 @@ jobs:
 
       - if: always() && !cancelled() && (steps.changed.outputs.binary == 'true' || github.event_name == 'push')
         name: go build
-        run: go build
+        run: |
+          go build
 
       - if: always() && !cancelled() && (steps.changed.outputs.binary == 'true' || github.event_name == 'push')
         name: go test
