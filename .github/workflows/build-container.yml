@@ -1,0 +1,28 @@
+name: Build
+permissions:
+  contents: none
+  pull-requests: none
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  #TBD
+  plan:
+    name: Plan
+    uses: ./.github/workflows/plan.yml
+    permissions:
+      packages: write
+
+  release:
+    name: Release
+    needs: plan
+    if: needs.plan.outputs.version != ''
+    uses: ./.github/workflows/release.yml
+    with:
+      version: ${{ needs.plan.outputs.version }}
+      #container: ${{ needs.plan.outputs.container }}
+    permissions:
+      contents: write
+    secrets: inherit
