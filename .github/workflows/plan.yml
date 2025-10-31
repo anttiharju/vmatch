@@ -62,14 +62,14 @@ jobs:
         run: |
           docker push "$image_id:$version"
     outputs:
-      version: ${{ steps.container.outputs.version }}
+      image: ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}-ci:${{ steps.container.outputs.version }}
 
   validate:
     name: Validate
     needs: container
     runs-on: ubuntu-24.04
     container:
-      image: ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}-ci:${{ needs.container.outputs.version }}
+      image: ${{ needs.container.outputs.image }}
     steps:
       - name: Find changes
         id: changes
