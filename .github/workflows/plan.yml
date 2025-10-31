@@ -17,7 +17,7 @@ on:
         value: ${{ jobs.validate.outputs.documentation_changed == 'true' }}
 
 jobs:
-  build-ci-container:
+  container:
     name: Build CI container
     runs-on: ubuntu-24.04
     permissions:
@@ -66,10 +66,10 @@ jobs:
 
   validate:
     name: Validate
-    needs: build-ci-container
+    needs: container
     runs-on: ubuntu-24.04
     container:
-      image: ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}-ci:${{ needs.build-ci-container.outputs.version }}
+      image: ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}-ci:${{ needs.container.outputs.version }}
     steps:
       - name: Find changes
         id: changes
