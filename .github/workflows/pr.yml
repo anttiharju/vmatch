@@ -7,8 +7,8 @@ on:
     # https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#pull_request
     # defaults: opened, synchronize, reopened
     types: [opened, synchronize, reopened, labeled, unlabeled]
-    paths-ignore:
-      - "flake.*"
+    paths:
+      - "!flake.*"
   workflow_call:
     inputs:
       container:
