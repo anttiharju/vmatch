@@ -8,7 +8,8 @@ on:
     # defaults: opened, synchronize, reopened
     types: [opened, synchronize, reopened, labeled, unlabeled]
     paths:
-      - "flake.*"
+      - "flake.nix"
+      - "flake.lock"
 
 jobs:
   container:
