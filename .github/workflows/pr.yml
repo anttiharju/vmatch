@@ -1,0 +1,32 @@
+name: Pull Request
+permissions:
+  contents: none
+  pull-requests: none
+on:
+  pull_request:
+    # https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#pull_request
+    # defaults: opened, synchronize, reopened
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+    paths:
+      - "!flake.nix"
+      - "!flake.lock"
+  workflow_call:
+    inputs:
+      container:
+        type: string
+        required: false
+    outputs:
+      version:
+        description: "Version for the next release. Empty if no release is needed."
+        value: ${{ github.event.repository.name != 'go-starter' && jobs.plan.outputs.version || '' }}
+      documentation:
+        description: "Whether to update the documentation website"
+        value: ${{ jobs.plan.outputs.documentation == 'true' }}
+
+jobs:
+  plan:
+    name: Plan
+    uses: ./.github/workflows/plan.yml
+    permissions:
+      contents: none
+      pull-requests: none

@@ -1,4 +1,4 @@
-name: Plan
+name: Pull Request
 permissions:
   contents: none
   pull-requests: none
@@ -57,10 +57,10 @@ jobs:
     outputs:
       image: ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}-ci:${{ steps.container.outputs.version }}
 
-  validate:
-    name: Validate
+  plan:
+    name: Plan
     needs: container
-    uses: ./.github/workflows/validate.yml
+    uses: ./.github/workflows/plan.yml
     permissions:
       contents: none
       pull-requests: none
