@@ -1,5 +1,5 @@
 {
-  description = "Go development environment";
+  description = "Go development environment"; # trigger ci change detection
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-25.05";
