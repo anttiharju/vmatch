@@ -10,7 +10,6 @@ on:
       - ".golangci-version"
       - ".golangci.yml"
       - "go.*"
-      - ".github/**"
 
 jobs:
   wildcard:
