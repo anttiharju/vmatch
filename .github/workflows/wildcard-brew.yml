@@ -7,7 +7,6 @@ on:
       - wildcard
     paths:
       - ".release/brew/**/*"
-      - ".github/**"
 
 jobs:
   wildcard:
