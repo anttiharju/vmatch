@@ -39,7 +39,9 @@ jobs:
           echo "version=$version"
           echo "version=$version" >> "$GITHUB_OUTPUT"
       - run: |
-          nix build .#ci && ./result | docker load
+          nix build .#ci
+      - run: |
+          ./result | docker load
       - name: Tag image
         id: tag
         env:
