@@ -128,18 +128,15 @@ jobs:
           GOARCH: arm64
         run: |
           ./.release/github/archive.sh "$tag" "$GOOS" "$GOARCH"
-      - name: Create a release
+      - name: Release
         shell: sh
         env:
           GH_TOKEN: ${{ github.token }}
           title: ${{ inputs.version }}
         run: |
-          gh release create "$tag" --title="$title" --generate-notes
-      - name: Upload archives to release
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
+          gh release create "$tag" --title="$title" --generate-notes --draft
           find . -maxdepth 1 -name '${{ github.event.repository.name }}-*-*.tar.gz' -exec gh release upload "$tag" {} \;
+          gh release edit "$tag" --draft=false
 
   homebrew-tap:
     name: Homebrew
