@@ -20,8 +20,8 @@ on:
         value: ${{ jobs.container.outputs.image }}
 
 jobs:
-  build:
-    name: Build
+  container:
+    name: Container
     runs-on: ubuntu-24.04
     permissions:
       packages: write
