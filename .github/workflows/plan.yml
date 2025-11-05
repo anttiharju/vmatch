@@ -57,9 +57,9 @@ jobs:
           image_id: ${{ steps.image.outputs.id }}
           version: ${{ steps.container.outputs.version }}
         run: |
-          LOCAL_DIGEST="$(docker inspect "$image_id:$version" --format='{{.Id}}')"
-          REMOTE_DIGEST="$(docker manifest inspect "$image_id:$version" | jq -r '.config.digest')"
-          if [[ "$LOCAL_DIGEST" != "$REMOTE_DIGEST" ]]; then
+          local_digest="$(docker inspect "$image_id:$version" --format='{{.Id}}')"
+          remote_digest="$(docker manifest inspect "$image_id:$version" | jq -r '.config.digest')"
+          if [[ "$local_digest" != "$remote_digest" ]]; then
             docker push "$image_id:$version"
           fi
     outputs:
