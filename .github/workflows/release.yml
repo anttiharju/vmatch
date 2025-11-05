@@ -94,48 +94,49 @@ jobs:
     runs-on: ubuntu-24.04
     container:
       image: ${{ inputs.container }}
+    env:
+      tag: "v${{ inputs.version }}" # Go expects version tags to be prefixed with "v"
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+      - name: Tag current commit
+        shell: sh
+        run: |
+          git tag "$tag"
       - name: Create darwin-arm64 archive
         env:
           GOOS: darwin
           GOARCH: arm64
-          tag: "v${{ inputs.version }}"
         run: |
           ./.release/github/archive.sh "$tag" "$GOOS" "$GOARCH"
       - name: Create linux-amd64 archive
         env:
           GOOS: linux
           GOARCH: amd64
-          tag: "v${{ inputs.version }}"
         run: |
           ./.release/github/archive.sh "$tag" "$GOOS" "$GOARCH"
       - name: Create darwin-amd64 archive
         env:
           GOOS: darwin
           GOARCH: amd64
-          tag: "v${{ inputs.version }}"
         run: |
           ./.release/github/archive.sh "$tag" "$GOOS" "$GOARCH"
       - name: Create linux-arm64 archive
         env:
           GOOS: linux
           GOARCH: arm64
-          tag: "v${{ inputs.version }}"
         run: |
           ./.release/github/archive.sh "$tag" "$GOOS" "$GOARCH"
-      - name: Create GitHub release
-        uses: anttiharju/actions/release@v0
-        with:
-          title: ${{ inputs.version }}
-          tag: "v${{ inputs.version }}" # Go expects version tags to be prefixed with "v"
-      - name: Upload archives to release
+      - name: Release
+        shell: sh
         env:
           GH_TOKEN: ${{ github.token }}
-          tag: "v${{ inputs.version }}"
+          title: ${{ inputs.version }}
         run: |
+          git push origin "$tag"
+          gh release create "$tag" --title="$title" --generate-notes --draft
           find . -maxdepth 1 -name '${{ github.event.repository.name }}-*-*.tar.gz' -exec gh release upload "$tag" {} \;
+          gh release edit "$tag" --draft=false
 
   homebrew-tap:
     name: Homebrew

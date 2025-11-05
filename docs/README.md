@@ -20,7 +20,7 @@
 
 ### Q: What about https://github.com/nix-community/nix-direnv?
 
-**A:** It is better, if you can get the buy-in for Nix.
+**A:** It is better, if you can get the buy-in for Nix. In fact, this repository uses a `flake.nix` setup that makes `vmatch` irrelevant.
 
 ### Q: How does this compare to https://mise.jdx.dev/dev-tools/shims.html#shims?
 
@@ -28,11 +28,12 @@
 
 ### Q: Go binaries downloaded by vmatch don't work on NixOS
 
-**A:** It is some versions of Go binaries supplied by Google are dynamically linked (on Linux you can check with `ldd`). I am personally a Nix on macOS user and know others who use Nix of Arch, where vmatch happens to work.
+**A:** Some versions of Go binaries supplied by Google are dynamically linked (on Linux you can check with `ldd`) and therefore on NixOS you need to setup [`nix-ld`](https://github.com/nix-community/nix-ld) to be able to use `vmatch`. One advantage over `vmatch` has over Nix is that it's way easier to have arbitary versions installed. On Nix locking `nixpkgs-unstable` to a specific sha to get a specific version of Go may also cause cache misses that cause you to compile and download all the necessary dependencies (comparatively very slowly) for that version of Go. For Nix users on other operating systems this should not be an issue
 
 ### Q: Should I use this?
 
-**A:** If it is helpful to you, yes. Given the other projects mentioned above (Nix and mise) this wouldn't be my go-to solution (pun intended) and one can view it as more of a nontrivial playground for my CI, packaging, and Git hooks setups.
+**A:** Probably not. Given the other projects mentioned above (Nix and mise) this wouldn't be my go-to solution (pun intended) and one can view it as more of a nontrivial playground for my CI, packaging, and Git hooks setups. You should also be aware that the code here has not been security audited and it does download binaries off of the internet and runs them, so use at your own caution. I've already (at least tried to, "best effort") fixed one security issue caught by [GitHub Advanced Security](https://docs.github.com/en/get-started/learning-about-github/about-github-advanced-security) here:
+* https://github.com/anttiharju/vmatch/pull/319
 
 ## Why
 
