@@ -36,12 +36,8 @@ jobs:
         id: container
         run: |
           version="$(nix eval .#container_version --raw)"
+          echo "version=$version"
           echo "version=$version" >> "$GITHUB_OUTPUT"
-      - name: Output container version
-        env:
-          container_version: ${{ steps.container.outputs.version }}
-        run: |
-          echo "$container_version"
       - run: |
           nix build .#ci && ./result | docker load
       - name: Tag image for registry
