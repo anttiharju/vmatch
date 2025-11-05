@@ -5,9 +5,9 @@ permissions:
 on:
   workflow_call:
     outputs:
-      container:
+      image:
         description: "Image to run all other CI jobs in"
-        value: ${{ jobs.container.outputs.image }}
+        value: ${{ jobs.build.outputs.image }}
 
 jobs:
   build:
