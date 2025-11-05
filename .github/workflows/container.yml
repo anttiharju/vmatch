@@ -25,7 +25,11 @@ jobs:
       - name: Parse container version
         id: container
         run: |
-          version="$(nix eval .#container_version --raw)"
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            version="$(nix eval .#container_version --raw)"
+          else
+            version="latest"
+          fi
           echo "version=$version"
           echo "version=$version" >> "$GITHUB_OUTPUT"
       - run: |
