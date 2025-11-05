@@ -103,7 +103,6 @@ jobs:
         shell: sh
         run: |
           git tag "$tag"
-          git push origin "$tag"
       - name: Create darwin-arm64 archive
         env:
           GOOS: darwin
@@ -134,6 +133,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           title: ${{ inputs.version }}
         run: |
+          git push origin "$tag"
           gh release create "$tag" --title="$title" --generate-notes --draft
           find . -maxdepth 1 -name '${{ github.event.repository.name }}-*-*.tar.gz' -exec gh release upload "$tag" {} \;
           gh release edit "$tag" --draft=false
