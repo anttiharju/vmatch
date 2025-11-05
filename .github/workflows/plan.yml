@@ -21,50 +21,10 @@ on:
 
 jobs:
   container:
-    name: Build CI container
-    runs-on: ubuntu-24.04
+    name: Container
+    uses: ./.github/workflows/container.yml
     permissions:
       packages: write
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-      - name: Install Nix
-        uses: cachix/install-nix-action@v31
-        with:
-          nix_path: nixpkgs=channel:nixos-25.05
-      - name: Parse container version
-        id: container
-        run: |
-          version="$(nix eval .#container_version --raw)"
-          echo "version=$version"
-          echo "version=$version" >> "$GITHUB_OUTPUT"
-      - run: |
-          nix build .#ci
-      - run: |
-          ./result | docker load
-      - name: Tag image
-        id: tag
-        env:
-          version: ${{ steps.container.outputs.version }}
-        run: |
-          image_id="ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}-ci"
-          image_id="$(echo "$image_id" | tr '[:upper:]' '[:lower:]')"
-          docker tag "ci:$version" "$image_id:$version"
-          echo "image=$image_id:$version" >> "$GITHUB_OUTPUT"
-      - name: Log in to registry
-        run: |
-          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-      - name: Push image
-        env:
-          image: ${{ steps.tag.outputs.image }}
-        run: |
-          local_digest="$(docker inspect "$image" --format='{{.Id}}')"
-          remote_digest="$(docker manifest inspect "$image" | jq -r '.config.digest')"
-          if [[ "$local_digest" != "$remote_digest" ]]; then
-            docker push "$image"
-          fi
-    outputs:
-      image: ${{ steps.tag.outputs.image }}
 
   validate:
     name: Validate
