@@ -56,7 +56,7 @@ jobs:
       - name: Log in to registry
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-      - name: Check if we need to push the image
+      - name: Push image
         id: digest
         env:
           image_id: ${{ steps.image.outputs.id }}
@@ -64,18 +64,9 @@ jobs:
         run: |
           LOCAL_DIGEST="$(docker inspect "$image_id:$version" --format='{{.Id}}')"
           REMOTE_DIGEST="$(docker manifest inspect "$image_id:$version" | jq -r '.config.digest')"
-          if [[ "$LOCAL_DIGEST" = "$REMOTE_DIGEST" ]]; then
-            echo "push=false"
-          else
-            echo "push=true"
+          if [[ "$LOCAL_DIGEST" != "$REMOTE_DIGEST" ]]; then
+            docker push "$image_id:$version"
           fi
-      - if: steps.digest.outputs.push == 'true'
-        name: Push image
-        env:
-          image_id: ${{ steps.image.outputs.id }}
-          version: ${{ steps.container.outputs.version }}
-        run: |
-          docker push "$image_id:$version"
     outputs:
       image: ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}-ci:${{ steps.container.outputs.version }}
 
