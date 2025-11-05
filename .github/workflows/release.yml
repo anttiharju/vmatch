@@ -97,6 +97,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+      - name: Tag current commit
+        shell: sh
+        env:
+          tag: "v${{ inputs.version }}" # Go expects version tags to be prefixed with "v"
+        run: |
+          git tag "$tag"
+          git push origin "$tag"
       - name: Create darwin-arm64 archive
         env:
           GOOS: darwin
@@ -125,11 +132,14 @@ jobs:
           tag: "v${{ inputs.version }}"
         run: |
           ./.release/github/archive.sh "$tag" "$GOOS" "$GOARCH"
-      - name: Create GitHub release
-        uses: anttiharju/actions/release@v0
-        with:
+      - name: Create a release
+        shell: sh
+        env:
+          GH_TOKEN: ${{ github.token }}
           title: ${{ inputs.version }}
-          tag: "v${{ inputs.version }}" # Go expects version tags to be prefixed with "v"
+          tag: "v${{ inputs.version }}"
+        run: |
+          gh release create "$tag" --title="$title" --generate-notes
       - name: Upload archives to release
         env:
           GH_TOKEN: ${{ github.token }}
