@@ -40,30 +40,29 @@ jobs:
           echo "version=$version" >> "$GITHUB_OUTPUT"
       - run: |
           nix build .#ci && ./result | docker load
-      - name: Tag image for registry
-        id: image
+      - name: Tag image
+        id: tag
         env:
           version: ${{ steps.container.outputs.version }}
         run: |
           image_id="ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}-ci"
           image_id="$(echo "$image_id" | tr '[:upper:]' '[:lower:]')"
           docker tag "ci:$version" "$image_id:$version"
-          echo "id=$image_id" >> "$GITHUB_OUTPUT"
+          echo "image=$image_id:$version" >> "$GITHUB_OUTPUT"
       - name: Log in to registry
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Push image
         env:
-          image_id: ${{ steps.image.outputs.id }}
-          version: ${{ steps.container.outputs.version }}
+          image: ${{ steps.tag.outputs.image }}
         run: |
-          local_digest="$(docker inspect "$image_id:$version" --format='{{.Id}}')"
-          remote_digest="$(docker manifest inspect "$image_id:$version" | jq -r '.config.digest')"
+          local_digest="$(docker inspect "$image" --format='{{.Id}}')"
+          remote_digest="$(docker manifest inspect "$image" | jq -r '.config.digest')"
           if [[ "$local_digest" != "$remote_digest" ]]; then
-            docker push "$image_id:$version"
+            docker push "$image"
           fi
     outputs:
-      image: ${{ steps.image.outputs.id }}:${{ steps.container.outputs.version }}
+      image: ${{ steps.tag.outputs.image }}
 
   validate:
     name: Validate
