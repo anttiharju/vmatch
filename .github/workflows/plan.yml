@@ -68,7 +68,7 @@ jobs:
             docker push "$image_id:$version"
           fi
     outputs:
-      image: ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}-ci:${{ steps.container.outputs.version }}
+      image: ${{ steps.image.outputs.id }}:${{ steps.container.outputs.version }}
 
   validate:
     name: Validate
