@@ -15,8 +15,8 @@ runs:
 
         echo "$go_mod_version=$env_version"
         if [[ "$go_mod_version" = "$env_version" ]]; then
-            echo "true"
+          echo "true"
         else
-            echo "false"
-            exit 1
+          echo "false"
+          exit 1
         fi
