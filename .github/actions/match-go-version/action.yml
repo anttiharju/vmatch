@@ -7,12 +7,11 @@ runs:
     - name: Compare Go versions
       shell: bash
       run: |
-        version_line=$(grep "^go " go.mod)
-        go_mod_version=$(echo "$version_line" | awk '{print $2}')
+        go_mod_version=$(awk '/^go / {print $2}' go.mod)
 
         version_output=$(go version)
         env_version=${version_output#go version go}
-        env_version=${INSTALLED_VERSION%% *}
+        env_version=${env_version%% *}
 
         echo "$go_mod_version=$env_version"
         [[ "$go_mod_version" = "$env_version" ]] && echo "true" || echo "false"
