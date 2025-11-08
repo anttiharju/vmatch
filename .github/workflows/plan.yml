@@ -92,6 +92,9 @@ jobs:
     runs-on: ubuntu-24.04
     container:
       image: ${{ needs.container.outputs.image || format('ghcr.io/{0}/{1}-ci:latest', github.repository_owner, github.event.repository.name) }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ github.token }}
     steps:
       - name: Find changes
         id: changes

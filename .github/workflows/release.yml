@@ -23,6 +23,9 @@ jobs:
     runs-on: ubuntu-24.04
     container:
       image: ${{ inputs.container || format('ghcr.io/{0}/{1}-ci:latest', github.repository_owner, github.event.repository.name) }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ github.token }}
     permissions:
       contents: write
     steps:
@@ -50,6 +53,9 @@ jobs:
     runs-on: ubuntu-24.04
     container:
       image: ${{ inputs.container || format('ghcr.io/{0}/{1}-ci:latest', github.repository_owner, github.event.repository.name) }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ github.token }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -94,6 +100,9 @@ jobs:
     runs-on: ubuntu-24.04
     container:
       image: ${{ inputs.container || format('ghcr.io/{0}/{1}-ci:latest', github.repository_owner, github.event.repository.name) }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ github.token }}
     env:
       tag: "v${{ inputs.version }}" # Go expects version tags to be prefixed with "v"
     steps:
@@ -144,6 +153,9 @@ jobs:
     runs-on: ubuntu-24.04
     container:
       image: ${{ inputs.container || format('ghcr.io/{0}/{1}-ci:latest', github.repository_owner, github.event.repository.name) }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ github.token }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
