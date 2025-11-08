@@ -48,6 +48,21 @@ jobs:
           echo "version=$version"
           echo "version=$version" >> "$GITHUB_OUTPUT"
       - if: steps.flake.outputs.changed == 'true'
+        name: Check if version exists in registry
+        env:
+          version: ${{ steps.container.outputs.version }}
+        run: |
+          image_id="ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}-ci"
+          image_id="$(echo "$image_id" | tr '[:upper:]' '[:lower:]')"
+
+          if docker manifest inspect "$image_id:$version" >/dev/null 2>&1; then
+            echo "Error: Version $version already exists in the registry at $image_id:$version"
+            echo "Please increment the version to avoid overriding existing images"
+            exit 1
+          else
+            echo "Version $version is available - proceeding with build"
+          fi
+      - if: steps.flake.outputs.changed == 'true'
         run: |
           nix build .#ci
       - if: steps.flake.outputs.changed == 'true'
