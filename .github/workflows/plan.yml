@@ -87,7 +87,7 @@ jobs:
     needs: container
     runs-on: ubuntu-24.04
     container:
-      image: ${{ needs.container.outputs.image }}
+      image: ${{ needs.container.outputs.image || format('ghcr.io/{0}/{1}-ci:latest', github.repository_owner, github.event.repository.name) }}
     steps:
       - name: Find changes
         id: changes
