@@ -14,4 +14,9 @@ runs:
         env_version=${env_version%% *}
 
         echo "$go_mod_version=$env_version"
-        [[ "$go_mod_version" = "$env_version" ]] && echo "true" || echo "false"
+        if [[ "$go_mod_version" = "$env_version" ]]; then
+            echo "true"
+        else
+            echo "false"
+            exit 1
+        fi
