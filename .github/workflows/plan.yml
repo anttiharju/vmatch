@@ -47,14 +47,17 @@ jobs:
           version="$(nix eval .#container_version --raw)"
           echo "version=$version"
           echo "version=$version" >> "$GITHUB_OUTPUT"
+
+          image_id="ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}-ci"
+          image_id="$(echo "$image_id" | tr '[:upper:]' '[:lower:]')"
+          echo "image_id=$image_id"
+          echo "image_id=$image_id" >> "$GITHUB_OUTPUT"
       - if: steps.flake.outputs.changed == 'true'
         name: Check if version exists in registry
         env:
+          image_id: ${{ steps.container.outputs.image_id }}
           version: ${{ steps.container.outputs.version }}
         run: |
-          image_id="ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}-ci"
-          image_id="$(echo "$image_id" | tr '[:upper:]' '[:lower:]')"
-
           if docker manifest inspect "$image_id:$version" >/dev/null 2>&1; then
             echo "Error: Version $version already exists in the registry at $image_id:$version"
             echo "Please increment the version to avoid overriding existing images"
@@ -72,11 +75,10 @@ jobs:
         name: Tag image
         id: tag
         env:
+          image_id: ${{ steps.container.outputs.image_id }}
           version: ${{ steps.container.outputs.version }}
           latest: ${{ github.event_name == 'pull_request' && steps.container.outputs.version || 'latest' }}
         run: |
-          image_id="ghcr.io/${{ github.repository_owner }}/${{ github.event.repository.name }}-ci"
-          image_id="$(echo "$image_id" | tr '[:upper:]' '[:lower:]')"
           docker tag "ci:$version" "$image_id:$latest"
           echo "image=$image_id:$latest"
           echo "image=$image_id:$latest" >> "$GITHUB_OUTPUT"
