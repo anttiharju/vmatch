@@ -26,23 +26,35 @@ jobs:
     permissions:
       packages: write
     steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-      - name: Install Nix
+      - name: Find changes
+        id: changes
+        uses: anttiharju/actions/find-changes@v0
+      - name: Compare changes
+        id: flake
+        uses: anttiharju/actions/compare-changes@v0
+        with:
+          wildcard: flake
+          changes: ${{ steps.changes.outputs.array }}
+      - if: steps.flake.outputs.changed == 'true'
+        name: Install Nix
         uses: cachix/install-nix-action@v31
         with:
           nix_path: nixpkgs=channel:nixos-25.05
-      - name: Parse container version
+      - if: steps.flake.outputs.changed == 'true'
+        name: Parse container version
         id: container
         run: |
           version="$(nix eval .#container_version --raw)"
           echo "version=$version"
           echo "version=$version" >> "$GITHUB_OUTPUT"
-      - run: |
+      - if: steps.flake.outputs.changed == 'true'
+        run: |
           nix build .#ci
-      - run: |
+      - if: steps.flake.outputs.changed == 'true'
+        run: |
           ./result | docker load
-      - name: Tag image
+      - if: steps.flake.outputs.changed == 'true'
+        name: Tag image
         id: tag
         env:
           version: ${{ steps.container.outputs.version }}
@@ -53,10 +65,12 @@ jobs:
           docker tag "ci:$version" "$image_id:$latest"
           echo "image=$image_id:$latest"
           echo "image=$image_id:$latest" >> "$GITHUB_OUTPUT"
-      - name: Log in to registry
+      - if: steps.flake.outputs.changed == 'true'
+        name: Log in to registry
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-      - name: Push image
+      - if: steps.flake.outputs.changed == 'true'
+        name: Push image
         env:
           image: ${{ steps.tag.outputs.image }}
         run: |
@@ -73,7 +87,7 @@ jobs:
     needs: container
     runs-on: ubuntu-24.04
     container:
-      image: ${{ needs.container.outputs.image }}
+      image: ${{ needs.container.outputs.image || format('ghcr.io/{0}/{1}-ci:latest', github.repository_owner, github.event.repository.name) }}
     steps:
       - name: Find changes
         id: changes

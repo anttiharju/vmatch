@@ -1,0 +1,18 @@
+permissions:
+  contents: none
+  pull-requests: none
+on:
+  push:
+    branches:
+      - wildcard
+    paths:
+      - "flake.nix"
+      - "flake.lock"
+
+jobs:
+  wildcard:
+    runs-on: ubuntu-latest
+    if: false
+    steps:
+      - run: |
+          true

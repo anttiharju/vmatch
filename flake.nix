@@ -17,7 +17,7 @@
       ...
     }:
     let
-      container_version = "0.1.0";
+      container_version = "1.0.0";
       supportedSystems = [
         "x86_64-linux"
         "aarch64-linux"
