@@ -1,0 +1,18 @@
+name: "Match Go Version"
+description: "Compare go.mod version with installed Go version"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Compare Go versions
+      shell: bash
+      run: |
+        version_line=$(grep "^go " go.mod)
+        go_mod_version=$(echo "$version_line" | awk '{print $2}')
+
+        version_output=$(go version)
+        env_version=${version_output#go version go}
+        env_version=${INSTALLED_VERSION%% *}
+
+        echo "$go_mod_version=$env_version"
+        [[ "$go_mod_version" = "$env_version" ]] && echo "true" || echo "false"
