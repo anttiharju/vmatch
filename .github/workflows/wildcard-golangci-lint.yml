@@ -7,7 +7,7 @@ on:
       - wildcard
     paths:
       - "**/*.go"
-      - ".golangci-version"
+      - "flake.lock"
       - ".golangci.yml"
       - "go.*"
 

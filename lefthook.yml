@@ -29,7 +29,7 @@ pre-commit:
       run: go test ./...
 
     - name: golangci-lint
-      glob: "{.golangci-version,.golangci.yml,*.go}"
+      glob: "{flake.lock,.golangci.yml,*.go}"
       run: |
         golangci-lint fmt
         golangci-lint run --fix
