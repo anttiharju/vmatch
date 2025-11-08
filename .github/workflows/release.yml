@@ -93,7 +93,7 @@ jobs:
           message: |
             Update ${{ github.event.repository.name }} to ${{ inputs.version }}
 
-            https://github.com/${{ github.repository }}/blob/${{ github.sha }}/.github/workflows/package.yml
+            https://github.com/${{ github.repository }}/blob/${{ github.sha }}/.github/workflows/release.yml
 
   github:
     name: GitHub
@@ -192,4 +192,4 @@ jobs:
           message: |
             Update ${{ github.event.repository.name }} to ${{ inputs.version }}
 
-            https://github.com/${{ github.repository }}/blob/${{ github.sha }}/.github/workflows/package.yml
+            https://github.com/${{ github.repository }}/blob/${{ github.sha }}/.github/workflows/release.yml
