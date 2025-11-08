@@ -133,8 +133,7 @@ jobs:
         run: |
           git ls-files -z | xargs -0 editorconfig-checker
 
-      - if: always() && !cancelled() && (steps.changed.outputs.binary == 'true' || github.event_name == 'push')
-        name: Ensure go.mod has matching Go version
+      - name: Ensure go.mod has matching Go version
         uses: ./.github/actions/match-go-version
 
       - if: always() && !cancelled() && (steps.changed.outputs.binary == 'true' || github.event_name == 'push')
