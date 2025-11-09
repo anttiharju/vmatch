@@ -56,6 +56,7 @@
           gawkInteractive
           perl538 # for shasum
           xz
+          gnugrep
         ];
     in
     {
