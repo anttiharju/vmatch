@@ -13,7 +13,7 @@ capture PKG_CLASS "$class"
 desc="$(gh repo view --json description --jq .description)"
 capture PKG_DESC "$desc"
 homepage="$(gh api "repos/$GITHUB_REPOSITORY" --jq .homepage)"
-capture PKG_HOMEPAGE "$homepage"
+capture PKG_HOMEPAGE "$homepage/"
 capture PKG_VERSION "${TAG#v}"
 capture PKG_OWNER "${GITHUB_REPOSITORY%%/*}"
 
