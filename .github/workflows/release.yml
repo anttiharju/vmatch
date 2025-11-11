@@ -81,10 +81,6 @@ jobs:
           source .release/nix/values.sh
           mkdir -p "$(dirname "$output")"
           envsubst -i .release/nix/template.nix -no-unset -no-empty > "$output"
-      - name: Sync nur-packages root default.nix
-        uses: anttiharju/actions/sync-default-nix@v0
-        with:
-          working-directory: nur-packages
       - name: Commit changes
         uses: anttiharju/actions/commit-changes@v0
         with:
