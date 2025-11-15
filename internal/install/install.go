@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 )
 
@@ -48,53 +49,19 @@ func FromURL(ctx context.Context, url, installPath string) error {
 	return nil
 }
 
+var (
+	versionPattern      = regexp.MustCompile(`(go\d+\.\d+)([.-])`)
+	patchVersionPattern = regexp.MustCompile(`go\d+\.\d+\.\d+`)
+)
+
 func tryAddPatchVersion(url string) string {
-	// Look for patterns like "go1.24.darwin" or "go1.24-darwin"
-	// and convert to "go1.24.0.darwin" or "go1.24.0-darwin"
+	// Match Go version pattern: goX.Y followed by non-digit (e.g., go1.24.darwin or go1.24-darwin)
+	// Captures: goX.Y and everything after
 
-	// Find the version part (e.g., "go1.24")
-	if !strings.Contains(url, "/go") {
-		return url
-	}
-
-	parts := strings.Split(url, "/")
-	for i, part := range parts {
-		if strings.HasPrefix(part, "go") && len(part) > 2 {
-			// Check if it's a version without patch (e.g., "go1.24.darwin-arm64.tar.gz")
-			versionPart := part[2:] // Remove "go" prefix
-
-			// Find where the version ends (first non-digit, non-dot character, or a dot followed by non-digit)
-			var versionEnd int
-			for j := 0; j < len(versionPart); j++ {
-				ch := versionPart[j]
-				if ch == '.' {
-					// Check if next character is a digit
-					if j+1 < len(versionPart) && versionPart[j+1] >= '0' && versionPart[j+1] <= '9' {
-						continue
-					}
-					// Dot followed by non-digit (like .darwin), this is the end
-					versionEnd = j
-					break
-				} else if ch < '0' || ch > '9' {
-					// Non-digit, non-dot character
-					versionEnd = j
-					break
-				}
-			}
-
-			if versionEnd > 0 {
-				version := versionPart[:versionEnd]
-				remainder := versionPart[versionEnd:]
-
-				// Count dots in version
-				dotCount := strings.Count(version, ".")
-				if dotCount == 1 {
-					// Only major.minor, add .0
-					parts[i] = "go" + version + ".0" + remainder
-					return strings.Join(parts, "/")
-				}
-			}
-		}
+	// Check if URL matches pattern and doesn't already have patch version
+	if versionPattern.MatchString(url) && !patchVersionPattern.MatchString(url) {
+		// Insert .0 before the separator (. or -)
+		return versionPattern.ReplaceAllString(url, "${1}.0${2}")
 	}
 
 	return url
