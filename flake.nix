@@ -54,7 +54,7 @@
           gzip
           envsubst
           gawkInteractive
-          perl538 # for shasum
+          perl # for shasum
           xz
           gnugrep
         ];
