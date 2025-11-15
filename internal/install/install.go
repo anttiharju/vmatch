@@ -21,22 +21,9 @@ func FromURL(ctx context.Context, url, installPath string) error {
 	}
 
 	// Download the file
-	body, err := downloadFile(ctx, url)
+	body, err := downloadWithRetry(ctx, url)
 	if err != nil {
-		// Try with .0 patch version if download fails with 404
-		if strings.Contains(err.Error(), "Not Found") {
-			retryURL := tryAddPatchVersion(url)
-			if retryURL != url {
-				body, err = downloadFile(ctx, retryURL)
-				if err != nil {
-					return errors.New("failed to download to " + installPath + ": " + err.Error())
-				}
-			} else {
-				return errors.New("failed to download to " + installPath + ": " + err.Error())
-			}
-		} else {
-			return errors.New("failed to download to " + installPath + ": " + err.Error())
-		}
+		return errors.New("failed to download to " + installPath + ": " + err.Error())
 	}
 	defer body.Close()
 
@@ -47,6 +34,25 @@ func FromURL(ctx context.Context, url, installPath string) error {
 	}
 
 	return nil
+}
+
+func downloadWithRetry(ctx context.Context, url string) (io.ReadCloser, error) {
+	body, err := downloadFile(ctx, url)
+	if err == nil {
+		return body, nil
+	}
+
+	// Try with .0 patch version if download fails with 404
+	if !strings.Contains(err.Error(), "Not Found") {
+		return nil, err
+	}
+
+	retryURL := tryAddPatchVersion(url)
+	if retryURL == url {
+		return nil, err
+	}
+
+	return downloadFile(ctx, retryURL)
 }
 
 var (
