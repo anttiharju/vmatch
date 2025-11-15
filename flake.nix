@@ -72,7 +72,7 @@
           default = pkgs.mkShell {
             packages = devPackages pkgs pkgs-unstable anttiharju system;
 
-            shellHook = "lefthook install";
+            # shellHook = "lefthook install"; # action-validator does not play well with nix-direnv (it scans all files instead of ones in version control)
           };
         }
       );
