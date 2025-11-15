@@ -57,7 +57,6 @@ var (
 func tryAddPatchVersion(url string) string {
 	// Match Go version pattern: goX.Y followed by non-digit (e.g., go1.24.darwin or go1.24-darwin)
 	// Captures: goX.Y and everything after
-
 	// Check if URL matches pattern and doesn't already have patch version
 	if versionPattern.MatchString(url) && !patchVersionPattern.MatchString(url) {
 		// Insert .0 before the separator (. or -)
