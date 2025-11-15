@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 )
 
@@ -20,9 +21,9 @@ func FromURL(ctx context.Context, url, installPath string) error {
 	}
 
 	// Download the file
-	body, err := downloadFile(ctx, url)
+	body, err := downloadWithRetry(ctx, url)
 	if err != nil {
-		return errors.New("failed to download: " + err.Error())
+		return errors.New("failed to download to " + installPath + ": " + err.Error())
 	}
 	defer body.Close()
 
@@ -33,6 +34,42 @@ func FromURL(ctx context.Context, url, installPath string) error {
 	}
 
 	return nil
+}
+
+func downloadWithRetry(ctx context.Context, url string) (io.ReadCloser, error) {
+	body, err := downloadFile(ctx, url)
+	if err == nil {
+		return body, nil
+	}
+
+	// Try with .0 patch version if download fails with 404
+	if !strings.Contains(err.Error(), "Not Found") {
+		return nil, err
+	}
+
+	retryURL := tryAddPatchVersion(url)
+	if retryURL == url {
+		return nil, err
+	}
+
+	return downloadFile(ctx, retryURL)
+}
+
+var (
+	versionPattern      = regexp.MustCompile(`(go\d+\.\d+)([.-])`)
+	patchVersionPattern = regexp.MustCompile(`go\d+\.\d+\.\d+`)
+)
+
+func tryAddPatchVersion(url string) string {
+	// Match Go version pattern: goX.Y followed by non-digit (e.g., go1.24.darwin or go1.24-darwin)
+	// Captures: goX.Y and everything after
+	// Check if URL matches pattern and doesn't already have patch version
+	if versionPattern.MatchString(url) && !patchVersionPattern.MatchString(url) {
+		// Insert .0 before the separator (. or -)
+		return versionPattern.ReplaceAllString(url, "${1}.0${2}")
+	}
+
+	return url
 }
 
 func downloadFile(ctx context.Context, url string) (io.ReadCloser, error) {

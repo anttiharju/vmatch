@@ -54,7 +54,7 @@
           gzip
           envsubst
           gawkInteractive
-          perl538 # for shasum
+          perl # for shasum
           xz
           gnugrep
         ];
@@ -71,6 +71,8 @@
         {
           default = pkgs.mkShell {
             packages = devPackages pkgs pkgs-unstable anttiharju system;
+
+            # shellHook = "lefthook install"; # action-validator does not play well with nix-direnv (it scans all files instead of ones in version control)
           };
         }
       );
