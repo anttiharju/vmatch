@@ -22,7 +22,7 @@ func FromURL(ctx context.Context, url, installPath string) error {
 	// Download the file
 	body, err := downloadFile(ctx, url)
 	if err != nil {
-		return errors.New("failed to download: " + err.Error())
+		return errors.New("failed to download to " + installPath + ": " + err.Error())
 	}
 	defer body.Close()
 
