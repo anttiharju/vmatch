@@ -21,6 +21,7 @@ on:
 
 jobs:
   container:
+    if: github.event.repository.name != 'go-starter'
     name: Container
     runs-on: ubuntu-24.04
     permissions:
