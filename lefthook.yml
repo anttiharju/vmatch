@@ -6,8 +6,9 @@ output:
 pre-commit:
   parallel: true
   jobs:
-    - name: action-validator
-      run: git ls-files -z '.github/workflows/*.yml' '*/action.yml' | xargs -0 action-validator --verbose
+    # action-validator does not play well with nix-direnv (it scans all files instead of ones in version control)
+    # - name: action-validator
+    #   run: git ls-files -z '.github/workflows/*.yml' '*/action.yml' | xargs -0 action-validator --verbose
 
     - name: actionlint
       glob: ".github/workflows/*.yml"
