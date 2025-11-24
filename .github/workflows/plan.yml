@@ -29,7 +29,7 @@ jobs:
     steps:
       - name: Find changes
         id: changes
-        uses: anttiharju/actions/find-changes@v0
+        uses: anttiharju/find-changes-action@v1
       - name: Compare changes
         id: flake
         uses: anttiharju/actions/compare-changes@v0
@@ -99,7 +99,7 @@ jobs:
     steps:
       - name: Find changes
         id: changes
-        uses: anttiharju/actions/find-changes@v0
+        uses: anttiharju/find-changes-action@v1
 
       - name: Detect changes
         id: changed
