@@ -36,7 +36,7 @@ jobs:
           app-id: ${{ secrets.ANTTIHARJU_BOT_ID }}
           private-key: ${{ secrets.ANTTIHARJU_BOT_PRIVATE_KEY }}
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           token: ${{ steps.deploy.outputs.token }}
       - name: Deploy to GitHub Pages
@@ -58,7 +58,7 @@ jobs:
         password: ${{ github.token }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Generate commit token
         id: generate-token
         uses: actions/create-github-app-token@v2
@@ -67,7 +67,7 @@ jobs:
           private-key: ${{ secrets.ANTTIHARJU_BOT_PRIVATE_KEY }}
           repositories: nur-packages
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           repository: anttiharju/nur-packages
           token: ${{ steps.generate-token.outputs.token }}
@@ -103,7 +103,7 @@ jobs:
       tag: "v${{ inputs.version }}" # Go expects version tags to be prefixed with "v"
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Tag current commit
         shell: sh
         run: |
@@ -154,7 +154,7 @@ jobs:
         password: ${{ github.token }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Generate commit token
         id: generate-token
         uses: actions/create-github-app-token@v2
@@ -163,7 +163,7 @@ jobs:
           private-key: ${{ secrets.ANTTIHARJU_BOT_PRIVATE_KEY }}
           repositories: homebrew-tap
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           repository: anttiharju/homebrew-tap
           token: ${{ steps.generate-token.outputs.token }}
