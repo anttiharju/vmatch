@@ -139,6 +139,8 @@ jobs:
 
       - if: always() && !cancelled() && (steps.changed.outputs.golangci-lint == 'true' || github.event_name == 'push')
         name: golangci-lint
+        env:
+          CGO_ENABLED: "0"
         run: golangci-lint run
 
       - if: always() && !cancelled() && (steps.changed.outputs.go == 'true' || steps.changed.outputs.release == 'true' || github.event_name == 'push') && ! endsWith(github.event.head_commit.author.name, '[bot]')
