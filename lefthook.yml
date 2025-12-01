@@ -2,13 +2,31 @@ output:
   - success
   - failure
 
+pre-push:
+  parallel: true
+  jobs:
+    - name: go test
+      glob: "{internal/*,go.*,*.go}"
+      run: go test ./...
+
 # Match to plan.yml
 pre-commit:
   parallel: true
   jobs:
+    - name: go build
+      glob: "{internal/*,go.*,*.go}"
+      run: go build
+
+    - name: golangci-lint
+      glob: "{flake.lock,.golangci.yml,*.go}"
+      run: |
+        golangci-lint fmt
+        golangci-lint run --fix
+      stage_fixed: true
+
     # action-validator does not play well with nix-direnv (it scans all files instead of ones in version control)
     # - name: action-validator
-    #   run: git ls-files -z '.github/workflows/*.yml' '*/action.yml' | xargs -0 action-validator --verbose
+    #   run: git ls-files -z '.github/workflows/*.yml' '*/action.yml' | xargs --null action-validator --verbose
 
     - name: actionlint
       glob: ".github/workflows/*.yml"
@@ -21,21 +39,6 @@ pre-commit:
     - name: editorconfig-checker
       run: editorconfig-checker {staged_files}
 
-    - name: go build
-      glob: "{internal/*,go.*,*.go}"
-      run: go build
-
-    - name: go test
-      glob: "{internal/*,go.*,*.go}"
-      run: go test ./...
-
-    - name: golangci-lint
-      glob: "{flake.lock,.golangci.yml,*.go}"
-      run: |
-        golangci-lint fmt
-        golangci-lint run --fix
-      stage_fixed: true
-
     - name: Keep .yml
       glob: "*.yaml"
       run: echo "You are trying to commit .yaml files. Please use .yml instead for the following files:" && echo {staged_files} && exit 1
@@ -45,13 +48,18 @@ pre-commit:
 
     - name: prettier
       glob: "{*.yml,*.md}"
-      run: prettier --write {staged_files}
+      run: prettier --write --no-error-on-unmatched-pattern {staged_files}
       stage_fixed: true
 
     - name: rubocop
       glob: "{*.rb}"
-      run: ./.release/render.sh brew && find .release/brew -name "*.rb" -type f -not -name "*template*" -exec rubocop {} \;
+      run: .release/render.sh brew && find .release/brew -name "*.rb" -type f -not -name "*template.rb" -and -not -name "*.tpl.rb" -exec rubocop {} \;
 
     - name: shellcheck
       glob: "{*.sh,.shellcheckrc}"
-      run: git ls-files -z '*.sh' | xargs -0 shellcheck --color=always
+      run: git ls-files -z '*.sh' | xargs --null shellcheck --color=always
+
+    - name: nixfmt
+      glob: "*.nix"
+      run: nixfmt {staged_files}
+      stage_fixed: true

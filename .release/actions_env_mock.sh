@@ -9,9 +9,8 @@ normalized_url="${remote_url/://}"
 temp="${normalized_url%/*}"
 owner="$(basename "$temp")"
 
-repository="$(basename -s .git "$remote_url")"
-
-export GITHUB_REPOSITORY="$owner/$repository"
+repo="$(basename --suffix .git "$remote_url")"
+export GITHUB_REPOSITORY="$owner/$repo"
 
 if [[ "$TAG" = "v0.0.0" ]]; then
   rev="$(gh api "repos/$GITHUB_REPOSITORY/commits/HEAD" --jq '.sha')"

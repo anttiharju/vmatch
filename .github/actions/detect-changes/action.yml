@@ -7,61 +7,61 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - id: github_actions_workflows
-      uses: anttiharju/actions/compare-changes@v0
+    - id: actionlint
+      uses: anttiharju/compare-changes@v0
       with:
-        wildcard: actionlint
+        github-workflows-wildcard: actionlint.yml
         changes: ${{ inputs.changes }}
-    - id: binary
-      uses: anttiharju/actions/compare-changes@v0
+    - id: go
+      uses: anttiharju/compare-changes@v0
       with:
-        wildcard: go-binary
+        github-workflows-wildcard: go.yml
         changes: ${{ inputs.changes }}
-    - id: go_code
-      uses: anttiharju/actions/compare-changes@v0
+    - id: golangci-lint
+      uses: anttiharju/compare-changes@v0
       with:
-        wildcard: golangci-lint
+        github-workflows-wildcard: golangci-lint.yml
         changes: ${{ inputs.changes }}
     - id: brew
-      uses: anttiharju/actions/compare-changes@v0
+      uses: anttiharju/compare-changes@v0
       with:
-        wildcard: brew
+        github-workflows-wildcard: brew.yml
         changes: ${{ inputs.changes }}
     - id: github
-      uses: anttiharju/actions/compare-changes@v0
+      uses: anttiharju/compare-changes@v0
       with:
-        wildcard: github
+        github-workflows-wildcard: github.yml
         changes: ${{ inputs.changes }}
     - id: nix
-      uses: anttiharju/actions/compare-changes@v0
+      uses: anttiharju/compare-changes@v0
       with:
-        wildcard: nix
+        github-workflows-wildcard: nix.yml
         changes: ${{ inputs.changes }}
-    - id: documentation
-      uses: anttiharju/actions/compare-changes@v0
+    - id: mkdocs
+      uses: anttiharju/compare-changes@v0
       with:
-        wildcard: mkdocs
+        github-workflows-wildcard: mkdocs.yml
         changes: ${{ inputs.changes }}
-    - id: md_and_yml
-      uses: anttiharju/actions/compare-changes@v0
+    - id: prettier
+      uses: anttiharju/compare-changes@v0
       with:
-        wildcard: prettier
+        github-workflows-wildcard: prettier.yml
         changes: ${{ inputs.changes }}
-    - id: scripts
-      uses: anttiharju/actions/compare-changes@v0
+    - id: shellcheck
+      uses: anttiharju/compare-changes@v0
       with:
-        wildcard: shellcheck
+        github-workflows-wildcard: shellcheck.yml
         changes: ${{ inputs.changes }}
 outputs:
-  github_actions_workflows:
-    description: "Whether GitHub Actions workflows have changed"
-    value: ${{ steps.github_actions_workflows.outputs.changed }}
-  binary:
-    description: "Whether the binary has changed"
-    value: ${{ steps.binary.outputs.changed }}
-  go_code:
-    description: "Whether Go code has changed"
-    value: ${{ steps.go_code.outputs.changed }}
+  actionlint:
+    description: "Whether actionlint has changed"
+    value: ${{ steps.actionlint.outputs.changed }}
+  go:
+    description: "Whether Go has changed"
+    value: ${{ steps.go.outputs.changed }}
+  golangci-lint:
+    description: "Whether golangci-lint has changed"
+    value: ${{ steps.golangci-lint.outputs.changed }}
   brew:
     description: "Whether Brew has changed"
     value: ${{ steps.brew.outputs.changed }}
@@ -74,12 +74,12 @@ outputs:
   release:
     description: "Whether any release has changed"
     value: ${{ steps.brew.outputs.changed || steps.github.outputs.changed || steps.nix.outputs.changed }}
-  documentation:
-    description: "Whether documentation has changed"
-    value: ${{ steps.documentation.outputs.changed }}
-  md_and_yml:
-    description: "Whether Markdown or YAML has changed"
-    value: ${{ steps.md_and_yml.outputs.changed }}
-  scripts:
-    description: "Whether scripts have changed"
-    value: ${{ steps.scripts.outputs.changed }}
+  mkdocs:
+    description: "Whether MkDocs has changed"
+    value: ${{ steps.mkdocs.outputs.changed }}
+  prettier:
+    description: "Whether Prettier has changed"
+    value: ${{ steps.prettier.outputs.changed }}
+  shellcheck:
+    description: "Whether ShellCheck has changed"
+    value: ${{ steps.shellcheck.outputs.changed }}

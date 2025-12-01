@@ -72,22 +72,24 @@ jobs:
           repository: anttiharju/nur-packages
           token: ${{ steps.generate-token.outputs.token }}
           path: nur-packages
+      - working-directory: nur-packages
+        run: nix flake update
       - name: Source values and render template # TODO: use release/render.sh for this, needs output param
         env:
           TAG: "v${{ inputs.version }}" # nix/values.sh expects TAG variable
           GH_TOKEN: ${{ github.token }} # values script may use gh cli that needs this
-          output: nur-packages/pkgs/${{ github.event.repository.name }}/default.nix
+          output: nur-packages/pkgs/${{ github.event.repository.name }}
         run: |
           source .release/nix/values.sh
-          mkdir -p "$(dirname "$output")"
-          envsubst -i .release/nix/template.nix -no-unset -no-empty > "$output"
+          mkdir -p "$output"
+          envsubst -i .release/nix/template.nix -no-unset -no-empty > "$output/default.nix"
       - name: Commit changes
         uses: anttiharju/actions/commit-changes@v0
         with:
           working-directory: nur-packages
-          committer: "${{ github.actor }}[bot]"
+          committer: ${{ github.actor }}
           message: |
-            Update ${{ github.event.repository.name }} to ${{ inputs.version }}
+            ${{ github.event.repository.name }} ${{ inputs.version }}
 
             https://github.com/${{ github.repository }}/blob/${{ github.sha }}/.github/workflows/release.yml
 
@@ -100,7 +102,7 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ github.token }}
     env:
-      tag: "v${{ inputs.version }}" # Go expects version tags to be prefixed with "v"
+      tag: "v${{ inputs.version }}"
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -108,9 +110,21 @@ jobs:
         shell: sh
         run: |
           git tag "$tag"
+      - name: Create darwin-amd64 archive
+        env:
+          GOOS: darwin
+          GOARCH: amd64
+        run: |
+          ./.release/github/archive.sh "$tag" "$GOOS" "$GOARCH"
       - name: Create darwin-arm64 archive
         env:
           GOOS: darwin
+          GOARCH: arm64
+        run: |
+          ./.release/github/archive.sh "$tag" "$GOOS" "$GOARCH"
+      - name: Create linux-arm64 archive
+        env:
+          GOOS: linux
           GOARCH: arm64
         run: |
           ./.release/github/archive.sh "$tag" "$GOOS" "$GOARCH"
@@ -118,18 +132,6 @@ jobs:
         env:
           GOOS: linux
           GOARCH: amd64
-        run: |
-          ./.release/github/archive.sh "$tag" "$GOOS" "$GOARCH"
-      - name: Create darwin-amd64 archive
-        env:
-          GOOS: darwin
-          GOARCH: amd64
-        run: |
-          ./.release/github/archive.sh "$tag" "$GOOS" "$GOARCH"
-      - name: Create linux-arm64 archive
-        env:
-          GOOS: linux
-          GOARCH: arm64
         run: |
           ./.release/github/archive.sh "$tag" "$GOOS" "$GOARCH"
       - name: Release
@@ -140,7 +142,7 @@ jobs:
         run: |
           git push origin "$tag"
           gh release create "$tag" --title="$title" --generate-notes --draft
-          find . -maxdepth 1 -name '${{ github.event.repository.name }}-*-*.tar.gz' -exec gh release upload "$tag" {} \;
+          find . -maxdepth 1 -name '${{ github.event.repository.name }}-*.tar.gz' -exec gh release upload "$tag" {} \;
           gh release edit "$tag" --draft=false
 
   homebrew-tap:
@@ -168,14 +170,11 @@ jobs:
           repository: anttiharju/homebrew-tap
           token: ${{ steps.generate-token.outputs.token }}
           path: homebrew-tap
-      - name: Output name with underscores
-        id: underscore
-        uses: ./.github/actions/underscore-name
       - name: Source values and render template # TODO: use release/render.sh for this, needs output param
         env:
           TAG: "v${{ inputs.version }}" # brew/values.sh expects TAG variable
           GH_TOKEN: ${{ github.token }} # values script may use gh cli that needs this
-          output: homebrew-tap/Formula/${{ steps.underscore.outputs.filename }}.rb
+          output: homebrew-tap/Formula/${{ github.event.repository.name }}.rb
         run: |
           source .release/brew/values.sh
           mkdir -p "$(dirname "$output")"
@@ -184,8 +183,8 @@ jobs:
         uses: anttiharju/actions/commit-changes@v0
         with:
           working-directory: homebrew-tap
-          committer: "${{ github.actor }}[bot]"
+          committer: ${{ github.actor }}
           message: |
-            Update ${{ github.event.repository.name }} to ${{ inputs.version }}
+            ${{ github.event.repository.name }} ${{ inputs.version }}
 
             https://github.com/${{ github.repository }}/blob/${{ github.sha }}/.github/workflows/release.yml

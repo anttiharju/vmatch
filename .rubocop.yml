@@ -1,0 +1,4 @@
+AllCops:
+  NewCops: enable
+Naming/FileName:
+  Enabled: false
