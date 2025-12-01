@@ -31,6 +31,7 @@
       devPackages =
         pkgs: anttiharju: system: with pkgs; [
           go
+          golangci-lint
           action-validator
           actionlint
           anttiharju.relcheck

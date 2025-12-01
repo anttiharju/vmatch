@@ -7,6 +7,8 @@ pre-push:
   jobs:
     - name: go test
       glob: "{internal/*,go.*,*.go}"
+      env:
+        CGO_ENABLED: "0"
       run: go test ./...
 
 # Match to plan.yml
