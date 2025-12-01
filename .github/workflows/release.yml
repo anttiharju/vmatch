@@ -116,25 +116,25 @@ jobs:
           GOOS: darwin
           GOARCH: amd64
         run: |
-          ./.release/github/archive.sh "$tag" "$GOOS" "$GOARCH"
+          ./.release/archive.sh "$tag" "$GOOS" "$GOARCH"
       - name: Create darwin-arm64 archive
         env:
           GOOS: darwin
           GOARCH: arm64
         run: |
-          ./.release/github/archive.sh "$tag" "$GOOS" "$GOARCH"
+          ./.release/archive.sh "$tag" "$GOOS" "$GOARCH"
       - name: Create linux-arm64 archive
         env:
           GOOS: linux
           GOARCH: arm64
         run: |
-          ./.release/github/archive.sh "$tag" "$GOOS" "$GOARCH"
+          ./.release/archive.sh "$tag" "$GOOS" "$GOARCH"
       - name: Create linux-amd64 archive
         env:
           GOOS: linux
           GOARCH: amd64
         run: |
-          ./.release/github/archive.sh "$tag" "$GOOS" "$GOARCH"
+          ./.release/archive.sh "$tag" "$GOOS" "$GOARCH"
       - name: Release
         shell: sh
         env:
