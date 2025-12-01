@@ -74,7 +74,10 @@
           default = pkgs.mkShell {
             packages = devPackages pkgs anttiharju system;
 
-            shellHook = "lefthook install";
+            shellHook = ''
+              export CGO_ENABLED=0
+              lefthook install
+            '';
           };
         }
       );
@@ -106,6 +109,7 @@
             config = {
               User = "1001"; # https://github.com/actions/runner/issues/2033#issuecomment-1598547465
               Env = [
+                "CGO_ENABLED=0"
                 "NIX_LD_LIBRARY_PATH=${
                   pkgs.lib.makeLibraryPath [
                     pkgs.stdenv.cc.cc.lib
