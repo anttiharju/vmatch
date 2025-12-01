@@ -137,7 +137,7 @@ jobs:
         name: golangci-lint
         run: golangci-lint run
 
-      - if: always() && !cancelled() && (steps.changed.outputs.go == 'true' || steps.changed.outputs.release == 'true' || github.event_name == 'push') && ! endsWith(github.event.head_commit.author.name, '[bot]')
+      - if: always() && !cancelled() && (steps.changed.outputs.go == 'true' || steps.changed.outputs.release == 'true' || github.event_name == 'push')
         id: semantic
         name: Require semantic version label
         uses: anttiharju/actions/semver-label@v0
@@ -192,37 +192,6 @@ jobs:
         name: shellcheck
         run: |
           git ls-files -z '*.sh' | xargs --null shellcheck --color=always
-
-      - if: steps.semantic.outputs.version != '' && github.event_name == 'push' && github.ref_name == github.event.repository.default_branch && !endsWith(github.event.head_commit.author.name, '[bot]')
-        name: Create release commit
-        uses: ./.github/actions/commit-release
-        with:
-          version: ${{ steps.semantic.outputs.version }}
-          ANTTIHARJU_BOT_ID: ${{ secrets.ANTTIHARJU_BOT_ID }}
-          ANTTIHARJU_BOT_PRIVATE_KEY: ${{ secrets.ANTTIHARJU_BOT_PRIVATE_KEY }}
-
-      - if: github.event_name == 'push' && github.ref_name == github.event.repository.default_branch && endsWith(github.event.head_commit.author.name, '[bot]')
-        id: parse
-        name: Parse release commit
-        env:
-          expected_bot: ${{ github.event.head_commit.author.name }}
-        run: |
-          commit_author="$(git log -1 --pretty=format:'%an')"
-          commit_committer="$(git log -1 --pretty=format:'%cn')"
-
-          if [[ "$commit_author" == "$expected_bot" && "$commit_committer" == "$expected_bot" ]]; then
-            commit_message="$(git log -1 --pretty=format:'%s')"
-            version="${commit_message%% *}"
-            if [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-              echo "version=$version"
-              echo "version=$version" >> "$GITHUB_OUTPUT"
-            else
-              echo "Commit message does not match semver format: $commit_message"
-            fi
-          else
-            echo "Author or committer does not match expected bot: $expected_bot"
-            echo "Author: $commit_author, Committer: $commit_committer"
-          fi
     outputs:
-      version: ${{ steps.semantic.outputs.version || steps.parse.outputs.version }}
+      version: ${{ steps.semantic.outputs.version }}
       documentation_changed: ${{ steps.changed.outputs.mkdocs }}

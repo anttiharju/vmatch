@@ -41,8 +41,8 @@ jobs:
           token: ${{ steps.deploy.outputs.token }}
       - name: Deploy to GitHub Pages
         env:
-          GIT_AUTHOR_NAME: ${{ github.actor }}
-          GIT_AUTHOR_EMAIL: "${{ github.actor }}@users.noreply.github.com"
+          GIT_AUTHOR_NAME: "${{ github.actor }}[bot]"
+          GIT_AUTHOR_EMAIL: "${{ github.actor }}[bot]@users.noreply.github.com"
           GIT_COMMITTER_NAME: "${{ github.actor }}[bot]"
           GIT_COMMITTER_EMAIL: "${{ github.actor }}[bot]@users.noreply.github.com"
         run: |
@@ -87,7 +87,8 @@ jobs:
         uses: anttiharju/actions/commit-changes@v0
         with:
           working-directory: nur-packages
-          committer: ${{ github.actor }}
+          author: "${{ github.actor }}[bot]"
+          committer: "${{ github.actor }}[bot]"
           message: |
             ${{ github.event.repository.name }} ${{ inputs.version }}
 
@@ -183,7 +184,8 @@ jobs:
         uses: anttiharju/actions/commit-changes@v0
         with:
           working-directory: homebrew-tap
-          committer: ${{ github.actor }}
+          author: "${{ github.actor }}[bot]"
+          committer: "${{ github.actor }}[bot]"
           message: |
             ${{ github.event.repository.name }} ${{ inputs.version }}
 
