@@ -124,6 +124,8 @@ jobs:
 
       - if: always() && !cancelled() && (steps.changed.outputs.go == 'true' || github.event_name == 'push')
         name: go build
+        env:
+          CGO_ENABLED: "0"
         run: |
           go build
 

@@ -15,6 +15,8 @@ pre-commit:
   jobs:
     - name: go build
       glob: "{internal/*,go.*,*.go}"
+      env:
+        CGO_ENABLED: "0"
       run: go build
 
     - name: golangci-lint
