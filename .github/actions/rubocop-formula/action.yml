@@ -9,13 +9,10 @@ runs:
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
-        ./.release/render.sh brew
-    - name: Output name with underscores
-      id: underscore
-      uses: ./.github/actions/underscore-name
+        .release/render.sh brew
     - name: rubocop
       shell: sh
       env:
-        filename: ${{ steps.underscore.outputs.filename }}
+        repository: ${{ github.event.repository.name }}
       run: |
-        rubocop ".release/brew/$filename.rb"
+        rubocop ".release/brew/$repository.rb"

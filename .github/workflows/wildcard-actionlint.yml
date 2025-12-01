@@ -7,11 +7,11 @@ on:
       - wildcard
     paths:
       - ".github/workflows/*.yml"
-
+      - "flake.nix"
+      - "flake.lock"
 jobs:
   wildcard:
     runs-on: ubuntu-latest
-    if: false
     steps:
       - run: |
           true

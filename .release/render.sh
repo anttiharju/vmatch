@@ -29,12 +29,12 @@ hash_cache="$pkg.cache"
 tag="$(git tag --sort=-creatordate | head -n1)"
 tag="${tag:-v0.0.0}"
 export TAG="$tag" # also supplied by CI
-source github/actions_env_mock.sh
+source actions_env_mock.sh
 
 calculate_hash() {
   local file="$1"
   branch=$(git rev-parse --abbrev-ref HEAD)
-  hash=$(shasum -a 256 "$file" | cut -d' ' -f1)
+  hash=$(hashsum --sha256 "$file" | cut -d' ' -f1)
   echo "$branch-$hash"
 }
 
@@ -60,6 +60,5 @@ cd "$pkg"
 # shellcheck disable=SC1091
 source "values.cache"
 repository="${GITHUB_REPOSITORY##*/}"
-filename="${repository//-/_}"
-envsubst -i "template.$ext" -no-unset -no-empty > "$filename.$ext"
-cp "template.$ext" "$filename.tpl.$ext" # easier to visually diff two gitignored files
+envsubst -i "template.$ext" -no-unset -no-empty > "$repository.$ext"
+cp "template.$ext" "$repository.tpl.$ext" # easier to visually diff two gitignored files

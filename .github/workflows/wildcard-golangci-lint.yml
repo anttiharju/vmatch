@@ -7,14 +7,13 @@ on:
       - wildcard
     paths:
       - "**/*.go"
-      - "flake.lock"
       - ".golangci.yml"
       - "go.*"
-
+      - "flake.nix"
+      - "flake.lock"
 jobs:
   wildcard:
     runs-on: ubuntu-latest
-    if: false
     steps:
       - run: |
           true

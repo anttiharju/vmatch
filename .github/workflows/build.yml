@@ -12,12 +12,14 @@ jobs:
     name: Plan
     uses: ./.github/workflows/plan.yml
     permissions:
+      contents: write
       packages: write
+    secrets: inherit
 
   release:
     name: Release
     needs: plan
-    if: needs.plan.outputs.version != ''
+    if: endsWith(github.event.head_commit.author.name, '[bot]') && needs.plan.outputs.version != ''
     uses: ./.github/workflows/release.yml
     with:
       version: ${{ needs.plan.outputs.version }}

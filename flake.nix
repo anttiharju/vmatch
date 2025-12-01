@@ -1,9 +1,12 @@
 {
   description = "Go development environment";
 
+  nixConfig.extra-substituters = [
+    "https://nix-community.cachix.org"
+    "https://anttiharju.cachix.org"
+  ];
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-25.05";
-    nixpkgs-unstable.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-25.11";
     nur-anttiharju.url = "github:anttiharju/nur-packages";
     nur-anttiharju.inputs.nixpkgs.follows = "nixpkgs";
   };
@@ -12,7 +15,6 @@
     {
       self,
       nixpkgs,
-      nixpkgs-unstable,
       nur-anttiharju,
       ...
     }:
@@ -27,24 +29,25 @@
       forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
 
       devPackages =
-        pkgs: pkgs-unstable: anttiharju: system: with pkgs; [
+        pkgs: anttiharju: system: with pkgs; [
           go
           action-validator
           actionlint
           anttiharju.relcheck
           editorconfig-checker
-          golangci-lint
           (python313.withPackages (
             ps: with ps; [
               mkdocs-material
             ]
           ))
-          pkgs-unstable.prettier
+          prettier
           rubocop
           shellcheck
           gh
+          yq-go
+          ripgrep
           # Everything below is required by GitHub Actions
-          coreutils
+          uutils-coreutils-noprefix
           bash
           git
           findutils
@@ -54,7 +57,6 @@
           gzip
           envsubst
           gawkInteractive
-          perl # for shasum
           xz
           gnugrep
         ];
@@ -65,12 +67,11 @@
         system:
         let
           pkgs = import nixpkgs { inherit system; };
-          pkgs-unstable = import nixpkgs-unstable { inherit system; };
           anttiharju = nur-anttiharju.packages.${system};
         in
         {
           default = pkgs.mkShell {
-            packages = devPackages pkgs pkgs-unstable anttiharju system;
+            packages = devPackages pkgs anttiharju system;
 
             shellHook = "lefthook install";
           };
@@ -81,11 +82,10 @@
         system:
         let
           pkgs = import nixpkgs { inherit system; };
-          pkgs-unstable = import nixpkgs-unstable { inherit system; };
           anttiharju = nur-anttiharju.packages.${system};
 
           # Fix not being able to run the unpatched node binaries that GitHub Actions mounts into the container
-          nix-ld-setup = pkgs.runCommand "nix-ld-setup" { } ''
+          nix_ld_setup = pkgs.runCommand "nix-ld-setup" { } ''
             mkdir -p $out/lib64
             install -D -m755 ${pkgs.nix-ld}/libexec/nix-ld "$out/lib64/$(basename ${pkgs.stdenv.cc.bintools.dynamicLinker})"
           '';
@@ -94,12 +94,13 @@
           ci = pkgs.dockerTools.streamLayeredImage {
             name = "ci";
             tag = container_version;
-            contents = (devPackages pkgs pkgs-unstable anttiharju system) ++ [
-              nix-ld-setup
+            contents = (devPackages pkgs anttiharju system) ++ [
+              nix_ld_setup
               pkgs.dockerTools.caCertificates
               pkgs.sudo
               pkgs.nix.out
               pkgs.dockerTools.usrBinEnv
+              anttiharju.compare-changes
             ];
             config = {
               User = "1001"; # https://github.com/actions/runner/issues/2033#issuecomment-1598547465
@@ -136,9 +137,13 @@
               mkdir -p /tmp
               chmod 1777 /tmp
 
-              # Enable nix-command experimental feature
+              # Enable 'nix eval .#container_version --raw' and 'nix flake update' inside the container
               mkdir -p /etc/nix
-              echo "experimental-features = nix-command" > /etc/nix/nix.conf
+              echo "experimental-features = nix-command flakes" > /etc/nix/nix.conf
+
+              # Fix 'mv: No such file or directory (os error 2)'
+              mkdir -p /usr/local/bin
+              chmod 0777 /usr/local/bin
             '';
           };
         }
