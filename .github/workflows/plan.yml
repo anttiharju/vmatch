@@ -137,6 +137,11 @@ jobs:
         name: golangci-lint
         run: golangci-lint run
 
+      - if: always() && !cancelled()
+        name: relcheck
+        run: |
+          relcheck all --verbose --color=always
+
       - if: always() && !cancelled() && (steps.changed.outputs.go == 'true' || steps.changed.outputs.release == 'true' || github.event_name == 'push')
         id: semantic
         name: Require semantic version label
@@ -153,11 +158,6 @@ jobs:
         name: actionlint
         run: |
           actionlint -color
-
-      - if: always() && !cancelled()
-        name: relcheck
-        run: |
-          relcheck all --verbose --color=always
 
       - if: always() && !cancelled()
         name: EditorConfig-Checker
