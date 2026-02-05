@@ -19,8 +19,6 @@ runs:
         tag: "v${{ inputs.version }}"
       run: |
         git tag "$tag"
-    - name: Cache
-      uses: ./.github/actions/cache
     - name: Create aarch64-apple-darwin archive
       shell: sh
       env:
