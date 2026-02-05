@@ -12,6 +12,10 @@ inputs:
   message:
     description: "Commit message"
     required: true
+  allow-empty:
+    description: "Allow empty commits"
+    required: false
+    default: "false"
   working-directory:
     description: "Working directory"
     required: false
@@ -25,12 +29,13 @@ runs:
       shell: sh
       env:
         message: ${{ inputs.message }}
+        allow_empty: ${{ inputs.allow-empty }}
         GIT_AUTHOR_NAME: ${{ inputs.author }}
         GIT_AUTHOR_EMAIL: "${{ inputs.author }}@users.noreply.github.com"
         GIT_COMMITTER_NAME: ${{ inputs.committer }}
         GIT_COMMITTER_EMAIL: "${{ inputs.committer }}@users.noreply.github.com"
       run: |
-        if [ -z "$(git status --porcelain)" ]; then
+        if [ "$allow_empty" != "true" ] && [ -z "$(git status --porcelain)" ]; then
           echo "No changes to commit"
           echo "changed=false" >> "$GITHUB_OUTPUT"
         else
