@@ -20,18 +20,21 @@ runs:
       run: |
         git tag "$tag"
     - name: Create darwin-arm64 archive
+      shell: sh
       env:
         GOOS: darwin
         GOARCH: arm64
       run: |
         .release/archive.sh "$tag" "$GOOS" "$GOARCH"
     - name: Create linux-arm64 archive
+      shell: sh
       env:
         GOOS: linux
         GOARCH: arm64
       run: |
         .release/archive.sh "$tag" "$GOOS" "$GOARCH"
     - name: Create linux-amd64 archive
+      shell: sh
       env:
         GOOS: linux
         GOARCH: amd64
