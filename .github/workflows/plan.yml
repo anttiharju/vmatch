@@ -37,7 +37,7 @@ jobs:
         uses: anttiharju/find-changes-action@v1
       - name: Compare changes
         id: flake
-        uses: anttiharju/compare-changes@v0
+        uses: anttiharju/compare-changes-action@v0
         with:
           github-workflows-wildcard: flake.yml
           changes: ${{ steps.changes.outputs.array }}
@@ -50,11 +50,12 @@ jobs:
             trusted-substituters = https://cache.nixos.org https://nix-community.cachix.org https://anttiharju.cachix.org
             trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= anttiharju.cachix.org-1:1/w1vNdGsG6EynEoWhjJLJ2rxqde2BP+wkKM+YdOxMQ=
             accept-flake-config = true
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
       - if: steps.flake.outputs.changed == 'true'
         name: Parse container version
         id: container
         run: |
-          version="$(nix eval .#container_version --raw)"
+          version=current
           echo "version=$version"
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
@@ -93,6 +94,14 @@ jobs:
           if [[ "$local_digest" != "$remote_digest" ]]; then
             docker push "$image"
           fi
+      - if: steps.flake.outputs.changed == 'true' && github.event_name == 'push' && github.ref_name == github.event.repository.default_branch
+        name: Delete untagged versions
+        uses: actions/delete-package-versions@v5
+        with:
+          package-name: ${{ github.event.repository.name }}-ci
+          package-type: container
+          min-versions-to-keep: 1
+          delete-only-untagged-versions: false
     outputs:
       image: ${{ steps.tag.outputs.image }}
 
@@ -118,6 +127,13 @@ jobs:
         with:
           changes: ${{ steps.changes.outputs.array }}
 
+      - if: always() && !cancelled() && (steps.changed.outputs.go == 'true' || steps.changed.outputs.release == 'true' || github.event_name == 'push') && ! endsWith(github.event.head_commit.author.name, '[bot]')
+        id: semantic
+        name: Require semantic version label
+        uses: ./.github/actions/semver-label
+        with:
+          require: ${{ steps.changed.outputs.go == 'true' || steps.changed.outputs.release == 'true' }}
+
       - if: always() && !cancelled() && (steps.changed.outputs.go == 'true' || github.event_name == 'push')
         name: Ensure go.mod has matching Go version
         uses: ./.github/actions/match-go-version
@@ -129,7 +145,6 @@ jobs:
 
       - if: always() && !cancelled() && (steps.changed.outputs.go == 'true' || github.event_name == 'push')
         name: go test
-        shell: sh
         run: |
           go test ./...
 
@@ -141,13 +156,6 @@ jobs:
         name: relcheck
         run: |
           relcheck all --verbose --color=always
-
-      - if: always() && !cancelled() && (steps.changed.outputs.go == 'true' || steps.changed.outputs.release == 'true' || github.event_name == 'push')
-        id: semantic
-        name: Require semantic version label
-        uses: anttiharju/actions/semver-label@v0
-        with:
-          require: ${{ steps.changed.outputs.go == 'true' || steps.changed.outputs.release == 'true' }}
 
       - if: always() && !cancelled()
         name: action-validator
@@ -192,6 +200,37 @@ jobs:
         name: shellcheck
         run: |
           git ls-files -z '*.sh' | xargs --null shellcheck --color=always
+
+      - if: steps.semantic.outputs.version != '' && github.event_name == 'push' && github.ref_name == github.event.repository.default_branch && !endsWith(github.event.head_commit.author.name, '[bot]')
+        name: Create release commit
+        uses: ./.github/actions/commit-release
+        with:
+          version: ${{ steps.semantic.outputs.version }}
+          ANTTIHARJU_BOT_ID: ${{ secrets.ANTTIHARJU_BOT_ID }}
+          ANTTIHARJU_BOT_PRIVATE_KEY: ${{ secrets.ANTTIHARJU_BOT_PRIVATE_KEY }}
+
+      - if: github.event_name == 'push' && github.ref_name == github.event.repository.default_branch && endsWith(github.event.head_commit.author.name, '[bot]')
+        id: parse
+        name: Parse release commit
+        env:
+          expected_bot: ${{ github.event.head_commit.author.name }}
+        run: |
+          commit_author="$(git log -1 --pretty=format:'%an')"
+          commit_committer="$(git log -1 --pretty=format:'%cn')"
+
+          if [[ "$commit_author" == "$expected_bot" && "$commit_committer" == "$expected_bot" ]]; then
+            commit_message="$(git log -1 --pretty=format:'%s')"
+            version="${commit_message%% *}"
+            if [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              echo "version=$version"
+              echo "version=$version" >> "$GITHUB_OUTPUT"
+            else
+              echo "Commit message does not match semver format: $commit_message"
+            fi
+          else
+            echo "Author or committer does not match expected bot: $expected_bot"
+            echo "Author: $commit_author, Committer: $commit_committer"
+          fi
     outputs:
-      version: ${{ steps.semantic.outputs.version }}
+      version: ${{ steps.semantic.outputs.version || steps.parse.outputs.version }}
       documentation_changed: ${{ steps.changed.outputs.mkdocs }}

@@ -24,39 +24,19 @@ go.work.sum
 # Env file
 .env
 
-# Ignore files at repo root without extension, except LICENSE
-/[!.]*
-!/LICENSE
-!/*/
-!/*.*
-
-# Docs build output
+# MkDocs
 site
 
-# Nested checkouts during package workflow
-homebrew-tap
-nur-packages
-
-# render.sh tmp files
-.release/*/*
-!.release/*/*.*
-.release/**/*.cache
-.release/brew/*.rb
-.release/nix/*.nix
-!.release/*/template.*
-
-# Archives
+# archive.sh
 *.tar.gz
-
-# Packaging happens under this directory
 tmp
-
-# rubocop-file action
-/*.lock
 
 # Nix
 .direnv
-!flake.lock
 
-# Release automation
-release
+# actions/checkout.path
+/documentation
+/nur-packages
+/release
+/action
+/homebrew-tap

@@ -8,50 +8,59 @@ runs:
   using: "composite"
   steps:
     - id: actionlint
-      uses: anttiharju/compare-changes@v0
-      with:
-        github-workflows-wildcard: actionlint.yml
-        changes: ${{ inputs.changes }}
+      shell: sh
+      env:
+        array: ${{ inputs.changes }}
+      run: |
+        compare-changes --changes "$array" --wildcard actionlint.yml
     - id: go
-      uses: anttiharju/compare-changes@v0
-      with:
-        github-workflows-wildcard: go.yml
-        changes: ${{ inputs.changes }}
+      shell: sh
+      env:
+        array: ${{ inputs.changes }}
+      run: |
+        compare-changes --changes "$array" --wildcard go.yml
     - id: golangci-lint
-      uses: anttiharju/compare-changes@v0
-      with:
-        github-workflows-wildcard: golangci-lint.yml
-        changes: ${{ inputs.changes }}
+      shell: sh
+      env:
+        array: ${{ inputs.changes }}
+      run: |
+        compare-changes --changes "$array" --wildcard golangci-lint.yml
     - id: brew
-      uses: anttiharju/compare-changes@v0
-      with:
-        github-workflows-wildcard: brew.yml
-        changes: ${{ inputs.changes }}
+      shell: sh
+      env:
+        array: ${{ inputs.changes }}
+      run: |
+        compare-changes --changes "$array" --wildcard brew.yml
     - id: github
-      uses: anttiharju/compare-changes@v0
-      with:
-        github-workflows-wildcard: github.yml
-        changes: ${{ inputs.changes }}
+      shell: sh
+      env:
+        array: ${{ inputs.changes }}
+      run: |
+        compare-changes --changes "$array" --wildcard github.yml
     - id: nix
-      uses: anttiharju/compare-changes@v0
-      with:
-        github-workflows-wildcard: nix.yml
-        changes: ${{ inputs.changes }}
+      shell: sh
+      env:
+        array: ${{ inputs.changes }}
+      run: |
+        compare-changes --changes "$array" --wildcard nix.yml
     - id: mkdocs
-      uses: anttiharju/compare-changes@v0
-      with:
-        github-workflows-wildcard: mkdocs.yml
-        changes: ${{ inputs.changes }}
+      shell: sh
+      env:
+        array: ${{ inputs.changes }}
+      run: |
+        compare-changes --changes "$array" --wildcard mkdocs.yml
     - id: prettier
-      uses: anttiharju/compare-changes@v0
-      with:
-        github-workflows-wildcard: prettier.yml
-        changes: ${{ inputs.changes }}
+      shell: sh
+      env:
+        array: ${{ inputs.changes }}
+      run: |
+        compare-changes --changes "$array" --wildcard prettier.yml
     - id: shellcheck
-      uses: anttiharju/compare-changes@v0
-      with:
-        github-workflows-wildcard: shellcheck.yml
-        changes: ${{ inputs.changes }}
+      shell: sh
+      env:
+        array: ${{ inputs.changes }}
+      run: |
+        compare-changes --changes "$array" --wildcard shellcheck.yml
 outputs:
   actionlint:
     description: "Whether actionlint has changed"

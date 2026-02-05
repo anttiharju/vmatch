@@ -8,14 +8,6 @@ class ${PKG_CLASS} < Formula
   license 'MIT'
 
   on_macos do
-    if Hardware::CPU.intel?
-      url 'https://github.com/${PKG_OWNER}/${PKG_REPO}/releases/download/v${PKG_VERSION}/${PKG_REPO}-darwin-amd64.tar.gz'
-      sha256 '${PKG_MAC_INTEL_SHA}'
-
-      def install
-        bin.install '${PKG_REPO}'
-      end
-    end
     if Hardware::CPU.arm?
       url 'https://github.com/${PKG_OWNER}/${PKG_REPO}/releases/download/v${PKG_VERSION}/${PKG_REPO}-darwin-arm64.tar.gz'
       sha256 '${PKG_MAC_ARM_SHA}'

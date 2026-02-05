@@ -1,0 +1,43 @@
+name: "Release homebrew-tap"
+description: "Update formula in homebrew-tap repository"
+inputs:
+  version:
+    description: "Version to release"
+    required: true
+  anttiharju-bot-id:
+    description: "GitHub App ID for anttiharju[bot]"
+    required: true
+  anttiharju-bot-private-key:
+    description: "GitHub App private key for anttiharju[bot]"
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Generate commit token
+      id: generate-token
+      uses: actions/create-github-app-token@v2
+      with:
+        app-id: ${{ inputs.anttiharju-bot-id }}
+        private-key: ${{ inputs.anttiharju-bot-private-key }}
+        repositories: homebrew-tap
+    - name: Checkout
+      uses: actions/checkout@v6
+      with:
+        repository: anttiharju/homebrew-tap
+        token: ${{ steps.generate-token.outputs.token }}
+        path: homebrew-tap
+    - name: Render Brew formula
+      shell: sh
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        .release/render.sh brew --output homebrew-tap/Formula
+    - name: Commit changes
+      uses: ./.github/actions/commit-changes
+      with:
+        working-directory: homebrew-tap
+        committer: ${{ github.actor }}
+        message: |
+          ${{ github.event.repository.name }} ${{ inputs.version }}
+
+          https://github.com/${{ github.repository }}/blob/${{ github.sha }}/.github/workflows/release.yml

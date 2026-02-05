@@ -1,0 +1,62 @@
+name: "Release GitHub"
+description: "Create a GitHub Release"
+inputs:
+  version:
+    description: "Version to release"
+    required: true
+  anttiharju-bot-id:
+    description: "GitHub App ID for anttiharju[bot]"
+    required: true
+  anttiharju-bot-private-key:
+    description: "GitHub App private key for anttiharju[bot]"
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Tag current commit
+      shell: sh
+      env:
+        tag: "v${{ inputs.version }}"
+      run: |
+        git tag "$tag"
+    - name: Cache
+      uses: ./.github/actions/cache
+    - name: Create aarch64-apple-darwin archive
+      shell: sh
+      env:
+        tag: "v${{ inputs.version }}"
+      run: |
+        .release/archive.sh "$tag" aarch64-apple-darwin
+    - name: Create aarch64-unknown-linux-gnu archive
+      shell: sh
+      env:
+        tag: "v${{ inputs.version }}"
+      run: |
+        .release/archive.sh "$tag" aarch64-unknown-linux-gnu
+    - name: Create x86_64-unknown-linux-gnu archive
+      shell: sh
+      env:
+        tag: "v${{ inputs.version }}"
+      run: |
+        .release/archive.sh "$tag" x86_64-unknown-linux-gnu
+    - name: Release
+      shell: sh
+      env:
+        GH_TOKEN: ${{ github.token }}
+        title: ${{ inputs.version }}
+        tag: "v${{ inputs.version }}"
+      run: |
+        git reset --hard && git clean -df
+        git push origin "$tag"
+        gh release create "$tag" --title="$title" --generate-notes --draft
+        find . -maxdepth 1 -name '${{ github.event.repository.name }}-*.tar.gz' -exec gh release upload "$tag" {} \;
+        gh release edit "$tag" --draft=false
+    - name: Tag major version
+      shell: sh
+      env:
+        version: ${{ inputs.version }}
+      run: |
+        major_version=$(echo "$version" | cut -d. -f1)
+        major_tag="v$major_version"
+        git tag "$major_tag"
+        git push origin "$major_tag" --force

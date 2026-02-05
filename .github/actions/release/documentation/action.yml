@@ -1,0 +1,33 @@
+name: "Release documentation"
+description: "Build and deploy documentation to GitHub Pages"
+inputs:
+  anttiharju-bot-id:
+    description: "GitHub App ID for anttiharju[bot]"
+    required: true
+  anttiharju-bot-private-key:
+    description: "GitHub App private key for anttiharju[bot]"
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Generate deploy token
+      id: deploy
+      uses: actions/create-github-app-token@v2
+      with:
+        app-id: ${{ inputs.anttiharju-bot-id }}
+        private-key: ${{ inputs.anttiharju-bot-private-key }}
+    - name: Checkout
+      uses: actions/checkout@v6
+      with:
+        token: ${{ steps.deploy.outputs.token }}
+        path: documentation
+    - name: Deploy to GitHub Pages
+      shell: sh
+      working-directory: documentation
+      env:
+        GIT_AUTHOR_NAME: ${{ github.actor }}
+        GIT_AUTHOR_EMAIL: "${{ github.actor }}@users.noreply.github.com"
+        GIT_COMMITTER_NAME: "${{ github.actor }}[bot]"
+        GIT_COMMITTER_EMAIL: "${{ github.actor }}[bot]@users.noreply.github.com"
+      run: |
+        mkdocs gh-deploy --force --no-history
