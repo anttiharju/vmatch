@@ -6,7 +6,10 @@ capture() {
   echo "export $1=\"$2\""
 }
 
-capture PKG_REPO "${GITHUB_REPOSITORY##*/}"
+repo="${GITHUB_REPOSITORY##*/}"
+capture PKG_FILENAME "default"
+capture PKG_EXTENSION nix
+capture PKG_REPO "$repo"
 capture PKG_VERSION "${TAG#v}"
 capture PKG_OWNER "${GITHUB_REPOSITORY%%/*}"
 capture PKG_REV "$GITHUB_SHA"

@@ -61,5 +61,6 @@ pre-commit:
 
     - name: nixfmt
       glob: "*.nix"
+      exclude: "template.nix"
       run: nixfmt {staged_files}
       stage_fixed: true

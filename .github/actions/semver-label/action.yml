@@ -1,0 +1,135 @@
+name: semver-label
+description: "Determines semantic version bump from PR labels"
+inputs:
+  require:
+    description: "Whether to fail upon missing semver label"
+    default: "true"
+    required: false
+  error-message:
+    description: "Message to echo upon failure"
+    required: false
+    default: "PR must have exactly one of the following labels: major-release, minor-release, patch-release, dependencies"
+runs:
+  using: "composite"
+  steps:
+    - name: Get labels
+      id: label
+      uses: anttiharju/actions/get-labels@v0
+
+    - name: Check for major-release label
+      id: major
+      uses: anttiharju/actions/require-label@v0
+      with:
+        labels: ${{ steps.label.outputs.names }}
+        name: "major-release"
+        error-message: ${{ inputs.error-message }}
+
+    - name: Check for minor-release label
+      id: minor
+      uses: anttiharju/actions/require-label@v0
+      with:
+        labels: ${{ steps.label.outputs.names }}
+        name: "minor-release"
+        error-message: ${{ inputs.error-message }}
+        fail-on-match: ${{ steps.major.outputs.match }}
+
+    - name: Check for patch-release label
+      id: patch
+      uses: anttiharju/actions/require-label@v0
+      with:
+        labels: ${{ steps.label.outputs.names }}
+        name: "patch-release"
+        error-message: ${{ inputs.error-message }}
+        fail-on-match: ${{ steps.minor.outputs.match == 'true' || steps.major.outputs.match == 'true' }}
+
+    - name: Check for dependencies label
+      id: dependencies
+      uses: anttiharju/actions/require-label@v0
+      with:
+        labels: ${{ steps.label.outputs.names }}
+        name: "dependencies"
+        error-message: ${{ inputs.error-message }}
+        fail-on-match: ${{ steps.minor.outputs.match == 'true' || steps.major.outputs.match == 'true' || steps.patch.outputs.match == 'true' }}
+
+    - if: ${{ steps.major.outputs.match == 'false' && steps.minor.outputs.match == 'false' && steps.patch.outputs.match == 'false' && steps.dependencies.outputs.match == 'false' }}
+      id: fail
+      name: Fail if no semver label matched
+      shell: sh
+      env:
+        require: ${{ inputs.require }}
+        msg: ${{ inputs.error-message }}
+      run: |
+        if [ "$require" = "true" ]; then
+          echo "Error: $msg"
+          exit 1
+        else
+          echo "skipped=true"
+          echo "skipped=true" >> "$GITHUB_OUTPUT"
+        fi
+
+    # This is not baked into output value to avoid falsely setting release type if a step fails
+    - if: steps.fail.outputs.skipped != 'true'
+      name: Set output
+      id: release
+      shell: sh
+      run: |
+        echo "type=${{ steps.major.outputs.match == 'true' && 'major' || steps.minor.outputs.match == 'true' && 'minor' || (steps.patch.outputs.match == 'true' || steps.dependencies.outputs.match == 'true') && 'patch' }}" >> "$GITHUB_OUTPUT"
+
+    - name: Parse latest release
+      id: latest
+      shell: sh
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        if [ -f Cargo.toml ]; then
+          version=$(yq '.package.version' Cargo.toml)
+        else
+          version=$(gh release view --json name -q '.name' 2>/dev/null || echo '0.0.0')
+        fi
+        echo "version=$version" >> "$GITHUB_OUTPUT"
+
+        major="$(echo "$version" | cut -d. -f1)"
+        minor="$(echo "$version" | cut -d. -f2)"
+        patch="$(echo "$version" | cut -d. -f3)"
+        {
+          echo "major=$major"
+          echo "minor=$minor"
+          echo "patch=$patch"
+        } >> "$GITHUB_OUTPUT"
+        echo "current=$version(as-is)=$major.$minor.$patch(parsed)"
+
+    - if: steps.fail.outputs.skipped != 'true'
+      name: Bump version
+      id: bump
+      shell: bash
+      env:
+        type: ${{ steps.release.outputs.type }}
+        major: ${{ steps.latest.outputs.major }}
+        minor: ${{ steps.latest.outputs.minor }}
+        patch: ${{ steps.latest.outputs.patch }}
+      run: |
+        if [[ "$type" == "major" ]]; then
+          echo "version=$((major + 1)).0.0" >> "$GITHUB_OUTPUT"
+        elif [[ "$type" == "minor" ]]; then
+          echo "version=$major.$((minor + 1)).0" >> "$GITHUB_OUTPUT"
+        elif [[ "$type" == "patch" ]]; then
+          echo "version=$major.$minor.$((patch + 1))" >> "$GITHUB_OUTPUT"
+        else
+          echo "Invalid type: $type" >&2
+          exit 1
+        fi
+
+    - if: steps.fail.outputs.skipped != 'true'
+      name: Log next version
+      shell: sh
+      env:
+        version: ${{ steps.bump.outputs.version }}
+      run: |
+        echo "next=$version"
+outputs:
+  version:
+    description: "Next semantic version"
+    value: "${{ steps.bump.outputs.version }}"
+  type:
+    description: "Type of semantic version bump"
+    value: ${{ steps.release.outputs.type }}

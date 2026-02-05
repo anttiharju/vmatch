@@ -19,11 +19,42 @@ jobs:
   release:
     name: Release
     needs: plan
-    if: needs.plan.outputs.version != ''
-    uses: ./.github/workflows/release.yml
-    with:
-      version: ${{ needs.plan.outputs.version }}
-      container: ${{ needs.plan.outputs.container }}
+    runs-on: ubuntu-24.04
+    container:
+      image: ${{ needs.plan.outputs.container || format('ghcr.io/{0}/{1}-ci:latest', github.repository_owner, github.event.repository.name) }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ github.token }}
+    if: endsWith(github.event.head_commit.author.name, '[bot]') && needs.plan.outputs.version != ''
     permissions:
       contents: write
-    secrets: inherit
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Documentation
+        uses: ./.github/actions/release/documentation
+        with:
+          anttiharju-bot-id: ${{ secrets.ANTTIHARJU_BOT_ID }}
+          anttiharju-bot-private-key: ${{ secrets.ANTTIHARJU_BOT_PRIVATE_KEY }}
+
+      - name: Nix User Repository
+        uses: ./.github/actions/release/nur-packages
+        with:
+          version: ${{ needs.plan.outputs.version }}
+          anttiharju-bot-id: ${{ secrets.ANTTIHARJU_BOT_ID }}
+          anttiharju-bot-private-key: ${{ secrets.ANTTIHARJU_BOT_PRIVATE_KEY }}
+
+      - name: GitHub
+        uses: ./.github/actions/release/github
+        with:
+          version: ${{ needs.plan.outputs.version }}
+          anttiharju-bot-id: ${{ secrets.ANTTIHARJU_BOT_ID }}
+          anttiharju-bot-private-key: ${{ secrets.ANTTIHARJU_BOT_PRIVATE_KEY }}
+
+      - name: Homebrew Tap
+        uses: ./.github/actions/release/homebrew-tap
+        with:
+          version: ${{ needs.plan.outputs.version }}
+          anttiharju-bot-id: ${{ secrets.ANTTIHARJU_BOT_ID }}
+          anttiharju-bot-private-key: ${{ secrets.ANTTIHARJU_BOT_PRIVATE_KEY }}

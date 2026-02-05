@@ -19,7 +19,6 @@
       ...
     }:
     let
-      container_version = "1.0.0";
       supportedSystems = [
         "x86_64-linux"
         "aarch64-linux"
@@ -35,6 +34,7 @@
           action-validator
           actionlint
           anttiharju.relcheck
+          anttiharju.compare-changes
           editorconfig-checker
           (python313.withPackages (
             ps: with ps; [
@@ -63,7 +63,6 @@
         ];
     in
     {
-      container_version = container_version; # This is here so that 'nix eval .#container_version --raw' works
       devShells = forAllSystems (
         system:
         let
@@ -89,7 +88,7 @@
           anttiharju = nur-anttiharju.packages.${system};
 
           # Fix not being able to run the unpatched node binaries that GitHub Actions mounts into the container
-          nix_ld_setup = pkgs.runCommand "nix-ld-setup" { } ''
+          ld = pkgs.runCommand "ld" { } ''
             mkdir -p $out/lib64
             install -D -m755 ${pkgs.nix-ld}/libexec/nix-ld "$out/lib64/$(basename ${pkgs.stdenv.cc.bintools.dynamicLinker})"
           '';
@@ -97,17 +96,22 @@
         pkgs.lib.optionalAttrs (system == "x86_64-linux" || system == "aarch64-linux") {
           ci = pkgs.dockerTools.streamLayeredImage {
             name = "ci";
-            tag = container_version;
+            tag = "current";
             contents = (devPackages pkgs anttiharju system) ++ [
-              nix_ld_setup
+              ld
+              pkgs.binutils
               pkgs.dockerTools.caCertificates
               pkgs.sudo
               pkgs.nix.out
               pkgs.dockerTools.usrBinEnv
-              anttiharju.compare-changes
             ];
             config = {
               User = "1001"; # https://github.com/actions/runner/issues/2033#issuecomment-1598547465
+              Labels = {
+                "org.opencontainers.image.description" =
+                  "This CI container image (apart from the flake.nix definition) is not covered by the license(s) of the source GitHub repository.";
+                "org.opencontainers.image.licenses" = "NOASSERTION";
+              };
               Env = [
                 "CGO_ENABLED=0"
                 "NIX_LD_LIBRARY_PATH=${
@@ -117,6 +121,7 @@
                   ]
                 }"
                 "NIX_LD=${pkgs.stdenv.cc.bintools.dynamicLinker}"
+                "AR=/usr/bin/ar"
                 # PATH has to be defined so that actions that manipulate it (e.g. setup-go) don't break the environment
                 "PATH=/home/runner/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
               ];
@@ -124,6 +129,7 @@
             enableFakechroot = true;
             fakeRootCommands = ''
               #!${pkgs.runtimeShell}
+              install -D -m755 ${pkgs.binutils}/bin/ar /usr/bin/ar
 
               # https://docs.github.com/en/actions/reference/runners/github-hosted-runners#administrative-privileges
               ${pkgs.dockerTools.shadowSetup}
@@ -142,13 +148,16 @@
               mkdir -p /tmp
               chmod 1777 /tmp
 
-              # Enable 'nix eval .#container_version --raw' and 'nix flake update' inside the container
+              # Enable 'nix flake update' inside the container
               mkdir -p /etc/nix
               echo "experimental-features = nix-command flakes" > /etc/nix/nix.conf
 
               # Fix 'mv: No such file or directory (os error 2)'
               mkdir -p /usr/local/bin
               chmod 0777 /usr/local/bin
+
+              # Just avoid extra diffs when using a Dockerfile to inspect changes
+              mkdir -p /proc /dev /sys
             '';
           };
         }

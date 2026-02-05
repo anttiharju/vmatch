@@ -7,6 +7,8 @@ capture() {
 }
 
 repo="${GITHUB_REPOSITORY##*/}"
+capture PKG_FILENAME "$repo"
+capture PKG_EXTENSION rb
 capture PKG_REPO "$repo"
 class="$(echo "$repo" | awk -F'-' '{for(i=1;i<=NF;i++) printf "%s%s", toupper(substr($i,1,1)), substr($i,2)}')"
 capture PKG_CLASS "$class"
@@ -14,6 +16,7 @@ desc="$(gh repo view --json description --jq .description)"
 capture PKG_DESC "$desc"
 homepage="$(gh api "repos/$GITHUB_REPOSITORY" --jq .homepage)"
 capture PKG_HOMEPAGE "$homepage"
+repo_root="$(git rev-parse --show-toplevel)"
 capture PKG_VERSION "${TAG#v}"
 capture PKG_OWNER "${GITHUB_REPOSITORY%%/*}"
 
@@ -25,15 +28,12 @@ if [[ "$TAG" = "v0.0.0" ]]; then
   exit 0
 fi
 
-repo_root="$(git rev-parse --show-toplevel)"
-cd "$repo_root"
+cd "$repo_root/.release/brew"
 pattern="$repo-*.tar.gz"
 gh release download "$TAG" --pattern "$pattern" --clobber
 for archive in $pattern; do
   echo "# $archive"
 done
-mac_intel_sha="$(hashsum --sha256 "$repo-darwin-amd64.tar.gz" | cut -d ' ' -f1)"
-capture PKG_MAC_INTEL_SHA "$mac_intel_sha"
 mac_arm_sha="$(hashsum --sha256 "$repo-darwin-arm64.tar.gz" | cut -d ' ' -f1)"
 capture PKG_MAC_ARM_SHA "$mac_arm_sha"
 linux_arm_sha="$(hashsum --sha256 "$repo-linux-arm64.tar.gz" | cut -d ' ' -f1)"

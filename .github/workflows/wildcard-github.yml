@@ -6,7 +6,6 @@ on:
     branches:
       - wildcard
     paths:
-      - ".release/actions_env_mock.sh"
       - ".release/archive.sh"
       - "flake.nix"
       - "flake.lock"

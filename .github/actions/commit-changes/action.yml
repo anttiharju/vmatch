@@ -1,0 +1,46 @@
+name: Commit changes
+description: "Commits all changes"
+inputs:
+  author:
+    description: "Author username"
+    required: false
+    default: "${{ github.actor }}"
+  committer:
+    description: "Committer username"
+    required: false
+    default: "github-actions[bot]"
+  message:
+    description: "Commit message"
+    required: true
+  working-directory:
+    description: "Working directory"
+    required: false
+    default: "${{ github.workspace }}"
+runs:
+  using: "composite"
+  steps:
+    - name: Commit changes
+      id: commit
+      working-directory: ${{ inputs.working-directory }}
+      shell: sh
+      env:
+        message: ${{ inputs.message }}
+        GIT_AUTHOR_NAME: ${{ inputs.author }}
+        GIT_AUTHOR_EMAIL: "${{ inputs.author }}@users.noreply.github.com"
+        GIT_COMMITTER_NAME: ${{ inputs.committer }}
+        GIT_COMMITTER_EMAIL: "${{ inputs.committer }}@users.noreply.github.com"
+      run: |
+        if [ -z "$(git status --porcelain)" ]; then
+          echo "No changes to commit"
+          echo "changed=false" >> "$GITHUB_OUTPUT"
+        else
+          git config push.autoSetupRemote true
+          git add --all
+          git commit -m "$message" --allow-empty
+          git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+        fi
+outputs:
+  changed:
+    description: "true/false depending on if a commit was made"
+    value: ${{ steps.commit.outputs.changed }}

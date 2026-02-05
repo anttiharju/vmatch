@@ -1,0 +1,47 @@
+name: "Release nur-packages"
+description: "Release in nur-packages repository"
+inputs:
+  version:
+    description: "Version to release"
+    required: true
+  anttiharju-bot-id:
+    description: "GitHub App ID for anttiharju[bot]"
+    required: true
+  anttiharju-bot-private-key:
+    description: "GitHub App private key for anttiharju[bot]"
+    required: true
+runs:
+  using: "composite"
+  steps:
+    - name: Generate commit token
+      id: generate-token
+      uses: actions/create-github-app-token@v2
+      with:
+        app-id: ${{ inputs.anttiharju-bot-id }}
+        private-key: ${{ inputs.anttiharju-bot-private-key }}
+        repositories: nur-packages
+    - name: Checkout
+      uses: actions/checkout@v6
+      with:
+        repository: anttiharju/nur-packages
+        token: ${{ steps.generate-token.outputs.token }}
+        path: nur-packages
+    - working-directory: nur-packages
+      shell: sh
+      run: nix flake update
+    - name: Render Nix expression
+      shell: sh
+      env:
+        GH_TOKEN: ${{ github.token }}
+        output: "nur-packages/pkgs/${{ github.event.repository.name }}"
+      run: |
+        .release/render.sh nix -o "$output"
+    - name: Commit changes
+      uses: ./.github/actions/commit-changes
+      with:
+        working-directory: nur-packages
+        committer: ${{ github.actor }}
+        message: |
+          ${{ github.event.repository.name }} ${{ inputs.version }}
+
+          https://github.com/${{ github.repository }}/blob/${{ github.sha }}/.github/workflows/release.yml
