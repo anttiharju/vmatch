@@ -52,12 +52,3 @@ runs:
         gh release create "$tag" --title="$title" --generate-notes --draft
         find . -maxdepth 1 -name '${{ github.event.repository.name }}-*.tar.gz' -exec gh release upload "$tag" {} \;
         gh release edit "$tag" --draft=false
-    - name: Tag major version
-      shell: sh
-      env:
-        version: ${{ inputs.version }}
-      run: |
-        major_version=$(echo "$version" | cut -d. -f1)
-        major_tag="v$major_version"
-        git tag "$major_tag"
-        git push origin "$major_tag" --force
