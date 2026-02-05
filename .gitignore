@@ -40,3 +40,6 @@ tmp
 /release
 /action
 /homebrew-tap
+
+# go build
+vmatch
