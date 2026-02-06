@@ -28,8 +28,8 @@ mock_github_actions_env() {
   #remote_url=git@example.com:owner/repository.git
   remote_url="$(git remote get-url origin)"
 
-  normalized_url="${remote_url/://}"
-  temp="${normalized_url%/*}"
+  local normalized_url="${remote_url/://}"
+  local temp="${normalized_url%/*}"
   owner="$(basename "$temp")"
 
   repo="$(basename --suffix .git "$remote_url")"
