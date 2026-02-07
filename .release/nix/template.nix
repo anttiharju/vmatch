@@ -21,6 +21,7 @@ buildGoModule rec {
   ldflags = [
     "-s"
     "-w"
+    "-buildid=nix-v$${version}"
     "-X main.revision=$${revision}"
     "-X main.version=$${version}"
     "-X main.time=${PKG_TIME}"
