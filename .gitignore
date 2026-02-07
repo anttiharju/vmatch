@@ -42,4 +42,4 @@ target
 /homebrew-tap
 
 # 'go build' default output
-go-starter
+vmatch
