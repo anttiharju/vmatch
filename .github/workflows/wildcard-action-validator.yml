@@ -10,6 +10,7 @@ on:
       - "**/action.yml"
       - "flake.nix"
       - "flake.lock"
+      - ".github/workflows/wildcard-action-validator.yml"
 jobs:
   wildcard:
     runs-on: ubuntu-latest

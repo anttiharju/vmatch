@@ -10,6 +10,7 @@ on:
       - "**/*.yml"
       - "flake.nix"
       - "flake.lock"
+      - ".github/workflows/wildcard-prettier.yml"
 jobs:
   wildcard:
     runs-on: ubuntu-latest

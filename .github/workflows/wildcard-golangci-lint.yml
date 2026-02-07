@@ -11,6 +11,7 @@ on:
       - "go.*"
       - "flake.nix"
       - "flake.lock"
+      - ".github/workflows/wildcard-golangci-lint.yml"
 jobs:
   wildcard:
     runs-on: ubuntu-latest
