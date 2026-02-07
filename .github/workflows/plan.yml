@@ -134,7 +134,7 @@ jobs:
         with:
           require: ${{ steps.changed.outputs.go == 'true' || steps.changed.outputs.release == 'true' }}
 
-      - if: always() && !cancelled() && (steps.changed.outputs.go == 'true' || github.event_name == 'push')
+      - if: always() && !cancelled() && (steps.changed.outputs.go == 'true' || steps.changed.outputs.golangci-lint == 'true' || github.event_name == 'push')
         name: Ensure go.mod has matching Go version
         uses: ./.github/actions/match-go-version
 
