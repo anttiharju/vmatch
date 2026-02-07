@@ -1,5 +1,5 @@
 name: "Match Go Version"
-description: "Compare go.mod version with installed Go version"
+description: "Compare project Go and golangci-lint versions with environment"
 
 runs:
   using: "composite"
@@ -15,6 +15,17 @@ runs:
 
         echo "$go_mod_version=$env_version"
         if [[ "$go_mod_version" = "$env_version" ]]; then
+          echo "true"
+        else
+          echo "false"
+          exit 1
+        fi
+
+        golangci_file_version=$(cat .golangci-version)
+        golangci_env_version=$(golangci-lint version --short)
+
+        echo "$golangci_file_version=$golangci_env_version"
+        if [[ "$golangci_file_version" = "$golangci_env_version" ]]; then
           echo "true"
         else
           echo "false"

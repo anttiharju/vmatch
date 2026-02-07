@@ -9,6 +9,7 @@ on:
       - ".release/nix/**/*"
       - "flake.nix"
       - "flake.lock"
+      - ".github/workflows/wildcard-nix.yml"
 jobs:
   wildcard:
     runs-on: ubuntu-latest

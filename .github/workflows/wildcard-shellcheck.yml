@@ -10,6 +10,7 @@ on:
       - ".shellcheckrc"
       - "flake.nix"
       - "flake.lock"
+      - ".github/workflows/wildcard-shellcheck.yml"
 jobs:
   wildcard:
     runs-on: ubuntu-latest

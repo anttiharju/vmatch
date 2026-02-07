@@ -8,6 +8,7 @@ on:
     paths:
       - "flake.nix"
       - "flake.lock"
+      - ".github/workflows/wildcard-flake.yml"
 jobs:
   wildcard:
     runs-on: ubuntu-latest

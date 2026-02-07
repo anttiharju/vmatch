@@ -34,9 +34,9 @@ gh release download "$TAG" --pattern "$pattern" --clobber
 for archive in $pattern; do
   echo "# $archive"
 done
-mac_arm_sha="$(hashsum --sha256 "$repo-darwin-arm64.tar.gz" | cut -d ' ' -f1)"
+mac_arm_sha="$(hashsum --sha256 "$repo-darwin-arm64.tar.gz" --no-names)"
 capture PKG_MAC_ARM_SHA "$mac_arm_sha"
-linux_arm_sha="$(hashsum --sha256 "$repo-linux-arm64.tar.gz" | cut -d ' ' -f1)"
+linux_arm_sha="$(hashsum --sha256 "$repo-linux-arm64.tar.gz" --no-names)"
 capture PKG_LINUX_ARM_SHA "$linux_arm_sha"
-linux_intel_sha="$(hashsum --sha256 "$repo-linux-amd64.tar.gz" | cut -d ' ' -f1)"
+linux_intel_sha="$(hashsum --sha256 "$repo-linux-amd64.tar.gz" --no-names)"
 capture PKG_LINUX_INTEL_SHA "$linux_intel_sha"

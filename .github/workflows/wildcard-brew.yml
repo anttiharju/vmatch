@@ -9,6 +9,7 @@ on:
       - ".release/brew/**/*"
       - "flake.nix"
       - "flake.lock"
+      - ".github/workflows/wildcard-brew.yml"
 jobs:
   wildcard:
     runs-on: ubuntu-latest

@@ -29,7 +29,7 @@ site
 
 # archive.sh
 *.tar.gz
-tmp
+target
 
 # Nix
 .direnv
@@ -41,5 +41,5 @@ tmp
 /action
 /homebrew-tap
 
-# go build
+# 'go build' default output
 vmatch

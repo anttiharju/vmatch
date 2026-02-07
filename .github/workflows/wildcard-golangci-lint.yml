@@ -7,10 +7,11 @@ on:
       - wildcard
     paths:
       - "**/*.go"
-      - ".golangci.yml"
+      - ".golangci*"
       - "go.*"
       - "flake.nix"
       - "flake.lock"
+      - ".github/workflows/wildcard-golangci-lint.yml"
 jobs:
   wildcard:
     runs-on: ubuntu-latest
