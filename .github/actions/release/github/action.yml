@@ -22,21 +22,21 @@ runs:
     - name: Create darwin-arm64 archive
       shell: sh
       env:
-        tag: "v${{ inputs.version }}"
+        version: ${{ inputs.version }}
       run: |
-        .release/archive.sh "$tag" darwin arm64
+        .release/archive.sh "$version" darwin arm64
     - name: Create linux-arm64 archive
       shell: sh
       env:
-        tag: "v${{ inputs.version }}"
+        version: ${{ inputs.version }}
       run: |
-        .release/archive.sh "$tag" linux arm64
+        .release/archive.sh "$version" linux arm64
     - name: Create linux-amd64 archive
       shell: sh
       env:
-        tag: "v${{ inputs.version }}"
+        version: ${{ inputs.version }}
       run: |
-        .release/archive.sh "$tag" linux amd64
+        .release/archive.sh "$version" linux amd64
     - name: Release
       shell: sh
       env:
