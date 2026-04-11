@@ -48,4 +48,3 @@ runs:
         git push origin "$tag"
         gh release create "$tag" --title="$title" --generate-notes --draft
         find . -maxdepth 1 -name '${{ github.event.repository.name }}-*.tar.gz' -exec gh release upload "$tag" {} \;
-        gh release edit "$tag" --draft=false

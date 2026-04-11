@@ -32,21 +32,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Documentation
-        uses: ./.github/actions/release/documentation
-        with:
-          anttiharju-bot-id: ${{ secrets.ANTTIHARJU_BOT_ID }}
-          anttiharju-bot-private-key: ${{ secrets.ANTTIHARJU_BOT_PRIVATE_KEY }}
-
-      - name: Nix User Repository
-        uses: ./.github/actions/release/nur-packages
+      - name: GitHub
+        uses: ./.github/actions/release/github
         with:
           version: ${{ needs.plan.outputs.version }}
           anttiharju-bot-id: ${{ secrets.ANTTIHARJU_BOT_ID }}
           anttiharju-bot-private-key: ${{ secrets.ANTTIHARJU_BOT_PRIVATE_KEY }}
 
-      - name: GitHub
-        uses: ./.github/actions/release/github
+      - name: Nix User Repository
+        uses: ./.github/actions/release/nur-packages
         with:
           version: ${{ needs.plan.outputs.version }}
           anttiharju-bot-id: ${{ secrets.ANTTIHARJU_BOT_ID }}
@@ -58,3 +52,17 @@ jobs:
           version: ${{ needs.plan.outputs.version }}
           anttiharju-bot-id: ${{ secrets.ANTTIHARJU_BOT_ID }}
           anttiharju-bot-private-key: ${{ secrets.ANTTIHARJU_BOT_PRIVATE_KEY }}
+
+      - name: Documentation
+        uses: ./.github/actions/release/documentation
+        with:
+          anttiharju-bot-id: ${{ secrets.ANTTIHARJU_BOT_ID }}
+          anttiharju-bot-private-key: ${{ secrets.ANTTIHARJU_BOT_PRIVATE_KEY }}
+
+      - name: Lock release immutability
+        shell: sh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          tag: "v${{ needs.plan.outputs.version }}"
+        run: |
+          gh release edit "$tag" --draft=false
